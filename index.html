@@ -1422,13 +1422,13 @@ function spawnDrink(b){
 
 // nhịp khách theo giờ: b = khách hỏi sân/phút game, w = khách mua mang đi/phút game
 function peakInfo(h){
-  if(h<8)   return {b:.075,w:.018,hot:true, lbl:'🔥 Cao điểm sáng'};
-  if(h<11)  return {b:.03, w:.012,hot:false,lbl:''};
-  if(h<13)  return {b:.04, w:.016,hot:false,lbl:'🍱 Giờ trưa'};
-  if(h<16)  return {b:.026,w:.011,hot:false,lbl:''};
-  if(h<17)  return {b:.05, w:.014,hot:false,lbl:'⏰ Sắp tan làm'};
-  if(h<21)  return {b:.11, w:.022,hot:true, lbl:'🔥 Cao điểm tối'};
-  return          {b:.025,w:.01, hot:false,lbl:''};
+  if(h<8)   return {b:.05, w:.012,hot:true, lbl:'🔥 Cao điểm sáng'};
+  if(h<11)  return {b:.022,w:.008,hot:false,lbl:''};
+  if(h<13)  return {b:.028,w:.011,hot:false,lbl:'🍱 Giờ trưa'};
+  if(h<16)  return {b:.018,w:.007,hot:false,lbl:''};
+  if(h<17)  return {b:.035,w:.01, hot:false,lbl:'⏰ Sắp tan làm'};
+  if(h<21)  return {b:.07, w:.015,hot:true, lbl:'🔥 Cao điểm tối'};
+  return          {b:.018,w:.007,hot:false,lbl:''};
 }
 const IMP1=['Em ơi, sao rồi?','Lâu vậy em...','Còn đó không em?','Nhanh giùm nha em!'];
 const IMP2=['Chờ lâu quá à!','Thôi, sắp đi về luôn nè!','Hết kiên nhẫn rồi nha!'];
@@ -1469,12 +1469,12 @@ function step(dm){
   const starF=0.35+0.23*S.rating;                       // 1★ ≈ 0.6 · 3★ ≈ 1.0 · 5★ ≈ 1.5
   const mult=starF*Math.min(1.8,1+0.06*(S.day-1))*(has('sign')?1.1:1)*(h>=17&&has('led')?1.25:1)*Math.max(.35,Math.min(1.5,2-courtF()))*(0.35+0.65*COURTS/MAX_COURTS);
   const pB=pk.b*mult*dm;
-  if(S.qB.length<8&&Math.random()<pB){spawnBooking(); if(pk.hot&&S.qB.length<8&&Math.random()<.35)spawnBooking()}
+  if(S.qB.length<7&&Math.random()<pB){spawnBooking(); if(pk.hot&&S.qB.length<7&&Math.random()<.15)spawnBooking()}
   // khách mang đi: giữ quán luôn nhộn nhịp kể cả khi ít sân đang chơi
-  if(S.qD.length<8&&Math.random()<pk.w*starF*dm)spawnDrink(null);
+  if(S.qD.length<7&&Math.random()<pk.w*starF*dm)spawnDrink(null);
   for(const b of S.bookings){
     if(b.start<=S.time&&S.time<b.end){
-      if(S.qD.length<8&&!S.qD.some(o=>o.bid===b.id)&&Math.random()<(pk.hot?0.016:0.011)*dm)spawnDrink(b);
+      if(S.qD.length<7&&!S.qD.some(o=>o.bid===b.id)&&Math.random()<(pk.hot?0.009:0.006)*dm)spawnDrink(b);
       else if(!courtSay[b.court]&&Math.random()<0.004*dm)courtSay[b.court]={t:pick(CHATTER),until:performance.now()+2400};
     }
   }
