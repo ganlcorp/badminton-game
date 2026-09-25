@@ -672,6 +672,37 @@ header{flex-wrap:nowrap;min-width:0}
 .rv-eff{margin-top:5px;font-size:.78rem;font-weight:800;border:2px solid var(--ink);border-radius:10px;padding:1px 8px;display:inline-block}
 .rv-eff.bad{background:#ffd0d6;color:#a3213a}
 .rv-eff.good{background:#c8f5dc;color:#1f6a47}
+
+/* bàn pha nhiều bước */
+.bench{position:relative;display:flex;flex-direction:column;gap:5px;align-items:stretch}
+.bench .cnt{position:absolute;top:-8px;right:-6px;z-index:2;background:var(--ink);color:#fff;border:2px solid #fff;border-radius:10px;font-size:.64rem;font-weight:800;min-width:20px;line-height:15px;padding:0 3px;text-align:center}
+.bench-top{position:relative;height:50px;border:2.5px dashed rgba(29,43,54,.35);border-radius:12px;background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center}
+.bench-top .bt-e{font-size:1.7rem;letter-spacing:-6px}
+.bench-top .bt-e:only-child,.bench-top .bt-e{line-height:1}
+.bench-top.busy{border-style:solid;border-color:var(--orange);animation:benchShake .3s ease-in-out infinite alternate}
+@keyframes benchShake{to{transform:translateY(-1px)}}
+.bench-top .steam{position:absolute;right:8px;top:2px;font-size:1rem;animation:mkSteam 1.2s ease-out infinite}
+.bench-top .brew{position:absolute;left:6px;right:6px;bottom:4px;height:6px;border-radius:3px;background:rgba(0,0,0,.12);overflow:hidden}
+.bench-top .brew i{display:block;height:100%;width:0;background:var(--orange)}
+.steps{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px}
+.stp{display:flex;flex-direction:column;align-items:center;gap:0;border:2.5px solid var(--ink);border-radius:10px;background:#fff;color:#1d2b36;padding:3px 1px;box-shadow:0 2px 0 var(--ink);line-height:1.1}
+.stp .se{font-size:1.2rem}
+.stp .st{font-size:.58rem;font-weight:800}
+.stp.next{background:var(--sun);animation:qnPulse 1s ease-in-out infinite}
+.stp.done{background:#c8f5dc;opacity:.8}
+.stp:active{transform:translateY(2px);box-shadow:none}
+.bench .pr{text-align:center;font-size:.64rem;color:var(--soft);font-weight:700}
+.bench.out .steps,.bench.out .bench-top{opacity:.45;filter:grayscale(.7)}
+.bench.off{opacity:.6}
+@media (prefers-reduced-motion:reduce){.stp.next,.bench-top.busy{animation:none}}
+
+.station{grid-template-columns:1.05fr 1fr 1fr!important;grid-template-areas:"fr tra cau" "fr food food" "mi mi cf"!important}
+.z-cau{flex-direction:column!important}
+.z-cau .tubes{display:none}
+@media (min-width:640px),(orientation:landscape) and (max-height:520px){
+  .station{grid-template-columns:repeat(5,1fr)!important;grid-template-areas:"fr tra cau food food" "fr mi mi cf cf"!important}
+}
+.bench-top .bt-t{font-size:.72rem;font-weight:700;color:#8a97a3}
 </style>
 </head>
 <body>
@@ -1123,7 +1154,14 @@ const UPG={broom:{e:'🧹',cost:200000,t:'Chổi xịn',d:'Chủ quán quét sâ
   fan:{e:'🌬️',cost:300000,t:'Quạt hơi nước ở quầy',d:'Khách gọi đồ chịu chờ lâu hơn 25%'},
   led:{e:'💡',cost:500000,t:'Đèn LED sân',d:'Buổi tối (từ 17h) đông khách hơn 25%'},
   sign:{e:'🪧',cost:350000,t:'Bảng hiệu mới',d:'Cả ngày khách ghé nhiều hơn 10%'}};
-const PREP_T={tra:{ms:700,v:'Đang rót trà'},cf:{ms:2000,v:'Máy đang pha'},mi:{ms:2600,v:'Đang chế nước sôi'}};
+const GAME_SPEED=3.5;
+const PREP_T={tra:{ms:700,v:'Đang rót trà'}};
+// Món làm nhiều bước ở bàn pha: bấm đúng thứ tự, bước cuối chờ một lúc rồi món tự vào khay
+const FLOW={
+  mi:{steps:[['bowl','🥣','Lấy tô'],['noodle','🍜','Bỏ mì'],['water','♨️','Châm nước']],ms:2600,busy:'Đang châm nước sôi',
+      look:['Bàn trống','🥣','🥣🍜','♨️'],need:['Lấy tô trước đã!','Bỏ mì vào tô đi!','Châm nước sôi vào!']},
+  cf:{steps:[['cup','🥛','Lấy ly'],['brew','⚙️','Pha cà phê']],ms:2000,busy:'Máy đang pha cà phê',
+      look:['Chưa có ly','🥛','☕'],need:['Lấy ly trước đã!','Đặt ly vào máy rồi bấm pha!']}};
 const FOOD=['banhmi','xoi','chuoi','mi'];
 const priceOf=id=>(S&&S.prices&&S.prices[id])||IT[id].price;
 const pf=id=>priceOf(id)/IT[id].price;
@@ -1556,8 +1594,21 @@ function decline(){
   finish(r,'qB',true);
 }
 function trayCount(){return Object.values(tray).reduce((a,b)=>a+b,0)}
-let brewing=[];
-const brewCount=id=>brewing.filter(b=>b.id===id).length;
+let brewing=[], bench={};
+function resetBench(){bench={mi:{step:0},cf:{step:0}}}
+resetBench();
+const brewCount=id=>brewing.filter(b=>b.id===id).length+(bench[id]&&bench[id].step>0?1:0);
+function doStep(k,act){
+  if(!cur||cur.type!=='d'||cur.done)return;
+  if(!S.unlocked.includes(k))return ownerSay(`Chưa có ${IT[k].name}, mở ở mục Nâng cấp lúc chuẩn bị nha.`);
+  const F=FLOW[k], B=bench[k], idx=F.steps.findIndex(x=>x[0]===act);
+  if(B.busy)return ownerSay(`${F.busy}, chờ xíu nha!`);
+  if(idx!==B.step)return ownerSay(F.need[B.step]);
+  if(idx===0&&S.stock[k]-(tray[k]||0)-brewCount(k)<=0)return ownerSay(`Tủ hết ${IT[k].name} rồi! Vào Kho mua gấp thôi.`);
+  B.step=idx+1;
+  if(idx===F.steps.length-1){const now=performance.now();B.busy=true;B.start=now;B.end=now+F.ms}
+  buildSheet();
+}
 function addItem(id){
   if(!cur||cur.done)return;
   if(!S.unlocked.includes(id))return ownerSay(`Chưa có ${IT[id].name}, mở ở mục Nâng cấp lúc chuẩn bị nha.`);
@@ -1568,8 +1619,11 @@ function addItem(id){
   tray[id]=(tray[id]||0)+1; buildSheet();
 }
 function tickBrew(){
-  if(!cur||cur.type!=='d'||!brewing.length)return;
+  if(!cur||cur.type!=='d')return;
   const now=performance.now(); let done=false;
+  for(const k in bench){const B=bench[k];if(B.busy&&now>=B.end){tray[k]=(tray[k]||0)+1;bench[k]={step:0};done=true;toast(`${IT[k].e} ${IT[k].name} xong, đã lên khay`,'star')}}
+  document.querySelectorAll('[data-benchbar]').forEach(el=>{const B=bench[el.dataset.benchbar];el.style.width=B&&B.busy?Math.min(100,(now-B.start)/(B.end-B.start)*100)+'%':'0%'});
+  if(!brewing.length){if(done)buildSheet();return}
   brewing=brewing.filter(b=>{if(now>=b.end){tray[b.id]=(tray[b.id]||0)+1;done=true;return false}return true});
   if(done)buildSheet();
   else document.querySelectorAll('[data-brewbar]').forEach(el=>{const id=el.dataset.brewbar;const b=brewing.filter(x=>x.id===id&&x.start<=now)[0];el.style.width=b?Math.min(100,(now-b.start)/(b.end-b.start)*100)+'%':'0%'});
@@ -1577,6 +1631,8 @@ function tickBrew(){
 function give(){
   const o=cur; if(o.done)return;
   if(brewing.length)return ownerSay('Đợi món đang pha xong đã!');
+  const wip=Object.keys(bench).find(k=>bench[k].step>0);
+  if(wip)return ownerSay(`${IT[wip].name} đang làm dở ở bàn pha, làm xong đã nha!`);
   const ids=new Set([...Object.keys(o.order),...Object.keys(tray)]);
   const ok=[...ids].every(id=>(o.order[id]||0)===(tray[id]||0));
   talk(o,'o',`Đồ của ${you(o.name)} đây ạ!`);
@@ -1712,11 +1768,11 @@ function checkStars(){
 }
 
 /* ---------- Sheet ---------- */
-function openCust(id){const c=[...S.qB,...S.qD].find(x=>x.id===id);if(!c)return;cur=c;tray={};brewing=[];tlT0=null;buildSheet();renderChat();showSheet()}
+function openCust(id){const c=[...S.qB,...S.qD].find(x=>x.id===id);if(!c)return;cur=c;tray={};brewing=[];resetBench();tlT0=null;buildSheet();renderChat();showSheet()}
 function openKho(){cur={type:'kho'};buildSheet();renderChat();showSheet()}
 function openReviews(){if(!S)return;cur={type:'rv'};buildSheet();renderChat();showSheet()}
 function showSheet(){$('#backdrop').style.display='block';requestAnimationFrame(()=>$('#sheet').classList.add('open'))}
-function closeSheet(){cur=null;brewing=[];$('#sheet').classList.remove('open');$('#backdrop').style.display='none'}
+function closeSheet(){cur=null;brewing=[];resetBench();$('#sheet').classList.remove('open');$('#backdrop').style.display='none'}
 
 function buildSheet(){
   if(!cur)return;
@@ -1741,7 +1797,8 @@ function buildSheet(){
     let sum=0; const tis=Object.entries(tray).filter(([,n])=>n>0).map(([id,n])=>{sum+=n*priceOf(id);return `<button class="ti" data-take="${id}" aria-label="Bỏ bớt ${IT[id].name}">${IT[id].e}<b>${n}</b></button>`}).join('');
     const checks=Object.entries(o.order).map(([id,n])=>{const h=tray[id]||0;return `<span class="ck ${h===n?'ok':h>n?'ck-over':''}">${IT[id].e} ${h}/${n}${h===n?' ✓':''}</span>`}).join('');
     const extra=Object.keys(tray).filter(id=>!o.order[id]).map(id=>`<span class="ck ck-over">${IT[id].e} dư</span>`).join('');
-    const bw=brewing.length?`${PREP_T[brewing[0].id].v}...`:'';
+    const wk=Object.keys(bench).find(k=>bench[k].step>0);
+    const bw=brewing.length?`${PREP_T[brewing[0].id].v}...`:wk?(bench[wk].busy?`${FLOW[wk].busy}...`:`${IT[wk].name}: bước ${bench[wk].step+1}/${FLOW[wk].steps.length}, ${FLOW[wk].steps[bench[wk].step][2].toLowerCase()}`):'';
     body.innerHTML=`
       <div class="step">${bw?`⏳ ${bw}`:trayCount()?'Đủ món thì bấm Giao cho khách':'Chạm hoặc kéo món ở quầy vào khay'}</div>
       <div class="checks">${checks}${extra}</div>
@@ -1815,13 +1872,25 @@ function sit(id,cls=''){
     <span class="cnt">${left}</span><span class="e">${it.e}</span><b>${it.name}</b><span class="pr">${off?'ngoài menu':left<=0?'<span class="hh">Hết hàng</span>':fmt(priceOf(id))}</span>
     ${P?`<span class="brew"><i data-brewbar="${id}"></i></span>${nb?`<span class="bq">×${nb}</span>`:''}`:''}</div>`;
 }
+function benchHTML(k){
+  if(!S.unlocked.includes(k))return sit(k,'big');
+  const F=FLOW[k], B=bench[k], left=S.stock[k]-(tray[k]||0)-brewCount(k), off=!S.menu.includes(k);
+  const out=left<=0&&B.step===0;
+  return `<div class="bench ${out?'out':''} ${off?'off':''}">
+    <span class="cnt">${Math.max(0,left)}</span>
+    <div class="bench-top ${B.busy?'busy':''}">${B.step===0?`<span class="bt-t">${F.look[0]}</span>`:`<span class="bt-e">${F.look[B.step]}</span>`}${B.busy?`<span class="steam">💨</span>`:''}
+      <span class="brew"><i data-benchbar="${k}"></i></span></div>
+    <div class="steps">${F.steps.map(([a,e,t],i)=>`<button class="stp ${i===B.step&&!B.busy&&!out?'next':''} ${i<B.step?'done':''}" data-step="${k}:${a}"><span class="se">${i<B.step?'✅':e}</span><span class="st">${i+1}. ${t}</span></button>`).join('')}</div>
+    <span class="pr">${off?'ngoài menu':out?'<span class="hh">Hết hàng</span>':`${IT[k].name} · ${fmt(priceOf(k))}`}</span>
+  </div>`;
+}
 function stationHTML(){
   return `<div class="station">
     <div class="zone z-fr"><span class="zl">❄️ Tủ lạnh</span><div class="shelf">${sit('suoi')}${sit('dg')}${sit('tl')}</div></div>
     <div class="zone z-tra"><span class="zl">🧊 Bình trà đá</span>${sit('tra','big')}<div class="cups">🥤🥤🥤</div></div>
-    <div class="zone z-cf"><span class="zl">☕ Máy pha</span>${sit('cf','big')}</div>
+    <div class="zone z-cf"><span class="zl">☕ Cà phê</span>${benchHTML('cf')}</div>
     <div class="zone z-food"><span class="zl">🍱 Tủ kính đồ ăn</span><div class="glass">${sit('banhmi')}${sit('xoi')}${sit('chuoi')}</div></div>
-    <div class="zone z-mi"><span class="zl">♨️ Ấm & mì</span>${sit('mi','big')}</div>
+    <div class="zone z-mi"><span class="zl">♨️ Ấm & mì</span>${benchHTML('mi')}</div>
     <div class="zone z-cau"><span class="zl">🏸 Kệ cầu</span>${sit('cau','big')}<div class="tubes"><i></i><i></i><i></i><i></i></div></div>
   </div>`;
 }
@@ -2237,10 +2306,11 @@ $('#backdrop').onclick=closeSheet;
 $('#ownerFace').onclick=()=>ownerSay(pick(['Cố lên nào!','Khách đông quá trời!','Nhớ quét sân sau mỗi lượt nha!','Sân sạch, khách vui, mình giàu!']));
 $('#sheetBody').addEventListener('click',e=>{
   const row=e.target.closest('[data-court]');if(row)return assign(+row.dataset.court);
+  const stp=e.target.closest('[data-step]');if(stp){const [k,a]=stp.dataset.step.split(':');return doStep(k,a)}
   const take=e.target.closest('[data-take]');if(take){const id=take.dataset.take;if(tray[id]>0){tray[id]--;if(!tray[id])delete tray[id];buildSheet()}return}
   const b=e.target.closest('[data-buy]');if(b)return buyRush(b.dataset.buy);
   const a=e.target.closest('[data-act]');if(!a)return;
-  ({decline,close:closeSheet,give,clear:()=>{tray={};buildSheet()},soldout:soldOut})[a.dataset.act]();
+  ({decline,close:closeSheet,give,clear:()=>{tray={};resetBench();buildSheet()},soldout:soldOut})[a.dataset.act]();
 });
 function resumeGame(){paused=false;last=performance.now();renderHUD()}
 function showPause(){
@@ -2270,7 +2340,7 @@ try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}ca
 $('#ownerFace').innerHTML=avatar(OWNER_LOOK,'happy');
 setInterval(()=>{
   const now=performance.now();let dt=(now-last)/1000;last=now;if(dt>.5)dt=.5;
-  if(S&&!paused&&S.phase==='open')step(dt*5*speed);   // 1 giây thật = 5 phút trong game (1x)
+  if(S&&!paused&&S.phase==='open')step(dt*GAME_SPEED*speed);   // 1x: 1 giây thật = 3,5 phút trong game
   render();
 },100);
 startScreen();
