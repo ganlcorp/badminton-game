@@ -668,6 +668,10 @@ header{flex-wrap:nowrap;min-width:0}
 .cb-empty span,.cb-empty b{color:#ff9aa8!important;text-decoration:line-through}
 .warn-empty{background:#fff0b3;border:2.5px solid var(--ink);border-radius:12px;padding:6px 10px;font-size:.8rem;line-height:1.35;margin-bottom:8px}
 .warn-empty button{margin-top:4px;display:block;border:2.5px solid var(--ink);background:#fff;color:#1d2b36;border-radius:10px;padding:1px 10px;font-weight:800;font-size:.8rem;box-shadow:0 2px 0 var(--ink)}
+
+.rv-eff{margin-top:5px;font-size:.78rem;font-weight:800;border:2px solid var(--ink);border-radius:10px;padding:1px 8px;display:inline-block}
+.rv-eff.bad{background:#ffd0d6;color:#a3213a}
+.rv-eff.good{background:#c8f5dc;color:#1f6a47}
 </style>
 </head>
 <body>
@@ -1271,7 +1275,7 @@ const tierOf=r=>r.stars<=2?'bad':r.stars===3?'mid':'good';
 function reviewHTML(r){
   const tier=tierOf(r);
   const tail=r.reply
-    ?`<div class="reply"><b>Chủ quán:</b> ${esc(r.reply)}</div>${r.follow?`<div class="follow ${r.tone||''}"><b>${r.h}:</b> ${r.follow}</div>`:''}${r.pile?`<div class="pile">${r.pile}</div>`:''}`
+    ?`<div class="reply"><b>Chủ quán:</b> ${esc(r.reply)}</div>${r.follow?`<div class="follow ${r.tone||''}"><b>${r.h}:</b> ${r.follow}</div>`:''}${r.pile?`<div class="pile">${r.pile}</div>`:''}${r.fined?`<div class="rv-eff bad">−${fmt(r.fined)} bồi thường vì chửi khách</div>`:''}${r.bonus?`<div class="rv-eff good">+${r.bonus.toFixed(2)}★ uy tín cho sao quán</div>`:''}`
     :`<div class="rbox"><textarea data-draft="${r.id}" maxlength="200" placeholder="Viết phản hồi cho ${r.h}...">${esc(drafts[r.id]||'')}</textarea>
       <div class="row">${SUG[tier].map(t=>`<button class="sug" data-fill="${r.id}" data-text="${esc(t)}">${esc(t.length>26?t.slice(0,24)+'…':t)}</button>`).join('')}<button class="send" data-send="${r.id}">Gửi</button></div></div>`;
   return `<div class="rv"><div class="face">${avatar(r.look,r.stars>=4?'happy':r.stars>=3?'meh':'angry')}</div><div><b>${r.h}</b><span class="st">${starStr(r.stars)}</span><p>${r.t}</p><small>❤️ ${r.likes} lượt thích, ngày ${r.day}</small>${tail}</div></div>`;
@@ -1283,19 +1287,26 @@ function replyReview(id,text){
   r.reply=text.slice(0,200); r.tone=tone;
   if(tone==='rude'){
     r.follow=pick(FOLLOW.rude); r.stars=1; r.likes+=150+rand(500); r.pile=pick(PILE);
-    ownerSay('Ối, lỡ lời rồi... Drama lan khắp mạng!');
+    const cash=Math.min(Math.max(0,S.money),RUDE_FINE); S.money-=cash; S.debt+=RUDE_FINE-cash; S.stats.replyFine=(S.stats.replyFine||0)+RUDE_FINE; r.fined=RUDE_FINE;
+    toast('−'+fmt(RUDE_FINE)+' vì chửi khách','bad');
+    ownerSay(`Ối, lỡ lời rồi... Drama lan khắp mạng, mất ${fmt(RUDE_FINE)} bồi thường!`);
   } else if(tone==='nice'){
     r.follow=pick(FOLLOW.nice[tier]); const n=hits(text,POS_WORDS,POS_ASCII);
     r.stars=Math.min(5,r.stars+(tier==='bad'&&n>=2?2:1));
-    r.likes+=20+rand(120); ownerSay('Phản hồi khéo là khách thương liền!');
+    r.likes+=20+rand(120);
+    const hb=S.hist[S.day]||(S.hist[S.day]={s:0,n:0,c:[0,0,0,0,0]}); const add=tier==='bad'?REPLY_BONUS*1.5:REPLY_BONUS;
+    const room=Math.max(0,REPLY_BONUS_MAX-replyBonus()); const got=Math.min(add,room); hb.b=(hb.b||0)+got; r.bonus=got;
+    if(got>0)setTimeout(()=>toast(`+${got.toFixed(2)}★ uy tín nhờ phản hồi tốt`,'star'),400);
+    ownerSay(got>0?'Phản hồi khéo là khách thương liền, sao quán nhích lên!':'Phản hồi khéo lắm! (điểm cộng uy tín tuần này đã tối đa)');
   } else {
     r.follow=pick(FOLLOW.plain[tier]);
     ownerSay(tier==='bad'?'Hơi hời hợt, lần sau nhớ xin lỗi khách nha.':'Ok, cũng được.');
   }
   // khách sửa lại số sao -> tính lại trung bình sao của ngày họ viết review
   const d=r.stars-old;
+  S.rating=calcRating();
   if(d){const h=S.hist[r.day]||(S.hist[r.day]={s:0,n:0});
-    if(!r.counted){h.s+=r.stars;h.n++;r.counted=true} else h.s+=d;
+    if(h.n>0)h.s=Math.max(h.n,Math.min(5*h.n,h.s+d)); else {h.s=r.stars;h.n=1}  // review là 1 khách đã chấm trong ngày: chỉ đổi số sao của khách đó
     S.rating=calcRating();
     toast(`${r.h} sửa thành ${'★'.repeat(r.stars)}`,d<0?'bad':'star');}
   delete drafts[id]; save(); return true;
@@ -1319,11 +1330,17 @@ let courtSay={}, sayTimer=null, lastMood='';
 // Sao quán = trung bình sao ngày của 7 ngày gần nhất.
 const PRIOR_N=3, PRIOR_STAR=4;
 function dayAvg(h){return h?(h.s+PRIOR_STAR*PRIOR_N)/(h.n+PRIOR_N):PRIOR_STAR}
+const REPLY_BONUS=0.03, REPLY_BONUS_MAX=0.3, RUDE_FINE=100000;
+function replyBonus(){ // điểm cộng uy tín từ phản hồi tích cực, còn hiệu lực trong 7 ngày
+  if(!S||!S.hist)return 0; let b=0;
+  for(const d in S.hist)if(+d>S.day-7)b+=S.hist[d].b||0;
+  return Math.min(REPLY_BONUS_MAX,b);
+}
 function calcRating(){
   if(!S||!S.hist)return 4;
   const days=Object.keys(S.hist).map(Number).filter(d=>S.hist[d].n>0).sort((a,b)=>b-a).slice(0,7);
-  if(!days.length)return S.hist[S.day]?dayAvg(S.hist[S.day]):PRIOR_STAR;
-  return days.reduce((a,d)=>a+dayAvg(S.hist[d]),0)/days.length;
+  const base=!days.length?(S.hist[S.day]?dayAvg(S.hist[S.day]):PRIOR_STAR):days.reduce((a,d)=>a+dayAvg(S.hist[d]),0)/days.length;
+  return Math.min(5,base+replyBonus());
 }
 function rate(n,who){
   n=Math.max(1,Math.min(5,Math.round(n)));
@@ -1744,7 +1761,7 @@ function buildSheet(){
       +`<p class="hint">Tiền hiện có: <b>${fmt(S.money)}</b></p>`;
   } else {
     $('#sheetTitle').textContent='Review về quán';
-    body.innerHTML=S.reviews.length?`<p class="hint">Tự viết phản hồi. Xin lỗi, hứa khắc phục thì được cộng sao. Chửi khách là bị chửi lại và trừ sao.</p><div class="rvs">${S.reviews.map(reviewHTML).join('')}</div>`:`<p class="empty">Chưa có review nào. Hết ngày đầu tiên là dân mạng bắt đầu nhận xét đó!</p>`;
+    body.innerHTML=S.reviews.length?`<p class="hint">Tự viết phản hồi. Lời lẽ tích cực (xin lỗi, khắc phục, cảm ơn, ạ...) được cộng điểm uy tín vào sao quán (tối đa +0,3★ trong 7 ngày). Chửi hoặc cà khịa khách bị trừ ${fmt(RUDE_FINE)} và khách hạ còn 1★.</p><p class="hint">Điểm uy tín đang có: <b>+${replyBonus().toFixed(2)}★</b></p><div class="rvs">${S.reviews.map(reviewHTML).join('')}</div>`:`<p class="empty">Chưa có review nào. Hết ngày đầu tiên là dân mạng bắt đầu nhận xét đó!</p>`;
   }
 }
 function buildTimeline(){
@@ -1975,7 +1992,7 @@ function showSummary(){
       <tr><td>😠 Khách không vui</td><td>${st.lost}</td></tr>
       <tr><td>🧹 Khách vô sân dơ</td><td>${lg.dirty||0}</td></tr>
       <tr><td>⭐ Sao khách chấm hôm nay<br><small style="color:var(--soft)">${(S.hist[S.day]&&S.hist[S.day].n)||0} lượt chấm${S.hist[S.day]&&S.hist[S.day].c?': '+S.hist[S.day].c.map((x,i)=>x?`${x}×${i+1}★`:'').filter(Boolean).reverse().join(', '):''}</small></td><td>${S.hist[S.day]&&S.hist[S.day].n?(S.hist[S.day].s/S.hist[S.day].n).toFixed(1):'–'}</td></tr>
-      <tr><td>⭐ Sao quán (TB 7 ngày gần nhất)</td><td>${S.rating.toFixed(1)}</td></tr>
+      <tr><td>⭐ Sao quán (TB 7 ngày gần nhất)${replyBonus()>0?`<br><small style="color:var(--soft)">đã gồm +${replyBonus().toFixed(2)}★ uy tín từ phản hồi tốt</small>`:''}</td><td>${S.rating.toFixed(1)}</td></tr>
       ${st.fine?`<tr><td>😱 Mất do tụt dưới 3 sao</td><td>−${fmt(st.fine)}</td></tr>`:''}
       <tr class="total"><td>💰 Lãi hôm nay</td><td>${fmt(profit)}</td></tr>
       <tr><td>🏦 Tiền lãi ngân hàng (${Math.round(INTEREST*100)}%/ngày, cộng vào nợ)</td><td>+${fmt(st.interest||0)}</td></tr>
@@ -1984,7 +2001,7 @@ function showSummary(){
       <tr><td>💼 Tài sản ròng (tiền mặt − nợ)</td><td>${fmt(S.money-S.debt)}</td></tr>
     </table>
     <h3>📱 Dân mạng nói gì về quán hôm nay</h3>
-    <p>Tự viết phản hồi cho khách. Lời lẽ cầu thị (xin lỗi, khắc phục, cải thiện, cố gắng, ạ...) thì khách dịu lại. Cà khịa hay chửi khách là khách chửi lại, drama lan khắp mạng!</p>
+    <p>Tự viết phản hồi cho khách. Lời lẽ cầu thị (xin lỗi, khắc phục, cải thiện, cố gắng, ạ...) thì khách dịu lại và quán được <b>cộng điểm uy tín vào sao</b>. Cà khịa hay chửi khách là khách chửi lại, drama lan khắp mạng và <b>bị trừ ${fmt(RUDE_FINE)}</b>!</p>
     <div class="rvs">${rv.map(reviewHTML).join('')}</div>
     <button class="btn ghost press" id="sumKey">💾 Lấy mã lưu game</button>
     <button class="btn press" id="nextDay">Sang ngày ${S.day+1}</button></div>`;
@@ -2098,7 +2115,7 @@ function snapshot(){
   const nextDay=S.phase!=='prep';
   const stock={};for(const it of ITEMS){const n=nextDay&&it.perish?0:S.stock[it.id];if(n)stock[it.id]=n}
   const db=Math.round(S.phase==='open'?S.debt*(1+INTEREST):S.debt);
-  const hs={};Object.keys(S.hist||{}).map(Number).sort((a,b)=>b-a).slice(0,7).forEach(d=>hs[d]=[S.hist[d].s,S.hist[d].n]);
+  const hs={};Object.keys(S.hist||{}).map(Number).sort((a,b)=>b-a).slice(0,7).forEach(d=>hs[d]=[S.hist[d].s,S.hist[d].n,+(S.hist[d].b||0).toFixed(3)]);
   return {v:1,hs,co:COURTS,db,l0:S.loan0,fd:S.fineDay,n:S.name,d:S.day+(nextDay?1:0),m:Math.round(S.money),r:+S.rating.toFixed(2),s:stock,u:S.unlocked,mn:S.menu,p:S.prices,c:S.courtRate,g:Object.keys(S.upg||{}).filter(k=>S.upg[k]),
     ls:nextDay?S.stats.sold:S.lastSold,
     rv:S.reviews.slice(0,6).map(r=>({h:r.h,s:r.stars,t:r.t,l:r.likes,d:r.day,...(r.reply?{re:r.reply,f:r.follow,o:r.tone}:{})}))};
@@ -2120,7 +2137,7 @@ async function readKey(key){
   const o=JSON.parse(json); if(!o||o.v!==1||!o.d)throw new Error('Mã không đọc được.');
   const st=newGame(cleanName(o.n)||undefined,o.co||MAX_COURTS);
   st.debt=o.db||0; st.loan0=o.l0||st.debt; st.fineDay=o.fd||0;
-  st.hist={};for(const d in (o.hs||{}))st.hist[d]={s:o.hs[d][0],n:o.hs[d][1]};
+  st.hist={};for(const d in (o.hs||{}))st.hist[d]={s:o.hs[d][0],n:o.hs[d][1],b:o.hs[d][2]||0};
   Object.assign(st,{day:o.d,money:o.m,rating:clamp(o.r||4),phase:'prep',
     stock:Object.assign(Object.fromEntries(ITEMS.map(i=>[i.id,0])),o.s||{}),
     unlocked:(o.u||START_ITEMS).filter(id=>IT[id]),menu:(o.mn||o.u||START_ITEMS).filter(id=>IT[id]),
