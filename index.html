@@ -663,6 +663,11 @@ header{flex-wrap:nowrap;min-width:0}
 .peak{background:#fff0b3;color:#1d2b36;border:3px solid var(--ink);border-radius:12px;padding:0 8px;font-size:.78rem;white-space:nowrap;position:relative;z-index:1}
 .peak.hot{background:#ff5a7a;color:#fff;text-shadow:0 1px 0 var(--ink);animation:qnPulse 1.2s ease-in-out infinite}
 .peak[hidden]{display:none}
+
+.sit .hh{color:#d6334f;font-weight:800}
+.cb-empty span,.cb-empty b{color:#ff9aa8!important;text-decoration:line-through}
+.warn-empty{background:#fff0b3;border:2.5px solid var(--ink);border-radius:12px;padding:6px 10px;font-size:.8rem;line-height:1.35;margin-bottom:8px}
+.warn-empty button{margin-top:4px;display:block;border:2.5px solid var(--ink);background:#fff;color:#1d2b36;border-radius:10px;padding:1px 10px;font-weight:800;font-size:.8rem;box-shadow:0 2px 0 var(--ink)}
 </style>
 </head>
 <body>
@@ -1422,13 +1427,13 @@ function spawnDrink(b){
 
 // nhịp khách theo giờ: b = khách hỏi sân/phút game, w = khách mua mang đi/phút game
 function peakInfo(h){
-  if(h<8)   return {b:.05, w:.012,hot:true, lbl:'🔥 Cao điểm sáng'};
-  if(h<11)  return {b:.022,w:.008,hot:false,lbl:''};
-  if(h<13)  return {b:.028,w:.011,hot:false,lbl:'🍱 Giờ trưa'};
-  if(h<16)  return {b:.018,w:.007,hot:false,lbl:''};
-  if(h<17)  return {b:.035,w:.01, hot:false,lbl:'⏰ Sắp tan làm'};
-  if(h<21)  return {b:.07, w:.015,hot:true, lbl:'🔥 Cao điểm tối'};
-  return          {b:.018,w:.007,hot:false,lbl:''};
+  if(h<8)   return {b:.062,w:.015,hot:true, lbl:'🔥 Cao điểm sáng'};
+  if(h<11)  return {b:.026,w:.01, hot:false,lbl:''};
+  if(h<13)  return {b:.034,w:.013,hot:false,lbl:'🍱 Giờ trưa'};
+  if(h<16)  return {b:.022,w:.009,hot:false,lbl:''};
+  if(h<17)  return {b:.042,w:.012,hot:false,lbl:'⏰ Sắp tan làm'};
+  if(h<21)  return {b:.09, w:.018,hot:true, lbl:'🔥 Cao điểm tối'};
+  return          {b:.021,w:.008,hot:false,lbl:''};
 }
 const IMP1=['Em ơi, sao rồi?','Lâu vậy em...','Còn đó không em?','Nhanh giùm nha em!'];
 const IMP2=['Chờ lâu quá à!','Thôi, sắp đi về luôn nè!','Hết kiên nhẫn rồi nha!'];
@@ -1469,12 +1474,12 @@ function step(dm){
   const starF=0.35+0.23*S.rating;                       // 1★ ≈ 0.6 · 3★ ≈ 1.0 · 5★ ≈ 1.5
   const mult=starF*Math.min(1.8,1+0.06*(S.day-1))*(has('sign')?1.1:1)*(h>=17&&has('led')?1.25:1)*Math.max(.35,Math.min(1.5,2-courtF()))*(0.35+0.65*COURTS/MAX_COURTS);
   const pB=pk.b*mult*dm;
-  if(S.qB.length<7&&Math.random()<pB){spawnBooking(); if(pk.hot&&S.qB.length<7&&Math.random()<.15)spawnBooking()}
+  if(S.qB.length<7&&Math.random()<pB){spawnBooking(); if(pk.hot&&S.qB.length<7&&Math.random()<.25)spawnBooking()}
   // khách mang đi: giữ quán luôn nhộn nhịp kể cả khi ít sân đang chơi
   if(S.qD.length<7&&Math.random()<pk.w*starF*dm)spawnDrink(null);
   for(const b of S.bookings){
     if(b.start<=S.time&&S.time<b.end){
-      if(S.qD.length<7&&!S.qD.some(o=>o.bid===b.id)&&Math.random()<(pk.hot?0.009:0.006)*dm)spawnDrink(b);
+      if(S.qD.length<7&&!S.qD.some(o=>o.bid===b.id)&&Math.random()<(pk.hot?0.012:0.008)*dm)spawnDrink(b);
       else if(!courtSay[b.court]&&Math.random()<0.004*dm)courtSay[b.court]={t:pick(CHATTER),until:performance.now()+2400};
     }
   }
@@ -1790,7 +1795,7 @@ function sit(id,cls=''){
   if(lock)return `<div class="sit lock ${cls}"><span class="e">${it.e}</span><b>${it.name}</b><span class="lk">🔒 Nâng cấp</span></div>`;
   const P=PREP_T[id], nb=brewCount(id);
   return `<div class="sit ${cls} ${left<=0?'out':''} ${off?'off':''}" data-add="${id}" role="button" tabindex="0" aria-label="${it.name}, còn ${left}">
-    <span class="cnt">${left}</span><span class="e">${it.e}</span><b>${it.name}</b><span class="pr">${off?'ngoài menu':fmt(priceOf(id))}</span>
+    <span class="cnt">${left}</span><span class="e">${it.e}</span><b>${it.name}</b><span class="pr">${off?'ngoài menu':left<=0?'<span class="hh">Hết hàng</span>':fmt(priceOf(id))}</span>
     ${P?`<span class="brew"><i data-brewbar="${id}"></i></span>${nb?`<span class="bq">×${nb}</span>`:''}`:''}</div>`;
 }
 function stationHTML(){
@@ -1807,7 +1812,7 @@ function stationHTML(){
 /* ---------- Day flow ---------- */
 let prepStaff=0, prepTab='hang', prepPay=0;
 function chalkboard(){
-  const rows=S.menu.map(id=>`<div class="cb-row"><span>${IT[id].e} ${IT[id].name}</span><i></i><b>${Math.round(priceOf(id)/1000)}k</b></div>`).join('');
+  const rows=S.menu.map(id=>{const empty=S.stock[id]+(prepCart[id]||0)*IT[id].pack<=0;return `<div class="cb-row ${empty?'cb-empty':''}"><span>${IT[id].e} ${IT[id].name}</span><i></i><b>${empty?'hết':Math.round(priceOf(id)/1000)+'k'}</b></div>`}).join('');
   return `<div class="chalk"><div class="cb-title">📋 Menu hôm nay</div>
     <div class="cb-grid">${rows||'<p>Chưa có món nào trong menu</p>'}</div>
     <div class="cb-court">🏸 Sân: ${Math.round(S.courtRate.day/1000)}k/giờ ngày · ${Math.round(S.courtRate.peak/1000)}k/giờ tối</div></div>`;
@@ -1879,6 +1884,7 @@ function showPrep(){
     <div class="ptabs" role="tablist">${tabs.map(([k,e,t])=>`<button role="tab" aria-selected="${prepTab===k}" data-tab="${k}"><span>${e}</span>${t}${k==='rv'&&u?`<b>${u}</b>`:''}</button>`).join('')}</div>
     <div class="ptab-body" id="prepList">${prepTabHTML(total)}</div>
     <div class="prep-sum">
+      ${(()=>{const em=S.menu.filter(id=>S.stock[id]+(prepCart[id]||0)*IT[id].pack<=0);return em.length?`<div class="warn-empty">⚠️ Trong menu nhưng chưa có hàng: <b>${em.map(id=>IT[id].e+' '+IT[id].name).join(', ')}</b>. Khách gọi là phải báo hết món. <button id="fillEmpty">Nhập mỗi món 1 lần</button></div>`:''})()}
       <div class="ps-line"><span>Nhập hàng${prepStaff?` + ${prepStaff} NV`:''}${prepPay?' + trả nợ':''}</span><b>−${fmt(total)}</b><span>Còn lại</span><b>${fmt(S.money-total)}</b></div>
       <button class="btn press" id="openShop">Nhập hàng & mở cửa · ${fmt(total)}</button>
     </div></div>`;
@@ -1903,7 +1909,10 @@ function showPrep(){
     if(dec){const id=dec.dataset.dec;if(prepCart[id]){prepCart[id]--;keepScroll(showPrep)}return}
     const ul=g('[data-unlock]');
     if(ul){const id=ul.dataset.unlock,c=UNLOCK[id].cost;if(S.money-total<c)return toast('Không đủ tiền','bad');
-      S.money-=c;S.stats.cost+=c;S.stats.start-=0;S.unlocked.push(id);S.menu.push(id);save();ownerSay(`Mở bán ${IT[id].name} rồi! Nhớ nhập hàng nha.`);return keepScroll(showPrep)}
+      S.money-=c;S.stats.cost+=c;S.unlocked.push(id);S.menu.push(id);
+      if(S.money-total>=IT[id].packCost){prepCart[id]=(prepCart[id]||0)+1;ownerSay(`Mở bán ${IT[id].name} rồi! Đã thêm ${IT[id].pack} ${IT[id].name.toLowerCase()} vào giỏ nhập hàng.`)}
+      else ownerSay(`Mở bán ${IT[id].name} rồi! Vào tab Nhập hàng để nhập ${IT[id].name.toLowerCase()} nha, chưa nhập là tủ trống.`);
+      save();return keepScroll(showPrep)}
     const up=g('[data-upg]');
     if(up){const k=up.dataset.upg,c=UPG[k].cost;if(S.money-total<c)return toast('Không đủ tiền','bad');
       S.money-=c;S.stats.cost+=c;S.upg[k]=1;save();ownerSay(`Lắp ${UPG[k].t} xong, xịn ghê!`);return keepScroll(showPrep)}
@@ -1914,10 +1923,12 @@ function showPrep(){
     const mt=g('[data-menu]');
     if(mt){const id=mt.dataset.menu;if(S.menu.includes(id)){if(S.menu.length<=1)return toast('Menu phải có ít nhất 1 món','bad');S.menu=S.menu.filter(x=>x!==id)}else S.menu.push(id);save();return keepScroll(showPrep)}
   };
+  if($('#fillEmpty'))$('#fillEmpty').onclick=()=>{let spent=total,added=0;for(const id of S.menu){if(S.stock[id]+(prepCart[id]||0)*IT[id].pack>0)continue;if(spent+IT[id].packCost>S.money)continue;prepCart[id]=(prepCart[id]||0)+1;spent+=IT[id].packCost;added++}
+    toast(added?`Đã thêm ${added} món vào giỏ`:'Không đủ tiền','bad'.slice(added?3:0));keepScroll(showPrep)};
   if($('#autoFill'))$('#autoFill').onclick=()=>{
     prepCart={}; let spent=prepStaff*WAGE;
     for(const it of ITEMS){ if(!S.unlocked.includes(it.id))continue;
-      const want=Math.ceil((S.lastSold[it.id]||0)*1.2)-S.stock[it.id];
+      const want=Math.max(Math.ceil((S.lastSold[it.id]||0)*1.2),S.menu.includes(it.id)?Math.ceil(it.pack*.5):0)-S.stock[it.id];
       let packs=Math.max(0,Math.ceil(want/it.pack));
       while(packs>0&&spent+packs*it.packCost>S.money)packs--;
       if(packs){prepCart[it.id]=packs;spent+=packs*it.packCost}
