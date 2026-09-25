@@ -483,7 +483,7 @@ header{flex-wrap:nowrap;min-width:0}
 .step{background:var(--blue);color:#fff;border:3px solid var(--ink);border-radius:12px;text-align:center;font-weight:800;padding:3px 10px;margin-bottom:8px;font-size:.9rem;text-shadow:0 1px 0 var(--ink)}
 .checks{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:6px}
 .ck{border:2.5px solid var(--ink);border-radius:10px;background:#fff;color:#1d2b36;padding:0 8px;font-weight:800;font-size:.85rem}
-.ck.ok{background:#c8f5dc}.ck.over{background:#ffd0d6}
+.ck.ok{background:#c8f5dc}.ck.ck-over{background:#ffd0d6}
 .station{display:grid;grid-template-columns:1.05fr 1fr 1fr;grid-template-areas:"fr tra cf" "fr food food" "mi cau cau";gap:16px 10px;padding:16px 10px 10px;border:3px solid var(--ink);border-radius:18px;
   background:linear-gradient(#f7e2c8 0 72%,#d8a173 72%);box-shadow:inset 0 -8px 0 #c98f62}
 .zone{position:relative;border:3px solid var(--ink);border-radius:14px;padding:14px 6px 6px;box-shadow:0 3px 0 var(--ink);background:var(--paper);display:flex;flex-direction:column;align-items:stretch;gap:6px;min-width:0}
@@ -659,6 +659,10 @@ header{flex-wrap:nowrap;min-width:0}
 .quick-n{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:10px}
 .quick-n button{border:2.5px solid #1d2b36;background:#fff;color:#1d2b36;border-radius:999px;padding:1px 10px;font-weight:800;font-size:.8rem}
 .quick-n button.on{background:#34c46e;color:#fff}
+
+.peak{background:#fff0b3;color:#1d2b36;border:3px solid var(--ink);border-radius:12px;padding:0 8px;font-size:.78rem;white-space:nowrap;position:relative;z-index:1}
+.peak.hot{background:#ff5a7a;color:#fff;text-shadow:0 1px 0 var(--ink);animation:qnPulse 1.2s ease-in-out infinite}
+.peak[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -702,7 +706,7 @@ header{flex-wrap:nowrap;min-width:0}
 
   <section class="box hall">
     <i class="bunting"></i>
-    <h2><span class="lbl">Sân <small id="courtSum"></small></span><span class="staffs" id="staffs" hidden></span></h2>
+    <h2><span class="lbl">Sân <small id="courtSum"></small></span><span class="peak" id="peakTag" hidden></span><span class="staffs" id="staffs" hidden></span></h2>
     <div class="courts" id="courts"></div>
   </section>
 
@@ -1402,6 +1406,7 @@ function orderPool(){
   return ['tra','tra','suoi','dg','dg','tl','mi','mi','banhmi','chuoi','cau','cau'];
 }
 function spawnDrink(b){
+  b=b||{id:'walk'+(++uid),name:pick(NAMES),court:0};
   let pool=[];for(const id of orderPool()){if(!S.menu.includes(id))continue;const w=Math.max(.15,2-pf(id));if(Math.random()<w/1.3)pool.push(id)}
   if(!pool.length)pool=S.menu.length?[pick(S.menu)]:['tra'];
   const order={}, n=1+rand(3);
@@ -1409,11 +1414,22 @@ function spawnDrink(b){
   const pat=Math.round((150+rand(60))*(has('fan')?1.25:1));
   const c={id:++uid,type:'d',bid:b.id,name:b.name,look:makeLook(b.name),court:b.court,order,pat,patMax:pat,warned:0,chat:[]};
   const hasFood=Object.keys(order).some(id=>['banhmi','xoi','chuoi','mi'].includes(id));
-  talk(c,'c',pick([`Em ơi, cho ${orderText(order)} nha!`,`Sân ${b.court} nè, lấy giùm ${orderText(order)}!`,hasFood?`Đói quá, cho ${orderText(order)} nha em!`:`Khát quá, ${orderText(order)} nha em!`]));
-  courtSay[b.court]={t:hasFood?'Em ơi, đói bụng!':'Em ơi, cho nước!',until:performance.now()+2600};
+  if(b.court){talk(c,'c',pick([`Em ơi, cho ${orderText(order)} nha!`,`Sân ${b.court} nè, lấy giùm ${orderText(order)}!`,hasFood?`Đói quá, cho ${orderText(order)} nha em!`:`Khát quá, ${orderText(order)} nha em!`]));
+  courtSay[b.court]={t:hasFood?'Em ơi, đói bụng!':'Em ơi, cho nước!',until:performance.now()+2600};}
+  else talk(c,'c',pick([`Ghé mua ${orderText(order)} mang đi nha em!`,`Đi ngang qua, cho ${orderText(order)} mang về nha!`,`Em ơi bán ${orderText(order)}, mình mang đi nè!`]));
   S.qD.push(c);
 }
 
+// nhịp khách theo giờ: b = khách hỏi sân/phút game, w = khách mua mang đi/phút game
+function peakInfo(h){
+  if(h<8)   return {b:.075,w:.018,hot:true, lbl:'🔥 Cao điểm sáng'};
+  if(h<11)  return {b:.03, w:.012,hot:false,lbl:''};
+  if(h<13)  return {b:.04, w:.016,hot:false,lbl:'🍱 Giờ trưa'};
+  if(h<16)  return {b:.026,w:.011,hot:false,lbl:''};
+  if(h<17)  return {b:.05, w:.014,hot:false,lbl:'⏰ Sắp tan làm'};
+  if(h<21)  return {b:.11, w:.022,hot:true, lbl:'🔥 Cao điểm tối'};
+  return          {b:.025,w:.01, hot:false,lbl:''};
+}
 const IMP1=['Em ơi, sao rồi?','Lâu vậy em...','Còn đó không em?','Nhanh giùm nha em!'];
 const IMP2=['Chờ lâu quá à!','Thôi, sắp đi về luôn nè!','Hết kiên nhẫn rồi nha!'];
 function step(dm){
@@ -1449,12 +1465,16 @@ function step(dm){
     if(!b.over&&S.time>=b.end){b.over=true;S.courts[b.court-1].dirty=true}
   }
   const h=S.time/60;
-  const base=h<8.5?0.035:h<16?0.012:h<17?0.025:h<21?0.045:0.008;
-  const mult=(0.4+S.rating*0.17)*(1+0.08*(S.day-1))*(has('sign')?1.1:1)*(h>=17&&has('led')?1.25:1)*Math.max(.3,Math.min(1.5,2-courtF()));
-  if(S.qB.length<6&&Math.random()<base*mult*(0.3+0.7*COURTS/MAX_COURTS)*dm)spawnBooking();
+  const pk=peakInfo(h);
+  const starF=0.35+0.23*S.rating;                       // 1★ ≈ 0.6 · 3★ ≈ 1.0 · 5★ ≈ 1.5
+  const mult=starF*Math.min(1.8,1+0.06*(S.day-1))*(has('sign')?1.1:1)*(h>=17&&has('led')?1.25:1)*Math.max(.35,Math.min(1.5,2-courtF()))*(0.35+0.65*COURTS/MAX_COURTS);
+  const pB=pk.b*mult*dm;
+  if(S.qB.length<8&&Math.random()<pB){spawnBooking(); if(pk.hot&&S.qB.length<8&&Math.random()<.35)spawnBooking()}
+  // khách mang đi: giữ quán luôn nhộn nhịp kể cả khi ít sân đang chơi
+  if(S.qD.length<8&&Math.random()<pk.w*starF*dm)spawnDrink(null);
   for(const b of S.bookings){
     if(b.start<=S.time&&S.time<b.end){
-      if(S.qD.length<6&&!S.qD.some(o=>o.bid===b.id)&&Math.random()<0.006*dm)spawnDrink(b);
+      if(S.qD.length<8&&!S.qD.some(o=>o.bid===b.id)&&Math.random()<(pk.hot?0.016:0.011)*dm)spawnDrink(b);
       else if(!courtSay[b.court]&&Math.random()<0.004*dm)courtSay[b.court]={t:pick(CHATTER),until:performance.now()+2400};
     }
   }
@@ -1546,7 +1566,7 @@ function give(){
   talk(o,'c',pick(['Mát quá!','Cảm ơn em nha!','Đã ghê!','Chuẩn luôn!','Ngon xỉu!']));
   toast('+'+fmt(sum));
   const low=ITEMS.filter(it=>S.stock[it.id]<4&&S.stats.sold[it.id]);
-  ownerSay(low.length?`Tủ sắp hết ${low[0].name} rồi!`:`Sân ${o.court}: "${lastLine(o)}"`);
+  ownerSay(low.length?`Tủ sắp hết ${low[0].name} rồi!`:`${o.court?'Sân '+o.court:o.name}: "${lastLine(o)}"`);
   finish(o,'qD',true);
 }
 function soldOut(){
@@ -1596,7 +1616,8 @@ function renderCourts(){
   }
   for(let c=COURTS+1;c<=MAX_COURTS;c++)html+=`<div class="court locked" data-c="${c}"><div class="mini"><span class="lk">🔒</span></div><span class="cnum">Sân ${c}</span><small>Chưa mở</small></div>`;
   const el=$('#courts'); if(el.dataset.h!==html){el.dataset.h=html;el.innerHTML=html}
-  $('#courtSum').textContent=`${busy}/${COURTS} đang chơi`+(dirty?` · ${dirty} dơ`:'');
+  const pk=peakInfo(S.time/60); $('#courtSum').textContent=`${busy}/${COURTS} đang chơi`+(dirty?` · ${dirty} dơ`:'');
+  const pt=$('#peakTag'); if(pt){pt.textContent=pk.lbl;pt.hidden=!pk.lbl;pt.classList.toggle('hot',pk.hot)}
   const st=$('#staffs'), sh=S.staff?STAFF_LOOKS.slice(0,S.staff).map(l=>`<span class="face">${avatar(l,'happy')}</span>`).join('')+`<span>thời vụ</span>`:'';
   st.hidden=!S.staff; if(st.dataset.h!==sh){st.dataset.h=sh;st.innerHTML=sh}
 }
@@ -1631,7 +1652,7 @@ function renderCounter(k,q,emptyTxt){
     if(!f){stage.innerHTML=`<div class="empty-ctr"><span>😴</span>${emptyTxt}</div>`;lastFirst[k]=null}
     else{
       const isNew=lastFirst[k]!==f.id; lastFirst[k]=f.id;
-      const tag=f.type==='d'?`<b>Sân ${f.court}:</b> `:(f.count>1?`<b>2 sân:</b> `:'');
+      const tag=f.type==='d'?`<b>${f.court?'Sân '+f.court:'🛍️ Mang đi'}:</b> `:(f.count>1?`<b>2 sân:</b> `:'');
       const rest=q.slice(1,5).map(c=>`<button class="hd ${moodOf(c)}" data-id="${c.id}" aria-label="${c.name}">${avatar(c.look,moodOf(c))}</button>`).join('');
       stage.innerHTML=`<div class="bub ${isNew?'new':''}">${tag}${esc(lastLine(f))}</div>
         <button class="chibi ${moodOf(f)} ${isNew?'new':''}" data-id="${f.id}" aria-label="Phục vụ ${f.name}">${avatar(f.look,moodOf(f))}</button>
@@ -1694,10 +1715,10 @@ function buildSheet(){
     buildTimeline();
   } else if(cur.type==='d'){
     const o=cur;
-    $('#sheetTitle').textContent=`${o.name} (sân ${o.court})`;
+    $('#sheetTitle').textContent=o.court?`${o.name} (sân ${o.court})`:`${o.name} (mang đi)`;
     let sum=0; const tis=Object.entries(tray).filter(([,n])=>n>0).map(([id,n])=>{sum+=n*priceOf(id);return `<button class="ti" data-take="${id}" aria-label="Bỏ bớt ${IT[id].name}">${IT[id].e}<b>${n}</b></button>`}).join('');
-    const checks=Object.entries(o.order).map(([id,n])=>{const h=tray[id]||0;return `<span class="ck ${h===n?'ok':h>n?'over':''}">${IT[id].e} ${h}/${n}${h===n?' ✓':''}</span>`}).join('');
-    const extra=Object.keys(tray).filter(id=>!o.order[id]).map(id=>`<span class="ck over">${IT[id].e} dư</span>`).join('');
+    const checks=Object.entries(o.order).map(([id,n])=>{const h=tray[id]||0;return `<span class="ck ${h===n?'ok':h>n?'ck-over':''}">${IT[id].e} ${h}/${n}${h===n?' ✓':''}</span>`}).join('');
+    const extra=Object.keys(tray).filter(id=>!o.order[id]).map(id=>`<span class="ck ck-over">${IT[id].e} dư</span>`).join('');
     const bw=brewing.length?`${PREP_T[brewing[0].id].v}...`:'';
     body.innerHTML=`
       <div class="step">${bw?`⏳ ${bw}`:trayCount()?'Đủ món thì bấm Giao cho khách':'Chạm hoặc kéo món ở quầy vào khay'}</div>
