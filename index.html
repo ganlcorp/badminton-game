@@ -526,6 +526,139 @@ header{flex-wrap:nowrap;min-width:0}
 .card .up-row .btn,.card .prep-tools .btn{width:auto;margin:0;flex:none}
 .ptabs button{min-width:0;font-size:.66rem;padding:4px 1px}
 .ptabs button span{font-size:1.15rem}
+
+/* v10: tên quán + mã lưu game */
+.modal{position:fixed;inset:0;z-index:150;display:none;align-items:center;justify-content:center;padding:20px calc(20px + env(safe-area-inset-right,0px)) 20px calc(20px + env(safe-area-inset-left,0px));background:rgba(20,30,50,.5)}
+.modal.on{display:flex}
+.mcard{width:100%;max-width:420px;max-height:92%;overflow:auto;background:#fffef7;color:#1d2b36;border:3px solid #1d2b36;border-radius:24px;box-shadow:0 6px 0 #1d2b36;padding:18px;animation:tin .25s ease}
+.mcard h2{margin:0 0 6px;font-size:1.35rem;justify-content:center;text-align:center}
+.mcard p{margin:0 0 10px;line-height:1.45;font-weight:500;font-size:.92rem}
+.mcard .mface{width:80px;height:80px;margin:-58px auto 6px;border-radius:50%;background:#ffd23f;border:3px solid #1d2b36;box-shadow:0 4px 0 #1d2b36;overflow:hidden;display:flex}
+.mcard input,.mcard textarea{width:100%;border:3px solid #1d2b36;border-radius:14px;padding:8px 12px;font:inherit;font-size:1.05rem;font-weight:700;background:#fff;color:#1d2b36}
+.mcard textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78rem;font-weight:600;min-height:120px;word-break:break-all;resize:vertical}
+.mcard .mrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.mcard .mrow .btn{flex:1;min-width:120px;width:auto}
+.mcard .sugs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.mcard .sugs button{border:2px solid #1d2b36;background:#fff3c4;color:#1d2b36;border-radius:999px;padding:1px 10px;font-size:.8rem;font-weight:700}
+.mcard .err{color:#d6334f;font-weight:700;font-size:.85rem;min-height:1.2em;margin-top:6px}
+.mcard .note{font-size:.8rem;color:#5f6f7a}
+.key-fab{bottom:calc(86px + env(safe-area-inset-bottom,0px));background:var(--mint);font-size:1.5rem}
+@media (orientation:landscape) and (max-height:520px){.key-fab{bottom:calc(72px + env(safe-area-inset-bottom,0px))}.mcard{max-width:560px}.mcard .mface{display:none}}
+@media (max-width:370px){.key-fab{bottom:calc(78px + env(safe-area-inset-bottom,0px))}}
+.shop-name{display:inline-flex;align-items:center;gap:6px;border:2.5px solid var(--ink);background:#fff;border-radius:12px;padding:0 10px;font-weight:800;font-size:.9rem;color:#1d2b36;margin-top:2px}
+.shop-name.btnlike{cursor:pointer}
+.prep-keys{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.prep-keys button{border:2.5px solid var(--ink);background:#fff;color:#1d2b36;border-radius:10px;padding:0 8px;font-weight:800;font-size:.78rem;box-shadow:0 2px 0 var(--ink)}
+
+.ps-line{grid-template-columns:auto 1fr auto 1fr;font-size:.82rem;margin-bottom:6px;align-items:center}
+.ps-line b{text-align:left}
+.prep-sum{padding-top:8px}
+.prep-sum .btn{padding:7px}
+
+/* v11: quầy gọn có nhân vật chibi + bong bóng chat, thanh chủ quán, menu tạm dừng */
+.app{padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))!important}
+.owner.owner-bar{position:relative;left:auto;bottom:auto;z-index:1;display:flex;align-items:center;gap:8px;margin:0 0 12px;pointer-events:auto}
+.owner-bar .me-wrap{position:relative;flex:none}
+.owner-bar .me{width:58px;height:58px;box-shadow:0 4px 0 var(--ink)}
+.owner-bar .tagname{left:50%;transform:translateX(-50%);bottom:-8px;white-space:nowrap;font-size:.6rem}
+.owner-bar .ob{flex:1;min-width:0;margin:0;max-width:none;opacity:.75;transform:none;border-radius:16px;font-size:.84rem;position:relative;min-height:44px;display:flex;align-items:center}
+.owner-bar .ob.on{opacity:1;animation:obPop .25s ease}
+@keyframes obPop{from{transform:scale(.96)}}
+.owner-bar .ob::before{content:"";position:absolute;left:-10px;top:50%;margin-top:-7px;border:7px solid transparent;border-right-color:var(--ink)}
+.owner-bar .phone{position:relative;right:auto;bottom:auto;width:46px;height:46px;flex:none;font-size:1.35rem;border-radius:14px;box-shadow:0 4px 0 var(--ink)}
+#keyBtn{background:var(--mint)}
+.ctrs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ctr{position:relative;border:3px solid var(--ink);border-radius:18px;overflow:hidden;box-shadow:0 5px 0 var(--ink);cursor:pointer;background:linear-gradient(#fff6e6,#ffe7c9)}
+.ctr-h{display:flex;align-items:center;gap:6px;padding:4px 8px;color:#fff;font-weight:800;font-size:.86rem;text-shadow:0 2px 0 var(--ink);border-bottom:3px solid var(--ink);white-space:nowrap}
+.ctr.book .ctr-h{background:linear-gradient(90deg,var(--blue),#5ab0ff)}
+.ctr.drink .ctr-h{background:linear-gradient(90deg,var(--pink),#ff9fcb)}
+.qn{background:#fff;color:#1d2b36;text-shadow:none;border:2px solid var(--ink);border-radius:10px;min-width:22px;text-align:center;font-size:.72rem;line-height:16px}
+.qn.hot{background:var(--sun);animation:qnPulse 1s ease-in-out infinite}
+@keyframes qnPulse{50%{transform:scale(1.18)}}
+.kho-mini{margin-left:auto;border:2px solid var(--ink);background:#fff;color:#1d2b36;text-shadow:none;border-radius:9px;font-size:.7rem;font-weight:800;padding:0 6px;box-shadow:0 2px 0 var(--ink)}
+.stage{position:relative;height:168px}
+.stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:30px;background:linear-gradient(#e2a86c,#c98f62);border-top:3px solid var(--ink);z-index:2}
+.bub{position:absolute;left:6px;right:6px;top:6px;z-index:3;background:#fff;color:#1d2b36;border:2.5px solid var(--ink);border-radius:14px;padding:4px 8px;font-size:.76rem;font-weight:600;line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;box-shadow:0 2px 0 var(--ink)}
+.bub b{color:var(--coral)}
+.bub.new{animation:bubPop .35s cubic-bezier(.3,1.7,.5,1)}
+@keyframes bubPop{from{transform:scale(.5) translateY(10px);opacity:0}}
+.bub-tail{position:absolute;left:34px;top:0;z-index:4;width:0;height:0;border:8px solid transparent;border-top-color:var(--ink)}
+.chibi{position:absolute;left:8px;bottom:14px;z-index:1;width:70px;height:74px;border:0;background:none;padding:0;cursor:pointer}
+.chibi .ava{width:70px;height:70px;filter:drop-shadow(0 3px 0 rgba(0,0,0,.2))}
+.chibi.new{animation:arrive .45s cubic-bezier(.3,1.5,.5,1)}
+@keyframes arrive{from{transform:translateX(-80px) rotate(-12deg)}}
+.chibi.angry .ava{animation:cShake .45s ease-in-out infinite}
+.chibi.happy .ava{animation:cNod 1.8s ease-in-out infinite}
+.tapme{position:absolute;left:62px;bottom:52px;z-index:3;font-size:1.3rem;animation:tapHint 1.2s ease-in-out infinite;pointer-events:none}
+@keyframes tapHint{50%{transform:translate(4px,4px) scale(.9)}}
+.ctr .pat{position:absolute;left:8px;right:8px;bottom:9px;z-index:3;height:10px}
+.line{position:absolute;right:6px;bottom:28px;z-index:1;display:flex;flex-direction:row-reverse;align-items:flex-end}
+.line .hd{width:34px;height:34px;margin-left:-10px;border-radius:50%;border:2px solid var(--ink);background:#fff;overflow:hidden;display:flex;padding:0}
+.line .hd.angry{border-color:var(--coral);box-shadow:0 0 0 2px var(--coral)}
+.line .more{align-self:center;margin-left:-4px;background:var(--ink);color:#fff;border-radius:10px;font-size:.66rem;font-weight:800;padding:0 5px;position:relative;z-index:2}
+.empty-ctr{position:absolute;inset:0 0 30px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#8a7a6c;font-weight:700;font-size:.82rem;text-align:center;gap:2px}
+.empty-ctr span{font-size:1.8rem;animation:zz 2.4s ease-in-out infinite}
+@keyframes zz{50%{transform:translateY(-4px)}}
+.ctr:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+@media (max-width:480px){
+  .sign{margin:0 0 10px}.sign div{font-size:1.05rem;padding:0 14px}
+  .mini{aspect-ratio:5/8}
+  .hall{padding-bottom:10px;margin-bottom:12px}
+}
+@media (max-width:370px){.stage{height:156px}.chibi,.chibi .ava{width:58px;height:58px}.tapme{left:52px}.bub{font-size:.7rem}.owner-bar .me{width:50px;height:50px}.owner-bar .phone{width:40px;height:40px}}
+@media (orientation:landscape) and (max-height:520px){.stage{height:140px}.bub{-webkit-line-clamp:2}.owner-bar .me{width:48px;height:48px}.owner-bar .phone{width:42px;height:42px}}
+@media (prefers-reduced-motion:reduce){.chibi,.chibi .ava,.bub,.tapme,.qn,.empty-ctr span{animation:none!important}}
+/* menu tạm dừng */
+.pmenu .btn{width:100%;margin-top:8px;font-size:1.05rem;padding:9px}
+.pmenu .pinfo{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;font-weight:800;margin-bottom:6px}
+
+@media (max-width:420px){.ctr-h{font-size:.78rem;gap:4px;padding:4px 6px}.kho-mini{font-size:0;padding:1px 5px}.kho-mini::before{content:"📦";font-size:.85rem}}
+.ctr-h{overflow:hidden}
+
+/* ngang: sân bên trái, chủ quán + 2 quầy bên phải, không cần cuộn */
+@media (orientation:landscape) and (max-height:520px){
+  .app{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);grid-template-areas:"hd hd" "hall own" "hall ctr";grid-template-rows:auto auto 1fr;column-gap:12px}
+  .app > header{grid-area:hd}
+  .app > .sign{display:none}
+  .app > .hall{grid-area:hall;margin:0;align-self:start}
+  .app > .owner-bar{grid-area:own;margin:0 0 8px}
+  .app > .ctrs{grid-area:ctr;align-self:start}
+  .courts{grid-template-columns:repeat(5,1fr)!important;gap:8px 6px}
+  .mini{max-width:54px;aspect-ratio:5/8}
+  .hall{padding:24px 8px 8px}
+  .owner-bar .ob{font-size:.76rem;min-height:38px;padding:3px 8px}
+}
+
+@media (orientation:landscape) and (max-height:520px){.mini{max-width:44px}.courts{gap:4px 6px;padding-top:2px}.hall h2{margin-bottom:6px}.court small{font-size:.58rem}.app > header{padding:4px 0}}
+
+/* v12: vay vốn */
+.court.locked{opacity:.55;cursor:not-allowed}
+.court.locked .mini{background:repeating-linear-gradient(45deg,#d8d2c8 0 8px,#cbc4b8 8px 16px);display:flex;align-items:center;justify-content:center}
+.court.locked .mini::before,.court.locked .mini::after{display:none}
+.court.locked .lk{font-size:1.3rem;font-style:normal}
+.loan-pick{display:flex;align-items:center;justify-content:center;gap:16px;margin:4px 0 10px}
+.loan-pick button{width:48px;height:48px;border-radius:16px;border:3px solid #1d2b36;background:#fff;box-shadow:0 4px 0 #1d2b36;font-size:1.6rem;font-weight:800}
+.loan-pick div{text-align:center;line-height:1}
+.loan-pick b{font-size:2.6rem;display:block}
+.loan-pick small{font-weight:700;color:#5f6f7a}
+.courts-mini{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin:6px 0 10px}
+.courts-mini i{font-style:normal;text-align:center;font-size:.7rem;font-weight:800;border:2px solid #1d2b36;border-radius:6px;padding:6px 0;background:repeating-linear-gradient(45deg,#e2ddd4 0 5px,#d4cec4 5px 10px);color:#8a8378}
+.courts-mini i.on{background:#34c46e;color:#fff;text-shadow:0 1px 0 #1d2b36}
+.bank-card{border:3px solid #1d2b36;border-radius:14px;background:linear-gradient(135deg,#eef6ff,#dcecff);padding:8px 12px;margin-bottom:8px}
+.bk-row{display:flex;justify-content:space-between;gap:10px;font-size:.88rem;padding:2px 0}
+.bk-row b{text-align:right}
+.bar-debt{height:10px;border:2px solid #1d2b36;border-radius:6px;background:#fff;overflow:hidden;margin-top:6px}
+.bar-debt i{display:block;height:100%;background:linear-gradient(90deg,#ff9f1c,#ff5a7a)}
+.pay-chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0}
+.pay-chips button{border:2.5px solid var(--ink);background:#fff;color:#1d2b36;border-radius:999px;padding:2px 10px;font-weight:800;font-size:.8rem;box-shadow:0 2px 0 var(--ink)}
+
+.toast.star{background:#ffd23f;color:#1d2b36}
+.lvl{text-align:center;font-weight:800;font-size:.88rem;border:2.5px solid #1d2b36;border-radius:12px;padding:3px 8px;margin:0 0 8px}
+.lvl-e{background:#c8f5dc}.lvl-m{background:#fff0b3}.lvl-h{background:#ffc2cc}
+.quick-n{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:10px}
+.quick-n button{border:2.5px solid #1d2b36;background:#fff;color:#1d2b36;border-radius:999px;padding:1px 10px;font-weight:800;font-size:.8rem}
+.quick-n button.on{background:#34c46e;color:#fff}
 </style>
 </head>
 <body>
@@ -565,7 +698,7 @@ header{flex-wrap:nowrap;min-width:0}
     <div class="pill stars" id="stars"></div>
   </header>
 
-  <div class="sign"><div>🏸 Sân Cầu Lông Nhà Mình</div></div>
+  <div class="sign"><div id="signName">🏸 Sân Cầu Lông Nhà Mình</div></div>
 
   <section class="box hall">
     <i class="bunting"></i>
@@ -573,24 +706,24 @@ header{flex-wrap:nowrap;min-width:0}
     <div class="courts" id="courts"></div>
   </section>
 
-  <div class="desks">
-    <section class="box desk book">
-      <h2>🗓️ Quầy đặt sân</h2>
-      <div class="q" id="qB"></div>
+  <div class="owner owner-bar" id="owner">
+    <div class="me-wrap"><div class="me" id="ownerFace" title="Chủ quán"></div><span class="tagname">Chủ quán</span></div>
+    <div class="ob on" id="ownerSay">Chạm vào khách ở quầy để phục vụ nha!</div>
+    <button class="phone press" id="keyBtn" aria-label="Lấy mã lưu game">💾</button>
+    <button class="phone press" id="rvBtn" aria-label="Xem review">📱<span class="badge" id="rvBadge" hidden>0</span></button>
+  </div>
+
+  <div class="ctrs">
+    <section class="ctr book" id="qB" aria-label="Quầy đặt sân">
+      <div class="ctr-h">🗓️ Đặt sân <span class="qn" id="qBn">0</span></div>
+      <div class="stage" id="qBs"></div>
     </section>
-    <section class="box desk drink">
-      <h2>🥤 Quầy nước & đồ ăn <button class="ib kho-btn press" id="khoBtn">📦 Kho</button></h2>
-      <div class="q" id="qD"></div>
+    <section class="ctr drink" id="qD" aria-label="Quầy nước và đồ ăn">
+      <div class="ctr-h">🥤 Nước & đồ ăn <span class="qn" id="qDn">0</span><button class="kho-mini press" id="khoBtn">📦 Kho</button></div>
+      <div class="stage" id="qDs"></div>
     </section>
   </div>
 </div>
-
-<div class="owner" id="owner">
-  <div class="me" id="ownerFace" title="Chủ quán"></div>
-  <span class="tagname">Chủ quán</span>
-  <div class="ob" id="ownerSay"></div>
-</div>
-<button class="phone press" id="rvBtn" aria-label="Xem review">📱<span class="badge" id="rvBadge" hidden>0</span></button>
 
 <div class="backdrop" id="backdrop"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true">
@@ -604,6 +737,7 @@ header{flex-wrap:nowrap;min-width:0}
   <div id="sheetBody"></div>
 </div>
 <div class="toasts" id="toasts"></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="mcard" id="mcard"></div></div>
 <div class="prep-bg" id="prepBg"><div class="mk-in"><svg class="mk-art" viewBox="0 0 520 860" preserveAspectRatio="xMidYMin slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 <defs><linearGradient id="mkSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffa9b8"/><stop offset=".6" stop-color="#ffe0b3"/><stop offset="1" stop-color="#fff3d6"/></linearGradient></defs>
 <rect width="520" height="860" fill="url(#mkSky)"/>
@@ -929,22 +1063,26 @@ header{flex-wrap:nowrap;min-width:0}
 <div class="sc-ui">
   <div class="saveline" id="saveLine"></div>
   <button class="sbtn" id="sPlay">Chơi tiếp</button>
-  <div class="sc-links"><button class="slink" id="sGuide">Hướng dẫn</button><button class="slink small" id="sFresh" hidden>Chơi lại từ đầu</button></div>
+  <div class="sc-links"><button class="slink" id="sGuide">Hướng dẫn</button><button class="slink" id="sImport">Nhập mã lưu game</button><button class="slink small" id="sFresh" hidden>Chơi lại từ đầu</button></div>
 </div>
-<div class="sver">v0.6</div>
+<div class="sver">v0.7</div>
 <div class="guide" id="guide"><div class="gcard">
   <h2>Cách chơi</h2>
-  <p>🏸 Bạn là chủ sân cầu lông 10 sân, mở cửa 6:00 đến 22:00.</p>
+  <p>🏦 Vay ngân hàng để mở sân, mỗi sân 50 triệu. Lãi 1% mỗi ngày cộng dồn, sáng nào cũng có thể trả bớt nợ. Tụt dưới 3★ là mất 10 triệu.</p>
+  <p>🏸 Quán mở cửa 6:00 đến 22:00.</p>
   <p>📦 Sáng sớm nhập nước, đồ ăn theo số tiền đang có. Đồ tươi bán không hết là bỏ. Có thể thuê nhân viên thời vụ dọn sân.</p>
   <p>🗓️ Khách hỏi sân: xem lịch, tìm sân trống đúng giờ rồi xếp. Báo hết sân sai là khách giận.</p>
   <p>🧹 Chơi xong sân sẽ dơ. Chạm vào sân để quét trước khi nhóm sau vô.</p>
   <p>🥤 Người đang chơi gọi nước, đồ ăn, mua cầu. Bỏ đúng món lên khay rồi giao.</p>
-  <p>📱 Cuối ngày đọc review của dân mạng và phản hồi lại để giữ sao cho quán.</p>
+  <p>⭐ Mỗi khách phục vụ xong sẽ chấm 1–5★. Sao quán là trung bình sao khách chấm của 7 ngày gần nhất.</p>
+  <p>📱 Cuối ngày đọc review và tự viết phản hồi. Xin lỗi, hứa khắc phục thì khách sửa sao lên. Chửi khách là khách chửi lại kiểu Gen Z và hạ còn 1★.</p>
   <button class="sbtn" id="gClose" style="width:100%;font-size:1.15rem">Đã hiểu!</button>
 </div></div>
 </div></div>
 <script>
-const OPEN=360, CLOSE=1320, PEAK=1020, COURTS=10, W=28, CLEAN_MIN=12, STAFF_MIN=15, RUSH=1.3, WAGE=180000, MAX_STAFF=3;
+const MAX_COURTS=10, COURT_COST=50000000, INTEREST=0.01, STAR_FINE=10000000, START_CASH=2000000;
+let COURTS=10;
+const OPEN=360, CLOSE=1320, PEAK=1020, W=28, CLEAN_MIN=12, STAFF_MIN=15, RUSH=1.3, WAGE=180000, MAX_STAFF=3;
 const STAFF_LOOKS=[{skin:'#f1c19b',hair:'#1b1b1b',style:'spiky',shirt:'#63e6be',band:'#ffd23f'},{skin:'#fbd9bd',hair:'#7a4a26',style:'bun',shirt:'#63e6be'},{skin:'#d9a07a',hair:'#2b1a12',style:'short',shirt:'#63e6be',glasses:true}];
 const RATE_DAY=70000, RATE_PEAK=100000;
 const ITEMS=[
@@ -1094,7 +1232,7 @@ function genReviews(){
   const out=[],used=new Set();
   for(let i=0;i<40&&out.length<n;i++){
     const k=pick(pool),t=pick(RV[k].t);if(used.has(t))continue;used.add(t);
-    out.push({id:'r'+S.day+'_'+(++uid),h:pick(HANDLES),stars:pick(RV[k].s),t,likes:3+rand(900),day:S.day,look:makeLook(pick(NAMES))});
+    out.push({id:'r'+S.day+'_'+(++uid),h:pick(HANDLES),stars:pick(RV[k].s),t,likes:3+rand(900),day:S.day,look:makeLook(pick(NAMES)),counted:false});
   }
   return out;
 }
@@ -1102,7 +1240,7 @@ const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 const drafts={};
 const POS_WORDS=['ạ','dạ','sửa','hứa','mong','tặng','iu','yêu','thương','ghi nhận','tiếp thu','khắc phục','cải thiện','cố gắng','xin lỗi','cảm ơn','cám ơn','thông cảm','rút kinh nghiệm','lần sau','quay lại','trân trọng','thành thật','hẹn gặp','chân thành','sẽ tốt hơn','nâng cấp'];
 const POS_ASCII=['khac phuc','cai thien','co gang','xin loi','cam on','thong cam','rut kinh nghiem','tiep thu','ghi nhan'];
-const BAD_WORDS=['ngu','ngáo','khùng','điên','hâm','láo','xạo','chó','cút','câm','đéo','đếch','kệ','đm','dm','đcm','dcm','vcl','vl','cc','clm','cl','lol','mày','tao','cmm','đĩ','dở hơi','óc chó','đồ ngu','ai mượn','không thích thì','khỏi tới','đừng tới','biến đi','im đi','nói nhảm','vớ vẩn','tào lao','mặc kệ','kệ bạn','tại bạn','mắc gì','liên quan gì','ăn vạ','xàm','xàm xí','bố láo','mất dạy','vô học','trẻ trâu','ảo tưởng'];
+const BAD_WORDS=['ngu','ngáo','khùng','điên','hâm','láo','xạo','chó','cút','câm','đéo','đếch','kệ','đm','dm','đcm','dcm','vcl','vl','cc','clm','cl','lol','mày','tao','cmm','đĩ','dở hơi','óc chó','đồ ngu','ai mượn','không thích thì','khỏi tới','đừng tới','biến đi','im đi','nói nhảm','vớ vẩn','tào lao','mặc kệ','kệ bạn','tại bạn','mắc gì','liên quan gì','ăn vạ','xàm','xàm xí','bố láo','mất dạy','vô học','trẻ trâu','ảo tưởng','hãm','hãm tài','khó ưa','khách gì kì','đòi hỏi','rảnh','nhảm','phiền','ai cho','đéo cần','kệ mẹ','đồ khùng','cà khịa','chê thì','ráng chịu','ở nhà đi','thích thì','không cần'];
 function noAcc(t){return t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d')}
 function hits(text,list,ascii){
   const t=' '+text.toLowerCase().normalize('NFC').replace(/[^\p{L}\p{N}]+/gu,' ')+' ';
@@ -1112,11 +1250,11 @@ function hits(text,list,ascii){
 }
 function judge(text){const bad=hits(text,BAD_WORDS),good=hits(text,POS_WORDS,POS_ASCII);return bad?'rude':good?'nice':'plain'}
 const FOLLOW={
-  nice:{bad:['Thấy chủ quán thành tâm vậy thì cho quán cơ hội nữa nha 🫶','Oke, lần sau quay lại xem quán cải thiện sao 👀','Chủ quán dễ thương ghê, tha lỗi á 😆','Được, quán có tâm vậy thì mình sửa lại 4 sao nha ⭐'],
+  nice:{bad:['Rep vậy là green flag rồi, cho quán thêm cơ hội 💚','Chủ quán có tâm ghê, 10 điểm không có nhưng 🥹','Okela, thấy thành ý rồi, sửa sao lại cho quán nha 🌟','Thấy chủ quán thành tâm vậy thì cho quán cơ hội nữa nha 🫶','Oke, lần sau quay lại xem quán cải thiện sao 👀','Chủ quán dễ thương ghê, tha lỗi á 😆','Được, quán có tâm vậy thì mình sửa lại 4 sao nha ⭐'],
         mid:['Chủ quán cầu tiến ghê, sẽ ủng hộ tiếp 👍','Oke chờ quán lên level 📈'],
-        good:['Hihi chủ quán dễ thương quá, mãi keo 🥰','Iu quán 3000, cuối tuần rủ hội tới 🫶']},
-  rude:['Ủa chủ quán ăn nói kiểu gì dợ? Thái độ vậy ai thèm tới 😤','Chửi khách luôn hả? Để tui share bài này cho cả xóm đọc 📢','Quán gì mà chủ nóng như lò vi sóng, 1 sao không hơn 🤬','Nói chuyện kiểu đó bảo sao sân vắng hoe, bye bye 👋','Trời đất, chủ quán cà khịa khách luôn, xin phép né 🚩'],
-  plain:{bad:['Ờ, vậy thôi hả 😐','Trả lời cho có ghê 🙂'],mid:['Ừm oke 🙂'],good:['Hihi 😊','Oke chủ quán 👌']}
+        good:['Chủ quán rep dễ thương xỉu, mãi iu 🫶','Slay luôn chủ ơi, cuối tuần kéo cả hội tới 🔥','Hihi chủ quán dễ thương quá, mãi keo 🥰','Iu quán 3000, cuối tuần rủ hội tới 🫶']},
+  rude:['Ủa alo? Chủ quán nói chuyện kì dợ, red flag từ chủ tới sân luôn 🚩🚩','Chủ quán gắt ghê, tưởng đang coi drama TikTok 🍿 1 sao cho chừa nha','Nói vậy là toang rồi đó chủ ơi, unfollow liền 🫵','Khẩu nghiệp ghê, karma tới liền á 🤡 xin phép né quán','Thái độ vậy là ét o ét rồi, cả hội tui bye bye quán 👋','Chủ quán cà khịa khách luôn? Chê, chê thật sự 🙄','Ủa chủ quán ăn nói kiểu gì dợ? Thái độ vậy ai thèm tới 😤','Chửi khách luôn hả? Để tui share bài này cho cả xóm đọc 📢','Quán gì mà chủ nóng như lò vi sóng, 1 sao không hơn 🤬','Nói chuyện kiểu đó bảo sao sân vắng hoe, bye bye 👋','Trời đất, chủ quán cà khịa khách luôn, xin phép né 🚩'],
+  plain:{bad:['Ờ, vậy thôi hả 😐','Trả lời cho có ghê 🙂','Rep lỏ ghê, hông thấy xin lỗi gì hết 😶'],mid:['Ừm oke 🙂'],good:['Hihi 😊','Oke chủ quán 👌']}
 };
 const PILE=['@hong.drama: Hóng drama quán này quá 🍿','@anhtu.99: Chủ quán gắt ghê, né né 😬','@mai.chill: Thôi đổi sân khác cho lành 🫣'];
 const SUG={bad:['Dạ quán xin lỗi ạ, tụi mình sẽ khắc phục liền','Quán sẽ cố gắng cải thiện, cảm ơn bạn góp ý ạ'],mid:['Cảm ơn bạn, quán sẽ cải thiện thêm ạ'],good:['Cảm ơn bạn nhiều ạ, hẹn gặp lại trên sân!']};
@@ -1132,23 +1270,26 @@ function reviewHTML(r){
 function replyReview(id,text){
   const r=S.reviews.find(x=>x.id===id); if(!r||r.reply)return false;
   text=(text||'').trim(); if(!text){toast('Viết gì đó rồi hãy gửi nha','bad');return false}
-  const tier=tierOf(r), tone=judge(text); let d=0;
+  const tier=tierOf(r), tone=judge(text), old=r.stars;
   r.reply=text.slice(0,200); r.tone=tone;
   if(tone==='rude'){
-    r.follow=pick(FOLLOW.rude); r.stars=1; r.likes+=150+rand(500); r.pile=pick(PILE); d=-0.15;
+    r.follow=pick(FOLLOW.rude); r.stars=1; r.likes+=150+rand(500); r.pile=pick(PILE);
     ownerSay('Ối, lỡ lời rồi... Drama lan khắp mạng!');
   } else if(tone==='nice'){
     r.follow=pick(FOLLOW.nice[tier]); const n=hits(text,POS_WORDS,POS_ASCII);
-    d=tier==='bad'?Math.min(.08,.04+.01*n):tier==='mid'?.03:.03;
-    if(tier==='bad'&&r.stars<4&&Math.random()<.5)r.stars++;
+    r.stars=Math.min(5,r.stars+(tier==='bad'&&n>=2?2:1));
     r.likes+=20+rand(120); ownerSay('Phản hồi khéo là khách thương liền!');
   } else {
-    r.follow=pick(FOLLOW.plain[tier]); d=tier==='bad'?-0.01:0.01;
+    r.follow=pick(FOLLOW.plain[tier]);
     ownerSay(tier==='bad'?'Hơi hời hợt, lần sau nhớ xin lỗi khách nha.':'Ok, cũng được.');
   }
-  S.rating=clamp(S.rating+d); delete drafts[id];
-  toast((d>=0?'+':'−')+Math.abs(d).toFixed(2)+' ★',d>=0?'':'bad');
-  save(); return true;
+  // khách sửa lại số sao -> tính lại trung bình sao của ngày họ viết review
+  const d=r.stars-old;
+  if(d){const h=S.hist[r.day]||(S.hist[r.day]={s:0,n:0});
+    if(!r.counted){h.s+=r.stars;h.n++;r.counted=true} else h.s+=d;
+    S.rating=calcRating();
+    toast(`${r.h} sửa thành ${'★'.repeat(r.stars)}`,d<0?'bad':'star');}
+  delete drafts[id]; save(); return true;
 }
 function rvEvents(root,rerender){
   root.addEventListener('input',e=>{const t=e.target.closest('[data-draft]');if(t)drafts[t.dataset.draft]=t.value});
@@ -1165,10 +1306,29 @@ function unreplied(){return S?S.reviews.filter(r=>!r.reply).length:0}
 let S=null, uid=0, cur=null, tray={}, speed=1, paused=true, last=performance.now(), tlT0=null, prepCart={};
 let courtSay={}, sayTimer=null, lastMood='';
 
+// Mỗi khách chấm 1–5★. Sao ngày = trung bình sao khách hôm đó (làm mượt nhẹ khi còn ít khách).
+// Sao quán = trung bình sao ngày của 7 ngày gần nhất.
+const PRIOR_N=3, PRIOR_STAR=4;
+function dayAvg(h){return h?(h.s+PRIOR_STAR*PRIOR_N)/(h.n+PRIOR_N):PRIOR_STAR}
+function calcRating(){
+  if(!S||!S.hist)return 4;
+  const days=Object.keys(S.hist).map(Number).filter(d=>S.hist[d].n>0).sort((a,b)=>b-a).slice(0,7);
+  if(!days.length)return S.hist[S.day]?dayAvg(S.hist[S.day]):PRIOR_STAR;
+  return days.reduce((a,d)=>a+dayAvg(S.hist[d]),0)/days.length;
+}
+function rate(n,who){
+  n=Math.max(1,Math.min(5,Math.round(n)));
+  const h=S.hist[S.day]||(S.hist[S.day]={s:0,n:0,c:[0,0,0,0,0]});
+  h.s+=n;h.n++;if(h.c)h.c[n-1]++;
+  S.rating=calcRating();
+  toast(`${who?who+' chấm ':''}${'★'.repeat(n)}`,n<=2?'bad':'star');
+  return n;
+}
 function cleanCourts(){return Array.from({length:COURTS},()=>({dirty:false}))}
+const tr=n=>(n/1e6).toLocaleString('vi-VN',{maximumFractionDigits:1})+' tr';
 function dayState(money){return {time:OPEN,bookings:[],qB:[],qD:[],courts:cleanCourts(),jobs:[],staff:0,log:{},
   stats:{court:0,drink:0,cost:0,wage:0,served:0,lost:0,start:money,waste:0,sold:{}}}}
-function newGame(){const m=2000000;return Object.assign({day:1,money:m,rating:4,phase:'prep',reviews:[],unread:0,lastSold:{},
+function newGame(name,courts){courts=Math.max(1,Math.min(MAX_COURTS,courts||4));COURTS=courts;const m=START_CASH;return Object.assign({hist:{},name:name||'Sân Cầu Lông Nhà Mình',courtsOpen:courts,debt:courts*COURT_COST,loan0:courts*COURT_COST,wasBelow:false,fineDay:0,day:1,money:m,rating:4,phase:'prep',reviews:[],unread:0,lastSold:{},
   unlocked:[...START_ITEMS],menu:[...START_ITEMS],prices:{},courtRate:{day:RATE_DAY,peak:RATE_PEAK},upg:{},
   stock:{tra:20,suoi:12,dg:12,tl:6,cf:0,cau:12,banhmi:0,xoi:0,chuoi:0,mi:0}},dayState(m))}
 function norm(d){
@@ -1181,6 +1341,12 @@ function norm(d){
   if(d.todayReviews){d.todayIds=d.todayReviews.map(r=>r.id);delete d.todayReviews}
   d.log=d.log||{};d.reviews=d.reviews||[];d.unread=d.unread||0;d.lastSold=d.lastSold||{};
   d.phase=d.phase||'open';
+  d.name=d.name||'Sân Cầu Lông Nhà Mình';
+  if(!d.hist){d.hist={};if(d.day>1)d.hist[d.day-1]={s:Math.round((d.rating||4)*5),n:5}}
+  d.courtsOpen=Math.max(1,Math.min(MAX_COURTS,d.courtsOpen||MAX_COURTS)); COURTS=d.courtsOpen;
+  d.debt=d.debt||0; d.loan0=d.loan0||d.debt; d.fineDay=d.fineDay||0; if(d.wasBelow===undefined)d.wasBelow=(d.rating||4)<3;
+  { const keep=S; S=d; d.rating=calcRating(); S=keep; }
+  if(d.courts)while(d.courts.length<COURTS)d.courts.push({dirty:false});
   if(!d.unlocked)d.unlocked=ITEMS.map(i=>i.id);
   if(!d.menu)d.menu=[...d.unlocked];
   d.prices=d.prices||{}; d.courtRate=d.courtRate||{day:RATE_DAY,peak:RATE_PEAK}; d.upg=d.upg||{};
@@ -1197,7 +1363,7 @@ function save(){if(!S)return;try{localStorage.setItem(SAVE_KEY,JSON.stringify({v
 function L(k,n=1){S.log[k]=(S.log[k]||0)+n}
 
 /* ---------- Chat helpers ---------- */
-function ownerSay(t){const el=$('#ownerSay');el.textContent=t;el.classList.add('on');clearTimeout(sayTimer);sayTimer=setTimeout(()=>el.classList.remove('on'),3800)}
+function ownerSay(t){const el=$('#ownerSay');el.textContent=t;el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(sayTimer);sayTimer=setTimeout(()=>el.classList.remove('on'),4500)}
 function talk(c,who,t){c.chat.push({who,t,mood:who==='c'?moodOf(c):ownerMood()});if(cur===c)renderChat()}
 function renderChat(){
   const el=$('#chat');if(!cur||!cur.chat){el.style.display='none';return}
@@ -1273,7 +1439,7 @@ function step(dm){
     if(!b.started&&S.time>=b.start){
       b.started=true;
       if(isDirty(b.court)){
-        S.rating=clamp(S.rating-0.1);L('dirty');
+        rate(2,b.name);L('dirty');
         courtSay[b.court]={t:pick(['Sân dơ quá trời!','Ủa sao chưa dọn?','Vỏ chai đầy sân nè!']),until:performance.now()+3000};
         ownerSay(`Chết, sân ${b.court} chưa dọn mà khách vô rồi!`);toast('−0.1 ★ sân dơ','bad');
         S.jobs=S.jobs.filter(j=>j.court!==b.court);
@@ -1285,7 +1451,7 @@ function step(dm){
   const h=S.time/60;
   const base=h<8.5?0.035:h<16?0.012:h<17?0.025:h<21?0.045:0.008;
   const mult=(0.4+S.rating*0.17)*(1+0.08*(S.day-1))*(has('sign')?1.1:1)*(h>=17&&has('led')?1.25:1)*Math.max(.3,Math.min(1.5,2-courtF()));
-  if(S.qB.length<6&&Math.random()<base*mult*dm)spawnBooking();
+  if(S.qB.length<6&&Math.random()<base*mult*(0.3+0.7*COURTS/MAX_COURTS)*dm)spawnBooking();
   for(const b of S.bookings){
     if(b.start<=S.time&&S.time<b.end){
       if(S.qD.length<6&&!S.qD.some(o=>o.bid===b.id)&&Math.random()<0.006*dm)spawnDrink(b);
@@ -1298,9 +1464,8 @@ function step(dm){
       if(p<.5&&c.warned<1){c.warned=1;talk(c,'c',pick(IMP1))}
       if(p<.22&&c.warned<2){c.warned=2;talk(c,'c',pick(IMP2))}
       if(c.pat<=0){
-        q.splice(i,1); S.rating=clamp(S.rating-0.15); S.stats.lost++; L('wait');
+        q.splice(i,1); rate(1,c.name); S.stats.lost++; L('wait');
         ownerSay(`Huhu, ${c.name} bỏ về rồi... Lần sau phải nhanh hơn!`);
-        toast('−0.15 ★','bad');
         if(cur===c)closeSheet();
       }
     }
@@ -1310,6 +1475,7 @@ function step(dm){
 
 function tapCourt(c){
   if(!S||paused||S.phase!=='open')return;
+  if(c>COURTS)return ownerSay(`Sân ${c} chưa xây. Lúc chuẩn bị vào tab Ngân hàng để vay ${tr(COURT_COST)} mở thêm sân nha.`);
   if(playingOn(c))return ownerSay(`Sân ${c} đang có người chơi, đợi xíu rồi dọn.`);
   const j=jobOn(c);
   if(j)return ownerSay(j.by==='owner'?`Đang quét sân ${c} nè, sắp xong!`:`Nhân viên đang dọn sân ${c} rồi!`);
@@ -1326,15 +1492,16 @@ function assign(ct){
   if(r.assigned.includes(ct))return;
   const [ws,we]=win(r);
   talk(r,'o',`Dạ, ${you(r.name)} vào sân ${ct} nha!`);
-  if(!courtFree(ct,ws,we)){r.pat-=8;L('conflict');talk(r,'c',pick([`Ơ, sân ${ct} có người giờ đó mà em!`,`Sân ${ct} kín rồi, em coi lại đi!`]));return}
+  if(!courtFree(ct,ws,we)){r.pat-=8;r.bad=(r.bad||0)+1;L('conflict');talk(r,'c',pick([`Ơ, sân ${ct} có người giờ đó mà em!`,`Sân ${ct} kín rồi, em coi lại đi!`]));return}
   S.bookings.push({id:r.id+'-'+ct,rid:r.id,court:ct,start:ws,end:we,name:r.name});
   const f=fee(ws,we); S.money+=f; S.stats.court+=f; r.paid+=f; r.assigned.push(ct);
   toast('+'+fmt(f));
   if(r.assigned.length>=r.count){
-    S.stats.served++; S.rating=clamp(S.rating+0.03); if(moodOf(r)==='happy')L('fast'); if(courtF()>1.25)L('pricey'); else if(courtF()<.85)L('cheap');
-    talk(r,'c',pick(['Ok em, cảm ơn nha!','Tuyệt, đi đánh thôi!','Nhanh gọn ghê, thích!','Ngon lành, cảm ơn em!']));
-    ownerSay(r.walk&&isDirty(ct)?`Ối, sân ${ct} chưa dọn!`:pick(['Xếp sân ngon lành!','Thêm một khách vui vẻ!','Tiền vào như nước!']));
-    finish(r,'qB');
+    S.stats.served++; rate({happy:5,meh:4,angry:3}[moodOf(r)]-Math.min(2,r.bad||0)-(courtF()>1.25?1:0),r.name); if(moodOf(r)==='happy')L('fast'); if(courtF()>1.25)L('pricey'); else if(courtF()<.85)L('cheap');
+    const thx=pick(['Ok em, cảm ơn nha!','Tuyệt, đi đánh thôi!','Nhanh gọn ghê, thích!','Ngon lành, cảm ơn em!']);
+    talk(r,'c',thx);
+    ownerSay(r.walk&&isDirty(ct)?`Ối, sân ${ct} chưa dọn mà ${r.name} vô rồi!`:`${r.name} nhận sân ${r.assigned.join(' và ')}: "${thx}"`);
+    finish(r,'qB',true);
   } else { talk(r,'c','Còn 1 sân nữa nha em!'); tlT0=null; buildTimeline(); }
 }
 function decline(){
@@ -1342,9 +1509,9 @@ function decline(){
   const need=r.count-r.assigned.length;
   const free=[];for(let c=1;c<=COURTS;c++)if(!r.assigned.includes(c)&&courtFree(c,ws,we))free.push(c);
   talk(r,'o',`Dạ, giờ đó kín sân rồi ${you(r.name)} ơi.`);
-  if(free.length>=need){S.rating=clamp(S.rating-0.12);S.stats.lost++;L('badDecline');talk(r,'c',`Sân ${free[0]} trống trơn kia mà em?!`);toast('−0.12 ★','bad')}
-  else talk(r,'c',pick(['Tiếc ghê, hẹn bữa khác vậy.','Thôi không sao, mai ghé lại.']));
-  finish(r,'qB');
+  if(free.length>=need){rate(1,r.name);S.stats.lost++;L('badDecline');talk(r,'c',`Sân ${free[0]} trống trơn kia mà em?!`);ownerSay(`${r.name} bực bội: "Sân ${free[0]} trống trơn kia mà!"`)}
+  else{const t=pick(['Tiếc ghê, hẹn bữa khác vậy.','Thôi không sao, mai ghé lại.']);talk(r,'c',t);ownerSay(`${r.name}: "${t}"`)}
+  finish(r,'qB',true);
 }
 function trayCount(){return Object.values(tray).reduce((a,b)=>a+b,0)}
 let brewing=[];
@@ -1371,24 +1538,25 @@ function give(){
   const ids=new Set([...Object.keys(o.order),...Object.keys(tray)]);
   const ok=[...ids].every(id=>(o.order[id]||0)===(tray[id]||0));
   talk(o,'o',`Đồ của ${you(o.name)} đây ạ!`);
-  if(!ok){o.pat-=6;L('wrong');talk(o,'c',`Không phải, ${me(o.name)} gọi ${orderText(o.order)} mà!`);return}
+  if(!ok){o.pat-=6;o.bad=(o.bad||0)+1;L('wrong');talk(o,'c',`Không phải, ${me(o.name)} gọi ${orderText(o.order)} mà!`);return}
   let sum=0;for(const id in tray){S.stock[id]-=tray[id];sum+=tray[id]*priceOf(id);S.stats.sold[id]=(S.stats.sold[id]||0)+tray[id]}
   const fs=Object.keys(tray).map(pf); if(Math.max(...fs)>1.3)L('pricey'); else if(Math.min(...fs)<.8)L('cheap');
-  S.money+=sum;S.stats.drink+=sum;S.stats.served++;S.rating=clamp(S.rating+0.02);
+  S.money+=sum;S.stats.drink+=sum;S.stats.served++;rate({happy:5,meh:4,angry:3}[moodOf(o)]-Math.min(2,o.bad||0)-(Math.max(...fs)>1.3?1:0),o.name);
   L('drinkOk'); if(Object.keys(tray).some(id=>['banhmi','xoi','chuoi','mi'].includes(id)))L('food');
   talk(o,'c',pick(['Mát quá!','Cảm ơn em nha!','Đã ghê!','Chuẩn luôn!','Ngon xỉu!']));
   toast('+'+fmt(sum));
   const low=ITEMS.filter(it=>S.stock[it.id]<4&&S.stats.sold[it.id]);
-  ownerSay(low.length?`Tủ sắp hết ${low[0].name} rồi!`:pick(['Giao nhanh như chớp!','Bán được thêm rồi!']));
+  ownerSay(low.length?`Tủ sắp hết ${low[0].name} rồi!`:`Sân ${o.court}: "${lastLine(o)}"`);
   finish(o,'qD',true);
 }
 function soldOut(){
   const o=cur; if(o.done)return;
   const lacking=Object.keys(o.order).filter(id=>S.stock[id]<o.order[id]);
   talk(o,'o',`Dạ, món đó hết mất rồi ${you(o.name)} ơi.`);
-  if(lacking.length){L('soldOut');talk(o,'c','Vậy thôi, tiếc ghê.')}
-  else{S.rating=clamp(S.rating-0.08);S.stats.lost++;L('fakeSold');talk(o,'c','Tủ còn đầy kia mà em!');toast('−0.08 ★','bad')}
-  finish(o,'qD');
+  if(lacking.length){L('soldOut');talk(o,'c','Vậy thôi, tiếc ghê.');rate(3,o.name)}
+  else{rate(1,o.name);S.stats.lost++;L('fakeSold');talk(o,'c','Tủ còn đầy kia mà em!')}
+  ownerSay(`${o.name}: "${lastLine(o)}"`);
+  finish(o,'qD',true);
 }
 function rushPrice(id){return Math.round(IT[id].packCost*RUSH/1000)*1000}
 function buyRush(id){
@@ -1400,6 +1568,7 @@ function buyRush(id){
 
 /* ---------- Render ---------- */
 function renderHUD(){
+  const sn='🏸 '+S.name; if($('#signName').textContent!==sn){$('#signName').textContent=sn;document.title=S.name+' · Game quản lý sân cầu lông'}
   $('#clock').textContent=hm(S.time);
   $('#day').textContent=`Ngày ${S.day}`+(paused&&S.phase==='open'?' · dừng':'');
   $('#money').textContent=fmt(S.money);
@@ -1425,6 +1594,7 @@ function renderCourts(){
     else if(d||cl)inner=`<i class="lit" style="top:18%;left:20%">🥤</i><i class="lit" style="top:66%;left:58%">🍌</i><i class="lit" style="top:30%;left:62%">🪶</i>${cl?'<i class="broom">🧹</i>':''}`;
     html+=`<div class="court ${p?'play':'free'} ${d&&!p?'dirty':''}" data-c="${c}">${courtSay[c]?`<span class="say">${courtSay[c].t}</span>`:''}<div class="mini"><i class="lines"></i><i class="svc a"></i><i class="svc b"></i>${inner}</div><span class="cnum">Sân ${c}</span><small>${sub}</small>${tag}</div>`;
   }
+  for(let c=COURTS+1;c<=MAX_COURTS;c++)html+=`<div class="court locked" data-c="${c}"><div class="mini"><span class="lk">🔒</span></div><span class="cnum">Sân ${c}</span><small>Chưa mở</small></div>`;
   const el=$('#courts'); if(el.dataset.h!==html){el.dataset.h=html;el.innerHTML=html}
   $('#courtSum').textContent=`${busy}/${COURTS} đang chơi`+(dirty?` · ${dirty} dơ`:'');
   const st=$('#staffs'), sh=S.staff?STAFF_LOOKS.slice(0,S.staff).map(l=>`<span class="face">${avatar(l,'happy')}</span>`).join('')+`<span>thời vụ</span>`:'';
@@ -1443,10 +1613,59 @@ function renderQueue(el,q,emptyTxt){
 function setBar(bar,c){const p=Math.max(0,c.pat/c.patMax);bar.style.width=(p*100)+'%';bar.className=p<.3?'low':p<.6?'mid':''}
 function render(){
   if(!S)return;
+  checkStars();
   renderHUD();renderCourts();
-  renderQueue($('#qB'),S.qB,'Chưa có khách hỏi sân 😴');
-  renderQueue($('#qD'),S.qD,'Chưa ai gọi đồ 🧃');
+  renderCounter('B',S.qB,'Chưa có khách hỏi sân');
+  renderCounter('D',S.qD,'Chưa ai gọi đồ');
   liveSheet();
+}
+
+const lastFirst={B:null,D:null};
+function renderCounter(k,q,emptyTxt){
+  const stage=$('#q'+k+'s'), n=$('#q'+k+'n');
+  n.textContent=q.length; n.classList.toggle('hot',q.length>0);
+  const f=q[0];
+  const sig=q.map(c=>c.id+':'+moodOf(c)+':'+c.chat.length+':'+(c.assigned?c.assigned.length:0)).join(',');
+  if(stage.dataset.sig!==sig){
+    stage.dataset.sig=sig;
+    if(!f){stage.innerHTML=`<div class="empty-ctr"><span>😴</span>${emptyTxt}</div>`;lastFirst[k]=null}
+    else{
+      const isNew=lastFirst[k]!==f.id; lastFirst[k]=f.id;
+      const tag=f.type==='d'?`<b>Sân ${f.court}:</b> `:(f.count>1?`<b>2 sân:</b> `:'');
+      const rest=q.slice(1,5).map(c=>`<button class="hd ${moodOf(c)}" data-id="${c.id}" aria-label="${c.name}">${avatar(c.look,moodOf(c))}</button>`).join('');
+      stage.innerHTML=`<div class="bub ${isNew?'new':''}">${tag}${esc(lastLine(f))}</div>
+        <button class="chibi ${moodOf(f)} ${isNew?'new':''}" data-id="${f.id}" aria-label="Phục vụ ${f.name}">${avatar(f.look,moodOf(f))}</button>
+        <span class="tapme">👆</span>
+        <div class="line">${rest}${q.length>5?`<span class="more">+${q.length-5}</span>`:''}</div>
+        <div class="pat"><i></i></div>`;
+    }
+  }
+  if(f){const bar=stage.querySelector('.pat i');if(bar)setBar(bar,f)}
+}
+function openCounter(e,k){
+  const b=e.target.closest('[data-id]');
+  if(b)return openCust(+b.dataset.id);
+  if(e.target.closest('#khoBtn'))return;
+  const q=k==='B'?S.qB:S.qD; if(q[0])openCust(q[0].id);
+}
+
+function checkStars(){
+  const below=S.rating<3;
+  if(below&&!S.wasBelow&&S.fineDay!==S.day){
+    S.fineDay=S.day;
+    let cash=Math.min(S.money,STAR_FINE), rest=STAR_FINE-cash;
+    S.money-=cash; S.debt+=rest; S.stats.fine=(S.stats.fine||0)+STAR_FINE; L('fine');
+    toast('−'+fmt(STAR_FINE),'bad');
+    ownerSay(`Quán tụt dưới 3 sao, mất khách thuê sân cố định: mất ${tr(STAR_FINE)}!`);
+    const wasP=paused; if(S.phase==='open'){paused=true;closeSheet()}
+    openModal(`<div class="mface">${avatar(OWNER_LOOK,'angry')}</div><h2>😱 Tụt dưới 3 sao!</h2>
+      <p style="text-align:center">Đánh giá quán còn <b>${S.rating.toFixed(1)}★</b>. Các nhóm thuê sân cố định huỷ hợp đồng, quán mất <b>${fmt(STAR_FINE)}</b>.</p>
+      ${rest?`<p class="note" style="text-align:center">Tiền mặt không đủ nên ${fmt(rest)} bị cộng vào nợ ngân hàng.</p>`:''}
+      <p class="note" style="text-align:center">Kéo sao lên lại từ 3 trở lên, nếu tụt nữa sẽ lại bị mất tiền (tối đa 1 lần mỗi ngày).</p>
+      <div class="mrow"><button class="btn press" data-mclose>Đã hiểu</button></div>`,()=>{if(S.phase==='open'&&!wasP){paused=false;last=performance.now()}});
+    save();
+  }
+  S.wasBelow=below;
 }
 
 /* ---------- Sheet ---------- */
@@ -1565,7 +1784,7 @@ function stationHTML(){
 }
 
 /* ---------- Day flow ---------- */
-let prepStaff=0, prepTab='hang';
+let prepStaff=0, prepTab='hang', prepPay=0;
 function chalkboard(){
   const rows=S.menu.map(id=>`<div class="cb-row"><span>${IT[id].e} ${IT[id].name}</span><i></i><b>${Math.round(priceOf(id)/1000)}k</b></div>`).join('');
   return `<div class="chalk"><div class="cb-title">📋 Menu hôm nay</div>
@@ -1607,28 +1826,55 @@ function prepTabHTML(total){
         <div class="stepper"><button data-sdec aria-label="Bớt nhân viên">−</button><span>${prepStaff}</span><button data-sinc aria-label="Thêm nhân viên">+</button></div></div>
       <div class="staff-line">${STAFF_LOOKS.slice(0,prepStaff).map(l=>`<span class="face">${avatar(l,'happy')}</span>`).join('')||'<p class="hint">Chưa thuê ai. Một mình chủ quán quét sân nha!</p>'}</div>`;
   }
+  if(prepTab==='bank'){
+    const maxPay=Math.max(0,Math.min(S.debt,S.money-(total-prepPay)));
+    const next=Math.round((S.debt-prepPay)*INTEREST);
+    return `<div class="bank-card"><div class="bk-row"><span>🏦 Nợ hiện tại</span><b>${fmt(S.debt)}</b></div>
+        <div class="bk-row"><span>Khoản vay ban đầu</span><b>${fmt(S.loan0)}</b></div>
+        <div class="bk-row"><span>Lãi suất</span><b>${Math.round(INTEREST*100)}% mỗi ngày, cộng dồn</b></div>
+        <div class="bk-row"><span>Lãi dự kiến tối nay</span><b>+${fmt(next)}</b></div>
+        <div class="bar-debt"><i style="width:${S.loan0?Math.min(100,S.debt/S.loan0*100):0}%"></i></div></div>
+      ${S.debt>0?`<h3 class="sub">💸 Trả nợ sáng nay: <span style="color:var(--coral)">${fmt(prepPay)}</span></h3>
+      <div class="pay-chips">${[500000,1000000,5000000,10000000].map(v=>`<button data-pay="${v}">+${tr(v)}</button>`).join('')}<button data-pay="max">Trả hết mức có thể</button><button data-pay="0">Đặt lại</button></div>
+      <p class="hint">Trả được tối đa ${fmt(maxPay)} (tiền mặt còn lại sau nhập hàng). Trả sớm thì lãi mỗi ngày nhỏ lại.</p>`:'<p class="hint">🎉 Quán đã hết nợ ngân hàng!</p>'}
+      <h3 class="sub">🏗️ Mở thêm sân (${COURTS}/${MAX_COURTS})</h3>
+      <div class="courts-mini">${Array.from({length:MAX_COURTS},(_,i)=>`<i class="${i<COURTS?'on':''}">${i+1}</i>`).join('')}</div>
+      ${COURTS<MAX_COURTS?`<div class="up-row"><span class="e">🏸</span><div><b>Xây sân số ${COURTS+1}</b><small>Vay thêm ${fmt(COURT_COST)}, cộng vào nợ. Thêm sân thì thêm khách.</small></div><button class="btn press" data-build>Vay ${tr(COURT_COST)}</button></div>`:'<p class="hint">Đã đủ 10 sân.</p>'}
+      <p class="hint">⚠️ Nếu đánh giá tụt dưới 3★, quán mất ${fmt(STAR_FINE)} (tối đa 1 lần mỗi ngày).</p>`;
+  }
   // đánh giá
   return S.reviews.length?`<p class="hint">Trả lời review cũ trước khi mở cửa cũng được nè.</p><div class="rvs">${S.reviews.slice(0,12).map(reviewHTML).join('')}</div>`:'<p class="empty">Chưa có review nào. Hết ngày đầu là dân mạng bắt đầu nhận xét!</p>';
 }
 function showPrep(){
   paused=true; closeSheet();
   $('#prepBg').style.display='flex'; $('#over').classList.add('prep');
-  const total=Object.entries(prepCart).reduce((a,[id,n])=>a+n*IT[id].packCost,0)+prepStaff*WAGE;
-  const tabs=[['hang','📦','Nhập hàng'],['nang','🛠️','Nâng cấp'],['gia','🏷️','Giá & menu'],['nv','👷','Nhân viên'],['rv','⭐','Đánh giá']];
+  prepPay=Math.max(0,Math.min(prepPay,S.debt));
+  const total=Object.entries(prepCart).reduce((a,[id,n])=>a+n*IT[id].packCost,0)+prepStaff*WAGE+prepPay;
+  const tabs=[['hang','📦','Nhập hàng'],['bank','🏦','Ngân hàng'],['nang','🛠️','Nâng cấp'],['gia','🏷️','Giá & menu'],['nv','👷','Nhân viên'],['rv','⭐','Đánh giá']];
   const u=unreplied();
   $('#over').innerHTML=`<div class="card box prep-card">
-    <div class="prep-head"><div class="face">${avatar(OWNER_LOOK,'happy')}</div><div><h1>Chuẩn bị ngày ${S.day}</h1><small>🪙 ${fmt(S.money)} · ⭐ ${S.rating.toFixed(1)}</small></div></div>
+    <div class="prep-head"><div class="face">${avatar(OWNER_LOOK,'happy')}</div><div><h1>Chuẩn bị ngày ${S.day}</h1><small>🪙 ${fmt(S.money)} · ⭐ ${S.rating.toFixed(1)} · 🏦 nợ ${tr(S.debt)}</small><div class="prep-keys"><button id="pRename">🏪 ${esc(S.name)} ✏️</button><button id="pKey">💾 Mã lưu game</button></div></div></div>
     ${chalkboard()}
     <div class="ptabs" role="tablist">${tabs.map(([k,e,t])=>`<button role="tab" aria-selected="${prepTab===k}" data-tab="${k}"><span>${e}</span>${t}${k==='rv'&&u?`<b>${u}</b>`:''}</button>`).join('')}</div>
     <div class="ptab-body" id="prepList">${prepTabHTML(total)}</div>
     <div class="prep-sum">
-      <div class="ps-line"><span>Nhập hàng${prepStaff?` + ${prepStaff} nhân viên`:''}</span><b>−${fmt(total)}</b><span>Còn lại</span><b>${fmt(S.money-total)}</b></div>
+      <div class="ps-line"><span>Nhập hàng${prepStaff?` + ${prepStaff} NV`:''}${prepPay?' + trả nợ':''}</span><b>−${fmt(total)}</b><span>Còn lại</span><b>${fmt(S.money-total)}</b></div>
       <button class="btn press" id="openShop">Nhập hàng & mở cửa · ${fmt(total)}</button>
     </div></div>`;
   $('#over').style.display='flex';
+  $('#pRename').onclick=()=>askName(S.name,n=>{S.name=n;save();keepScroll(showPrep);ownerSay(`Quán mình giờ tên là "${n}" nha!`)});
+  $('#pKey').onclick=showKey;
   $('#over').querySelector('.ptabs').onclick=e=>{const t=e.target.closest('[data-tab]');if(t){prepTab=t.dataset.tab;keepScroll(showPrep)}};
   $('#prepList').onclick=e=>{
     const g=e.target.closest.bind(e.target);
+    const py=g('[data-pay]');
+    if(py){const v=py.dataset.pay, room=S.money-(total-prepPay);
+      if(v==='0')prepPay=0; else if(v==='max')prepPay=Math.max(0,Math.min(S.debt,room)); else{const nv=prepPay+ +v;if(nv>room)return toast('Không đủ tiền mặt','bad');prepPay=Math.min(S.debt,nv)}
+      return keepScroll(showPrep)}
+    if(g('[data-build]')){if(COURTS>=MAX_COURTS)return;
+      if(!confirm(`Vay thêm ${fmt(COURT_COST)} để xây sân số ${COURTS+1}? Khoản này cộng vào nợ, lãi ${Math.round(INTEREST*100)}%/ngày.`))return;
+      S.debt+=COURT_COST; S.loan0+=COURT_COST; COURTS++; S.courtsOpen=COURTS; S.courts.push({dirty:false}); save();
+      ownerSay(`Xây xong sân số ${COURTS} rồi! Giờ quán có ${COURTS} sân.`); return keepScroll(showPrep)}
     if(g('[data-sinc]')){if(prepStaff>=MAX_STAFF)return toast('Tối đa 3 người thôi','bad');if(total+WAGE>S.money)return toast('Không đủ tiền','bad');prepStaff++;return keepScroll(showPrep)}
     if(g('[data-sdec]')){if(prepStaff){prepStaff--;keepScroll(showPrep)}return}
     const inc=g('[data-inc]'),dec=g('[data-dec]');
@@ -1660,7 +1906,8 @@ function showPrep(){
   if($('#clearCart'))$('#clearCart').onclick=()=>{prepCart={};keepScroll(showPrep)};
   $('#openShop').onclick=()=>{
     for(const [id,n] of Object.entries(prepCart)){S.stock[id]+=n*IT[id].pack}
-    S.money-=total; S.stats.wage=prepStaff*WAGE; S.stats.cost+=total-S.stats.wage; S.stats.start=S.money+total+(S.stats.cost-(total-S.stats.wage)); S.staff=prepStaff; prepCart={}; prepStaff=0;
+    S.money-=total; S.debt-=prepPay; S.stats.repaid=prepPay; S.stats.wage=prepStaff*WAGE; const goods=total-S.stats.wage-prepPay; S.stats.cost+=goods; S.stats.start=S.money+total-prepPay+(S.stats.cost-goods); S.staff=prepStaff; prepCart={}; prepStaff=0;
+    if(prepPay)toast('Đã trả nợ '+fmt(prepPay)); if(S.debt<=0&&prepPay){S.debt=0;ownerSay('Trả hết nợ ngân hàng rồi! Nhẹ cả người 🎉')} prepPay=0;
     S.phase='open'; save();
     $('#over').style.display='none'; $('#over').classList.remove('prep'); $('#prepBg').style.display='none'; paused=false; last=performance.now();
     ownerSay(S.staff?`Có ${S.staff} bạn thời vụ phụ dọn sân, yên tâm rồi!`:S.day===1?'Mở cửa rồi! Nhớ quét sân sau mỗi lượt chơi nha!':`Ngày ${S.day} rồi! Mở cửa đón khách thôi!`);
@@ -1674,6 +1921,7 @@ function endDay(){
   for(const it of ITEMS)if(it.perish&&S.stock[it.id]>0){waste+=S.stock[it.id]*unitCost(it.id);wasted.push(`${S.stock[it.id]} ${it.name.toLowerCase()}`);S.stock[it.id]=0}
   S.stats.waste=waste; S.stats.wasted=wasted.join(', ');
   const rv=genReviews(); S.todayIds=rv.map(r=>r.id); S.reviews=rv.concat(S.reviews).slice(0,40);
+  const it=Math.round(S.debt*INTEREST); S.debt+=it; S.stats.interest=it;
   S.phase='closed'; save(); showSummary(); $('#over').scrollTop=0;
 }
 function showSummary(){
@@ -1683,6 +1931,7 @@ function showSummary(){
   $('#over').innerHTML=`<div class="card box">
     <div class="hero">${avatar(OWNER_LOOK,profit>0?'happy':'meh')}</div>
     <h1>Đóng cửa ngày ${S.day}!</h1>
+    <div style="text-align:center;margin:-6px 0 8px"><span class="shop-name">🏪 ${esc(S.name)}</span></div>
     <table class="sum">
       <tr><td>🏸 Tiền sân</td><td>${fmt(st.court)}</td></tr>
       <tr><td>🥤 Tiền nước & đồ ăn</td><td>${fmt(st.drink)}</td></tr>
@@ -1693,13 +1942,21 @@ function showSummary(){
       <tr><td>😊 Lượt phục vụ</td><td>${st.served}</td></tr>
       <tr><td>😠 Khách không vui</td><td>${st.lost}</td></tr>
       <tr><td>🧹 Khách vô sân dơ</td><td>${lg.dirty||0}</td></tr>
-      <tr><td>⭐ Đánh giá</td><td>${S.rating.toFixed(1)}</td></tr>
+      <tr><td>⭐ Sao khách chấm hôm nay<br><small style="color:var(--soft)">${(S.hist[S.day]&&S.hist[S.day].n)||0} lượt chấm${S.hist[S.day]&&S.hist[S.day].c?': '+S.hist[S.day].c.map((x,i)=>x?`${x}×${i+1}★`:'').filter(Boolean).reverse().join(', '):''}</small></td><td>${S.hist[S.day]&&S.hist[S.day].n?(S.hist[S.day].s/S.hist[S.day].n).toFixed(1):'–'}</td></tr>
+      <tr><td>⭐ Sao quán (TB 7 ngày gần nhất)</td><td>${S.rating.toFixed(1)}</td></tr>
+      ${st.fine?`<tr><td>😱 Mất do tụt dưới 3 sao</td><td>−${fmt(st.fine)}</td></tr>`:''}
       <tr class="total"><td>💰 Lãi hôm nay</td><td>${fmt(profit)}</td></tr>
+      <tr><td>🏦 Tiền lãi ngân hàng (${Math.round(INTEREST*100)}%/ngày, cộng vào nợ)</td><td>+${fmt(st.interest||0)}</td></tr>
+      ${st.repaid?`<tr><td>🏦 Đã trả nợ sáng nay</td><td>${fmt(st.repaid)}</td></tr>`:''}
+      <tr><td>🏦 Nợ ngân hàng còn</td><td>${S.debt>0?fmt(S.debt):'Hết nợ 🎉'}</td></tr>
+      <tr><td>💼 Tài sản ròng (tiền mặt − nợ)</td><td>${fmt(S.money-S.debt)}</td></tr>
     </table>
     <h3>📱 Dân mạng nói gì về quán hôm nay</h3>
     <p>Tự viết phản hồi cho khách. Lời lẽ cầu thị (xin lỗi, khắc phục, cải thiện, cố gắng, ạ...) thì khách dịu lại. Cà khịa hay chửi khách là khách chửi lại, drama lan khắp mạng!</p>
     <div class="rvs">${rv.map(reviewHTML).join('')}</div>
+    <button class="btn ghost press" id="sumKey">💾 Lấy mã lưu game</button>
     <button class="btn press" id="nextDay">Sang ngày ${S.day+1}</button></div>`;
+  $('#sumKey').onclick=showKey;
   $('#over').style.display='flex';
   $('#nextDay').onclick=()=>{
     S.lastSold=S.stats.sold; S.day++; Object.assign(S,dayState(S.money)); S.todayIds=[];
@@ -1718,7 +1975,7 @@ function setScene(t){
 function startScreen(){
   const saved=load();
   const kfmt=m=>(m/1000).toLocaleString('vi-VN',{maximumFractionDigits:1})+'k';
-  $('#saveLine').textContent=saved?`Chủ quán · Ngày ${saved.day} · ${kfmt(saved.money)} · ${saved.rating.toFixed(1)}★`:'Quán mới toanh, chờ chủ quán tới!';
+  $('#saveLine').textContent=saved?`${saved.name} · Ngày ${saved.day} · ${kfmt(saved.money)} · ${saved.rating.toFixed(1)}★${saved.debt>0?' · nợ '+tr(saved.debt):''}`:'Quán mới toanh, chờ chủ quán tới!';
   $('#sPlay').textContent=saved?'Chơi tiếp':'Mở quán';
   $('#sFresh').hidden=!saved;
   $('#over').style.display='none';
@@ -1745,13 +2002,141 @@ function startScreen(){
     $('#over').style.display='none';paused=false;last=performance.now();
     ownerSay(`Mừng chủ quán quay lại! Tiếp tục ngày ${S.day} nha.`);
   };
-  $('#sPlay').onclick=()=>{if(saved){S=saved}else{S=newGame();save()}resume()};
-  $('#sFresh').onclick=()=>{if(!confirm('Chơi lại từ đầu sẽ xoá tiến trình hiện tại. Chắc chưa?'))return;S=newGame();save();resume()};
+  const fresh=()=>askName('',n=>askLoan(n,c=>{S=newGame(n,c);save();resume()}),true);
+  $('#sPlay').onclick=()=>{if(saved){S=saved;resume()}else fresh()};
+  $('#sFresh').onclick=()=>{if(!confirm('Chơi lại từ đầu sẽ xoá tiến trình hiện tại. Nhớ lấy mã lưu game trước nếu muốn giữ lại. Chắc chưa?'))return;fresh()};
+  $('#sImport').onclick=()=>askImport(st=>{S=st;save();resume();ownerSay(`Chào mừng quay lại ${S.name}!`)},!!saved);
   $('#sGuide').onclick=()=>{$('#guide').style.display='flex'};
   $('#gClose').onclick=()=>{$('#guide').style.display='none'};
   document.querySelectorAll('.sc-time button').forEach(b=>b.onclick=()=>setScene(b.dataset.t));
 }
 
+
+
+/* ---------- Hộp thoại: tên quán, mã lưu game ---------- */
+let modalOnClose=null;
+function openModal(html,onClose){$('#mcard').innerHTML=html;$('#modal').classList.add('on');modalOnClose=onClose||null}
+function closeModal(silent){$('#modal').classList.remove('on');const f=modalOnClose;modalOnClose=null;if(!silent&&f)f()}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal'||e.target.closest('[data-mclose]'))closeModal()});
+const NAME_SUGS=['Sân Cầu Lông Nhà Mình','Smash Club','Cầu Lông Chill','Sân Nhà Bé Mèo','Lông Vũ Quán','Sân Cầu Xóm Mới'];
+function cleanName(t){return String(t||'').replace(/[<>"`]/g,'').replace(/\s+/g,' ').trim().slice(0,30)}
+function askLoan(name,done){
+  let n=3;
+  const draw=()=>{
+    const loan=n*COURT_COST;
+    openModal(`<div class="mface">${avatar(OWNER_LOOK,'happy')}</div>
+      <h2>🏦 Vay vốn mở sân</h2>
+      <p style="text-align:center">Quán tối đa <b>${MAX_COURTS} sân</b>. Mỗi sân tốn <b>${fmt(COURT_COST)}</b>, muốn mở mấy sân thì ngân hàng cho vay bấy nhiêu. Lãi <b>${Math.round(INTEREST*100)}% mỗi ngày</b>, cộng dồn vào nợ.</p>
+      <div class="loan-pick"><button data-ln="-1" aria-label="Bớt sân">−</button><div><b>${n}</b><small>sân</small></div><button data-ln="1" aria-label="Thêm sân">+</button></div>
+      <div class="courts-mini">${Array.from({length:MAX_COURTS},(_,i)=>`<i class="${i<n?'on':''}">${i+1}</i>`).join('')}</div>
+      <div class="lvl lvl-${n<=3?'e':n<=6?'m':'h'}">${n<=3?'🙂 Dễ thở: hợp người mới chơi':n<=6?'😅 Vừa sức: đông khách hơn, lãi nặng hơn':'🔥 Khó: rất đông khách nhưng nợ khủng'}</div>
+      <div class="quick-n">${[2,3,4,6,8,10].map(k=>`<button data-lnset="${k}" class="${k===n?'on':''}">${k} sân</button>`).join('')}</div>
+      <div class="bank-card"><div class="bk-row"><span>Khoản vay</span><b>${fmt(loan)}</b></div>
+        <div class="bk-row"><span>Lãi ngày đầu</span><b>+${fmt(loan*INTEREST)}</b></div>
+        <div class="bk-row"><span>Tiền túi để nhập hàng</span><b>${fmt(START_CASH)}</b></div></div>
+      <p class="note" style="text-align:center">Ít sân: nợ nhẹ nhưng ít khách. Nhiều sân: đông khách nhưng lãi mỗi ngày nặng. Sau này vẫn vay thêm để xây sân được.</p>
+      <div class="mrow"><button class="btn press" id="lnOk">Ký hợp đồng vay & khai trương 🎉</button></div>`);
+    $('#mcard').querySelectorAll('[data-ln]').forEach(b=>b.onclick=()=>{n=Math.max(1,Math.min(MAX_COURTS,n+ +b.dataset.ln));draw()});
+    $('#mcard').querySelectorAll('[data-lnset]').forEach(b=>b.onclick=()=>{n=+b.dataset.lnset;draw()});
+    $('#lnOk').onclick=()=>{closeModal(true);done(n)};
+  };
+  draw();
+}
+function askName(cur0,done,isNew){
+  openModal(`<div class="mface">${avatar(OWNER_LOOK,'happy')}</div>
+    <h2>${isNew?'Đặt tên quán của bạn':'Đổi tên quán'}</h2>
+    <p style="text-align:center">Tên sẽ hiện trên bảng hiệu và trong mã lưu game.</p>
+    <input id="nmIn" maxlength="30" placeholder="Ví dụ: Sân Cầu Lông Bé Na" value="${esc(cur0||'')}" autocomplete="off">
+    <div class="sugs">${NAME_SUGS.map(n=>`<button data-sug="${esc(n)}">${esc(n)}</button>`).join('')}</div>
+    <div class="err" id="nmErr"></div>
+    <div class="mrow">${isNew?'':'<button class="btn ghost press" data-mclose>Huỷ</button>'}<button class="btn press" id="nmOk">${isNew?'Khai trương 🎉':'Lưu tên'}</button></div>`);
+  const inp=$('#nmIn'); setTimeout(()=>inp.focus(),50);
+  $('#mcard').querySelector('.sugs').onclick=e=>{const b=e.target.closest('[data-sug]');if(b){inp.value=b.dataset.sug;inp.focus()}};
+  const ok=()=>{const n=cleanName(inp.value);if(n.length<2){$('#nmErr').textContent='Tên quán cần ít nhất 2 ký tự nha.';return}closeModal(true);done(n)};
+  $('#nmOk').onclick=ok; inp.onkeydown=e=>{if(e.key==='Enter')ok()};
+}
+
+// Mã lưu game: nén tiến trình rồi mã hoá thành chuỗi chữ để người chơi tự cất
+function crc32(str){let c,crc=~0;for(let i=0;i<str.length;i++){c=(crc^str.charCodeAt(i))&255;for(let k=0;k<8;k++)c=c&1?(c>>>1)^0xEDB88320:c>>>1;crc=(crc>>>8)^c}return ((~crc)>>>0).toString(36).toUpperCase().padStart(7,'0').slice(-5)}
+const b64u={enc:u8=>{let s='';for(let i=0;i<u8.length;i+=8192)s+=String.fromCharCode.apply(null,u8.subarray(i,i+8192));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')},
+  dec:t=>{t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';const s=atob(t);const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u}};
+async function zip(u8,mode){const cs=mode==='c'?new CompressionStream('deflate-raw'):new DecompressionStream('deflate-raw');const st=new Blob([u8]).stream().pipeThrough(cs);return new Uint8Array(await new Response(st).arrayBuffer())}
+function snapshot(){
+  // mã lưu từ đầu ngày kế tiếp (nếu đang mở cửa/đã đóng cửa) hoặc đúng màn chuẩn bị hiện tại
+  const nextDay=S.phase!=='prep';
+  const stock={};for(const it of ITEMS){const n=nextDay&&it.perish?0:S.stock[it.id];if(n)stock[it.id]=n}
+  const db=Math.round(S.phase==='open'?S.debt*(1+INTEREST):S.debt);
+  const hs={};Object.keys(S.hist||{}).map(Number).sort((a,b)=>b-a).slice(0,7).forEach(d=>hs[d]=[S.hist[d].s,S.hist[d].n]);
+  return {v:1,hs,co:COURTS,db,l0:S.loan0,fd:S.fineDay,n:S.name,d:S.day+(nextDay?1:0),m:Math.round(S.money),r:+S.rating.toFixed(2),s:stock,u:S.unlocked,mn:S.menu,p:S.prices,c:S.courtRate,g:Object.keys(S.upg||{}).filter(k=>S.upg[k]),
+    ls:nextDay?S.stats.sold:S.lastSold,
+    rv:S.reviews.slice(0,6).map(r=>({h:r.h,s:r.stars,t:r.t,l:r.likes,d:r.day,...(r.reply?{re:r.reply,f:r.follow,o:r.tone}:{})}))};
+}
+async function makeKey(){
+  const json=JSON.stringify(snapshot()), raw=new TextEncoder().encode(json);
+  let body,tag='J';
+  try{if(window.CompressionStream){body=b64u.enc(await zip(raw,'c'));tag='Z'}}catch(e){}
+  if(!body)body=b64u.enc(raw);
+  return `SCL1${tag}-${crc32(json)}-${body}`;
+}
+async function readKey(key){
+  const k=String(key||'').replace(/\s+/g,'');
+  const m=k.match(/^SCL1([ZJ])-([0-9A-Z]{5})-([A-Za-z0-9_-]+)$/);
+  if(!m)throw new Error('Mã không đúng định dạng. Mã hợp lệ bắt đầu bằng "SCL1".');
+  let u8; try{u8=b64u.dec(m[3]); if(m[1]==='Z')u8=await zip(u8,'d')}catch(e){throw new Error('Mã bị thiếu hoặc sai ký tự. Hãy dán lại đầy đủ nhé.')}
+  const json=new TextDecoder().decode(u8);
+  if(crc32(json)!==m[2])throw new Error('Mã bị sai một vài ký tự (kiểm tra không khớp). Hãy dán lại đầy đủ nhé.');
+  const o=JSON.parse(json); if(!o||o.v!==1||!o.d)throw new Error('Mã không đọc được.');
+  const st=newGame(cleanName(o.n)||undefined,o.co||MAX_COURTS);
+  st.debt=o.db||0; st.loan0=o.l0||st.debt; st.fineDay=o.fd||0;
+  st.hist={};for(const d in (o.hs||{}))st.hist[d]={s:o.hs[d][0],n:o.hs[d][1]};
+  Object.assign(st,{day:o.d,money:o.m,rating:clamp(o.r||4),phase:'prep',
+    stock:Object.assign(Object.fromEntries(ITEMS.map(i=>[i.id,0])),o.s||{}),
+    unlocked:(o.u||START_ITEMS).filter(id=>IT[id]),menu:(o.mn||o.u||START_ITEMS).filter(id=>IT[id]),
+    prices:o.p||{},courtRate:o.c||{day:RATE_DAY,peak:RATE_PEAK},upg:Object.fromEntries((o.g||[]).filter(k=>UPG[k]).map(k=>[k,1])),lastSold:o.ls||{},
+    reviews:(o.rv||[]).map((r,i)=>({id:'k'+i+'_'+(++uid),h:r.h,stars:r.s,t:r.t,likes:r.l,day:r.d,look:makeLook(pick(NAMES)),...(r.re?{reply:r.re,follow:r.f,tone:r.o}:{})}))});
+  Object.assign(st,dayState(st.money));
+  if(!Object.keys(st.hist).length&&o.r)st.hist[st.day-1]={s:Math.round(o.r*5),n:5};
+  const nd=norm(st); { const keep=S; S=nd; nd.rating=calcRating(); S=keep; } nd.wasBelow=nd.rating<3; return nd;
+}
+async function showKey(after){
+  if(!S)return;
+  openModal(`<h2>💾 Mã lưu game</h2><p style="text-align:center">Đang tạo mã...</p>`,after);
+  let key; try{key=await makeKey()}catch(e){openModal(`<h2>Không tạo được mã</h2><p>${esc(e.message)}</p><div class="mrow"><button class="btn press" data-mclose>Đóng</button></div>`,after);return}
+  const from=S.phase==='prep'?`màn chuẩn bị ngày ${S.day}`:`sáng ngày ${S.day+1}`;
+  openModal(`<h2>💾 Mã lưu game</h2>
+    <p>Cất mã này ở chỗ an toàn (ghi chú, tin nhắn cho chính mình...). Mở game trên bất kỳ máy nào, chọn <b>Nhập mã lưu game</b> ở màn hình mở đầu rồi dán vào là chơi tiếp.</p>
+    <textarea id="keyTxt" readonly>${key}</textarea>
+    <p class="note">Mã lưu: tên quán, ngày, tiền, sao, kho hàng, nâng cấp, giá, menu và vài review gần nhất. Nhập mã sẽ chơi tiếp từ ${from}.</p>
+    <div class="err" id="keyMsg" style="color:#239a53"></div>
+    <div class="mrow"><button class="btn press" id="keyCopy">📋 Sao chép</button><button class="btn ghost press" id="keyDl">⬇️ Tải file</button></div>
+    <div class="mrow"><button class="btn ghost press" data-mclose>Đóng</button></div>`,after);
+  const ta=$('#keyTxt');
+  $('#keyCopy').onclick=async()=>{
+    let ok=false; try{await navigator.clipboard.writeText(key);ok=true}catch(e){}
+    if(!ok){ta.focus();ta.select();try{ok=document.execCommand('copy')}catch(e){}}
+    $('#keyMsg').textContent=ok?'Đã sao chép mã!':'Không tự sao chép được, hãy giữ vào ô mã để chọn và sao chép thủ công.';
+  };
+  $('#keyDl').onclick=()=>{
+    try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([`Mã lưu game ${S.name}\n${new Date().toLocaleString('vi-VN')}\n\n${key}\n`],{type:'text/plain'}));
+      a.download=`ma-luu-${cleanName(S.name).replace(/\s+/g,'-')}-ngay${S.day}.txt`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+      $('#keyMsg').textContent='Đã tải file mã về máy.'}catch(e){$('#keyMsg').textContent='Trình duyệt chặn tải file, hãy dùng nút Sao chép.'}
+  };
+  ta.onclick=()=>ta.select();
+}
+function askImport(done,hasSave){
+  openModal(`<h2>🔑 Nhập mã lưu game</h2>
+    <p>Dán mã lưu game (bắt đầu bằng <b>SCL1</b>) vào ô bên dưới.</p>
+    <textarea id="impTxt" placeholder="SCL1Z-XXXXX-..."></textarea>
+    ${hasSave?'<p class="note">Lưu ý: tiến trình đang có trên máy này sẽ bị thay bằng tiến trình trong mã.</p>':''}
+    <div class="err" id="impErr"></div>
+    <div class="mrow"><button class="btn ghost press" data-mclose>Huỷ</button><button class="btn press" id="impOk">Chơi tiếp</button></div>`);
+  setTimeout(()=>$('#impTxt').focus(),50);
+  $('#impOk').onclick=async()=>{
+    const btn=$('#impOk'); btn.disabled=true;
+    try{const st=await readKey($('#impTxt').value);closeModal(true);done(st)}
+    catch(e){$('#impErr').textContent=e.message;btn.disabled=false}
+  };
+}
 
 /* ---------- Kéo thả món vào khay ---------- */
 let drag=null;
@@ -1792,11 +2177,12 @@ addEventListener('resize',fitArt); addEventListener('orientationchange',()=>setT
 rvEvents($('#over'),()=>{if(S&&S.phase==='closed')keepScroll(showSummary);else if(S&&S.phase==='prep')keepScroll(showPrep)});
 rvEvents($('#sheetBody'),()=>{if(cur&&cur.type==='rv'){const y=$('#sheet').scrollTop;buildSheet();$('#sheet').scrollTop=y}});
 function toast(msg,kind=''){if(msg[0]==='+'){const m=$('.money');m.classList.remove('bump');void m.offsetWidth;m.classList.add('bump')}const d=document.createElement('div');d.className='toast '+kind;d.textContent=msg;$('#toasts').appendChild(d);setTimeout(()=>d.remove(),1800);while($('#toasts').children.length>3)$('#toasts').firstChild.remove()}
-$('#qB').addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(b)openCust(+b.dataset.id)});
-$('#qD').addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(b)openCust(+b.dataset.id)});
+$('#qB').addEventListener('click',e=>{if(S&&S.phase==='open')openCounter(e,'B')});
+$('#qD').addEventListener('click',e=>{if(S&&S.phase==='open')openCounter(e,'D')});
 $('#courts').addEventListener('pointerdown',e=>{const c=e.target.closest('[data-c]');if(c)tapCourt(+c.dataset.c)});
-$('#khoBtn').onclick=openKho;
+$('#khoBtn').onclick=e=>{e.stopPropagation();openKho()};
 $('#rvBtn').onclick=openReviews;
+$('#keyBtn').onclick=()=>{if(!S)return;const was=paused;paused=true;showKey(()=>{paused=was;last=performance.now()})};
 $('#sheetClose').onclick=closeSheet;
 $('#backdrop').onclick=closeSheet;
 $('#ownerFace').onclick=()=>ownerSay(pick(['Cố lên nào!','Khách đông quá trời!','Nhớ quét sân sau mỗi lượt nha!','Sân sạch, khách vui, mình giàu!']));
@@ -1807,7 +2193,23 @@ $('#sheetBody').addEventListener('click',e=>{
   const a=e.target.closest('[data-act]');if(!a)return;
   ({decline,close:closeSheet,give,clear:()=>{tray={};buildSheet()},soldout:soldOut})[a.dataset.act]();
 });
-$('#pauseBtn').onclick=()=>{if(!S||S.phase!=='open')return;paused=!paused;last=performance.now();renderHUD()};
+function resumeGame(){paused=false;last=performance.now();renderHUD()}
+function showPause(){
+  if(!S||S.phase!=='open')return;
+  paused=true; renderHUD();
+  openModal(`<div class="pmenu"><div class="mface">${avatar(OWNER_LOOK,ownerMood())}</div>
+    <h2>⏸ Tạm dừng</h2>
+    <div class="pinfo"><span>🏪 ${esc(S.name)}</span><span>📅 Ngày ${S.day}, ${hm(S.time)}</span><span>🪙 ${fmt(S.money)}</span><span>🏦 Nợ ${tr(S.debt)}</span></div>
+    <button class="btn press" id="pmGo">▶ Tiếp tục</button>
+    <button class="btn ghost press" id="pmKey">🔑 Lấy mã lưu game</button>
+    <button class="btn warn press" id="pmExit">💾 Lưu & thoát</button>
+    <p class="note" style="text-align:center;margin-top:8px">Lưu & thoát sẽ về màn hình mở đầu. Bấm "Chơi tiếp" để quay lại đúng lúc này.</p></div>`,resumeGame);
+  $('#pmGo').onclick=()=>closeModal();
+  $('#pmKey').onclick=()=>{modalOnClose=null;showKey(showPause)};
+  $('#pmExit').onclick=()=>{closeModal(true);closeSheet();save();paused=true;toast('Đã lưu game');startScreen()};
+}
+$('#pauseBtn').onclick=()=>{if(!S||S.phase!=='open')return;if(paused)resumeGame();else showPause()};
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&S&&S.phase==='open'&&!paused&&!$('#modal').classList.contains('on'))showPause()});
 $('#speedBtn').onclick=()=>{speed=speed===1?2:speed===2?3:1;$('#speedBtn').textContent=speed+'x'};
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
 
