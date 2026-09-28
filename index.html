@@ -703,6 +703,17 @@ header{flex-wrap:nowrap;min-width:0}
   .station{grid-template-columns:repeat(5,1fr)!important;grid-template-areas:"fr tra cau food food" "fr mi mi cf cf"!important}
 }
 .bench-top .bt-t{font-size:.72rem;font-weight:700;color:#8a97a3}
+
+/* mốc thời gian chờ */
+.zpat{position:relative;overflow:visible}
+.zpat i{border-radius:4px}
+.zpat::before,.zpat::after{content:"";position:absolute;top:-4px;bottom:-4px;width:2.5px;background:var(--ink);border-radius:2px;z-index:2}
+.zpat::before{left:15%}.zpat::after{left:40%}
+.eta{font-size:.72rem;font-weight:800;border:2px solid var(--ink);border-radius:9px;padding:0 6px;white-space:nowrap;background:#c8f5dc;color:#1d2b36;flex:none}
+.eta.meh{background:#fff0b3}.eta.angry{background:#ffc2cc;animation:qnPulse .8s ease-in-out infinite}
+.stage .eta{position:absolute;right:8px;bottom:22px;z-index:4}
+.stage .line{bottom:44px}
+@media (prefers-reduced-motion:reduce){.eta.angry{animation:none}}
 </style>
 </head>
 <body>
@@ -774,7 +785,7 @@ header{flex-wrap:nowrap;min-width:0}
   <div class="sheet-top">
     <div class="face" id="sheetFace"></div>
     <h3 id="sheetTitle"></h3>
-    <div class="pat" id="sheetPatWrap"><i id="sheetPat"></i></div>
+    <div class="pat zpat" id="sheetPatWrap"><i id="sheetPat"></i></div><span class="eta" id="sheetEta"></span>
     <button class="ib press" id="sheetClose" aria-label="Đóng">✕</button>
   </div>
   <div class="chat" id="chat"></div>
@@ -1112,19 +1123,20 @@ header{flex-wrap:nowrap;min-width:0}
 <div class="sver">v0.7</div>
 <div class="guide" id="guide"><div class="gcard">
   <h2>Cách chơi</h2>
-  <p>🏦 Vay ngân hàng để mở sân, mỗi sân 50 triệu. Lãi 1% mỗi ngày cộng dồn, sáng nào cũng có thể trả bớt nợ. Tụt dưới 3★ là mất 10 triệu.</p>
+  <p>🏦 Vay ngân hàng để mở sân, mỗi sân 50 triệu. Lãi 0,1% mỗi ngày cộng dồn, sáng nào cũng có thể trả bớt nợ. Tụt dưới 3★ là mất 10 triệu.</p>
   <p>🏸 Quán mở cửa 6:00 đến 22:00.</p>
   <p>📦 Sáng sớm nhập nước, đồ ăn theo số tiền đang có. Đồ tươi bán không hết là bỏ. Có thể thuê nhân viên thời vụ dọn sân.</p>
   <p>🗓️ Khách hỏi sân: xem lịch, tìm sân trống đúng giờ rồi xếp. Báo hết sân sai là khách giận.</p>
   <p>🧹 Chơi xong sân sẽ dơ. Chạm vào sân để quét trước khi nhóm sau vô.</p>
   <p>🥤 Người đang chơi gọi nước, đồ ăn, mua cầu. Bỏ đúng món lên khay rồi giao.</p>
+  <p>⏱ Thanh chờ có 2 mốc: phục vụ khi còn trong vùng xanh được 5★, vùng vàng 4★. Qua mốc đỏ "gần hết giờ" chỉ còn 2★, hết giờ khách bỏ về và chấm 1★.</p>
   <p>⭐ Mỗi khách phục vụ xong sẽ chấm 1–5★. Sao quán là trung bình sao khách chấm của 7 ngày gần nhất.</p>
   <p>📱 Cuối ngày đọc review và tự viết phản hồi. Xin lỗi, hứa khắc phục thì khách sửa sao lên. Chửi khách là khách chửi lại kiểu Gen Z và hạ còn 1★.</p>
   <button class="sbtn" id="gClose" style="width:100%;font-size:1.15rem">Đã hiểu!</button>
 </div></div>
 </div></div>
 <script>
-const MAX_COURTS=10, COURT_COST=50000000, INTEREST=0.01, STAR_FINE=10000000, START_CASH=2000000;
+const MAX_COURTS=10, COURT_COST=50000000, INTEREST=0.001, STAR_FINE=10000000, START_CASH=2000000;
 let COURTS=10;
 const OPEN=360, CLOSE=1320, PEAK=1020, W=28, CLEAN_MIN=12, STAFF_MIN=15, RUSH=1.3, WAGE=180000, MAX_STAFF=3;
 const STAFF_LOOKS=[{skin:'#f1c19b',hair:'#1b1b1b',style:'spiky',shirt:'#63e6be',band:'#ffd23f'},{skin:'#fbd9bd',hair:'#7a4a26',style:'bun',shirt:'#63e6be'},{skin:'#d9a07a',hair:'#2b1a12',style:'short',shirt:'#63e6be',glasses:true}];
@@ -1148,13 +1160,14 @@ const UNLOCK={tl:{cost:150000,t:'Nhập thêm nước tăng lực',d:'Thêm mộ
   mi:{cost:250000,t:'Ấm siêu tốc',d:'Bán mì ly, phải chế nước sôi chờ chín'},
   xoi:{cost:300000,t:'Nồi hấp xôi',d:'Bán xôi nóng buổi sáng'},
   cf:{cost:600000,t:'Máy pha cà phê',d:'Bán cà phê sữa, phải chờ máy pha'}};
-const UPG={broom:{e:'🧹',cost:200000,t:'Chổi xịn',d:'Chủ quán quét sân nhanh hơn (12 → 8 phút)'},
+const UPG={cam:{e:'📹',cost:400000,t:'Camera an ninh',d:'Khách hết dám bùng tiền sân (6% → 1%)'},
+  broom:{e:'🧹',cost:200000,t:'Chổi xịn',d:'Chủ quán quét sân nhanh hơn (12 → 8 phút)'},
   vac:{e:'🌀',cost:450000,t:'Máy hút bụi',d:'Nhân viên dọn nhanh hơn (15 → 10 phút)'},
   bench:{e:'🪑',cost:300000,t:'Ghế chờ có mái che',d:'Khách đặt sân chịu chờ lâu hơn 25%'},
   fan:{e:'🌬️',cost:300000,t:'Quạt hơi nước ở quầy',d:'Khách gọi đồ chịu chờ lâu hơn 25%'},
   led:{e:'💡',cost:500000,t:'Đèn LED sân',d:'Buổi tối (từ 17h) đông khách hơn 25%'},
   sign:{e:'🪧',cost:350000,t:'Bảng hiệu mới',d:'Cả ngày khách ghé nhiều hơn 10%'}};
-const GAME_SPEED=3.5;
+const GAME_SPEED=2.5; // 1x: 2 giây thật = 5 phút trong game
 const PREP_T={tra:{ms:700,v:'Đang rót trà'}};
 // Món làm nhiều bước ở bàn pha: bấm đúng thứ tự, bước cuối chờ một lúc rồi món tự vào khay
 const FLOW={
@@ -1221,11 +1234,15 @@ function avatar(L,mood='happy'){
   else g+=`<path d="M26.5 41.5 Q32 35.5 37.5 41.5" fill="none" stroke="${k}" stroke-width="2.5" stroke-linecap="round"/><path d="M45 17 l2 -4 l2 4 l-2 4 Z" fill="#ff5d5d" stroke="${k}" stroke-width="1.4"/>`;
   return `<svg class="ava" viewBox="0 0 64 64" aria-hidden="true">${g}</svg>`;
 }
-function moodOf(c){const p=c.pat/c.patMax;return p>.6?'happy':p>.3?'meh':'angry'}
+// Mốc thời gian chờ: vùng xanh (còn ≥40%) 5★ · vùng vàng (15–40%) 4★ · vùng đỏ "gần hết giờ" (<15%) 2★ · hết giờ: bỏ về 1★
+const Z_WARN=0.4, Z_LATE=0.15;
+function moodOf(c){const p=c.pat/c.patMax;return p>=Z_WARN?'happy':p>=Z_LATE?'meh':'angry'}
+function starByTime(c){const p=c.pat/c.patMax;return p>=Z_WARN?5:p>=Z_LATE?4:2}
+function zoneTxt(c){const p=c.pat/c.patMax,m=Math.max(0,Math.ceil(c.pat));return p>=Z_WARN?`⏱ ${m}′ · ★5`:p>=Z_LATE?`⏳ ${m}′ · ★4`:`🔥 ${m}′ · ★2`}
 function ownerMood(){return S&&S.rating<2.5?'angry':S&&S.rating<3.5?'meh':'happy'}
 
 /* ---------- Review Gen Z ---------- */
-const HANDLES=['@minhthu.2k5','@kh0a_smash','@vy.caulong','@dungday.12','@baotram.xinhxinh','@longnguyen_','@hieuu.badminton','@my.caulonggg','@quan_smash_king','@nhinhi.hihi','@tuanbeo.97','@thao.chill','@phat.dapcau','@ngocc.nee','@trammm.2k4','@gia.bao.smash'];
+const HANDLES=['@lanh.lung.boy','@chipu.caulong','@bong.bay.99','@anh.ba.q7','@gau.map.smash','@tieu.thu.tennis','@kenji.vn','@hoa.hong.do','@dat.dz','@team.dap.cau.q8','@banh.bao.mini','@mr.backhand','@cam.ne.2k6','@vitamin.sea','@minhthu.2k5','@kh0a_smash','@vy.caulong','@dungday.12','@baotram.xinhxinh','@longnguyen_','@hieuu.badminton','@my.caulonggg','@quan_smash_king','@nhinhi.hihi','@tuanbeo.97','@thao.chill','@phat.dapcau','@ngocc.nee','@trammm.2k4','@gia.bao.smash'];
 const RV={
   fast:{s:[5,5,4],t:[
     'Đặt sân cái rụp, chủ quán xử lý nhanh hơn người yêu cũ trở mặt 😭 10 điểm',
@@ -1270,8 +1287,14 @@ const RV={
     'Nói hết món mà tủ còn nguyên, keo lỳ tái châu hả 🤨',
     'Tủ còn đầy mà bảo hết, chủ quán đang troll tụi mình à 🤡']},
   pricey:{s:[2,2,3],t:['Giá chát xỉu, tưởng thuê sân ở trung tâm thương mại 😵','Chai nước mà giá như trà sữa size L, cay ghê 🥲','Sân đẹp nhưng ví tui khóc rồi 💸']},
-  cheap:{s:[5,5,4],t:['Giá mềm như bún, sinh viên mãi iu 🫶','Rẻ mà chất, chủ quán đang làm từ thiện hả 🥹','Giá hạt dẻ, cuối tháng vẫn đi đánh được 🌰']},
-  neutral:{s:[4,3,4],t:[
+  cheap:{s:[5,5,4],t:['Giá này là thuộc hàng hiếm, đánh 2 tiếng chưa bằng 1 ly trà sữa 🧋','Giá mềm như bún, sinh viên mãi iu 🫶','Rẻ mà chất, chủ quán đang làm từ thiện hả 🥹','Giá hạt dẻ, cuối tháng vẫn đi đánh được 🌰']},
+  dash:{s:[3,4,3],t:['Hôm nay thấy có nhóm đánh xong chạy mất tiêu không trả tiền, thương chủ quán ghê 🥲','Bàn bên cạnh bùng tiền sân, chủ quán mặt buồn thiu, tui trả dư 5k an ủi 🫂','Quán nên gắn camera đi, nãy có đám bùng tiền chạy lẹ như Usain Bolt 🏃‍♂️💨']},
+  late:{s:[2,3,2],t:['Đợi muốn đóng rêu mới được phục vụ, đói muốn xỉu 😵','Gọi nước từ hiệp 1 tới hiệp 3 mới có, chắc nước đi đường vòng 🌀','Chờ lâu ghê, nhưng chủ quán cười xin lỗi nên thôi 🙂']},
+  busy:{s:[4,5,4],t:['Tối nay quán đông như hội chợ, vui xỉu, không khí cháy phố 🔥','Giờ cao điểm mà vẫn có sân, chủ quán xếp khéo ghê 👏','Đông mà vẫn gọn gàng, chủ quán multitask đỉnh nóc 🐙']},
+  staff:{s:[5,4],t:['Nhân viên dọn sân nhanh như ninja, vừa đánh xong sân đã sạch bong 🥷','Bạn nhân viên thời vụ dễ thương, dọn sân kỹ ghê 🧹✨']},
+  coffee:{s:[5,4],t:['Cà phê sữa ở đây đậm đà, đánh cầu xong làm ly tỉnh hẳn ☕','Không ngờ sân cầu lông mà cà phê ngon vậy, mãi mê ☕🫶']},
+  noodle:{s:[5,4,4],t:['Mì ly nóng hổi sau trận tối, hạnh phúc đơn giản vậy thôi 🍜','Chủ quán chế mì nhanh, nước sôi vừa tới, 10 điểm 🍜']},
+  neutral:{s:[4,5,4,3],t:['Sân ok, đèn sáng, lưới căng, không có gì để chê 👍','Lần đầu ghé, thấy cũng được, sẽ rủ bạn bè quay lại 🙂','Sân sạch sẽ, chủ quán thân thiện, giá hợp lý ✌️',
     'Sân ổn áp, giá mềm, chill phết 👌',
     'Không có gì để chê, cũng chưa có gì để flex, sẽ quay lại 😌']},
 };
@@ -1279,7 +1302,7 @@ function genReviews(){
   const L=S.log, pool=[];
   for(const k in RV)if(L[k])for(let i=0;i<Math.min(L[k],4);i++)pool.push(k);
   if(!pool.length)pool.push('neutral');
-  const n=Math.min(5,Math.max(3,Math.round(pool.length/3)));
+  const n=Math.min(6,Math.max(3,Math.round(pool.length/2.5)));
   const out=[],used=new Set();
   for(let i=0;i<40&&out.length<n;i++){
     const k=pick(pool),t=pick(RV[k].t);if(used.has(t))continue;used.add(t);
@@ -1342,6 +1365,7 @@ function replyReview(id,text){
   }
   // khách sửa lại số sao -> tính lại trung bình sao của ngày họ viết review
   const d=r.stars-old;
+  if(r.stars<=3)S.avgOn=true;
   S.rating=calcRating();
   if(d){const h=S.hist[r.day]||(S.hist[r.day]={s:0,n:0});
     if(h.n>0)h.s=Math.max(h.n,Math.min(5*h.n,h.s+d)); else {h.s=r.stars;h.n=1}  // review là 1 khách đã chấm trong ngày: chỉ đổi số sao của khách đó
@@ -1366,7 +1390,7 @@ let courtSay={}, sayTimer=null, lastMood='';
 
 // Mỗi khách chấm 1–5★. Sao ngày = trung bình sao khách hôm đó (làm mượt nhẹ khi còn ít khách).
 // Sao quán = trung bình sao ngày của 7 ngày gần nhất.
-const PRIOR_N=3, PRIOR_STAR=4;
+const PRIOR_N=3, PRIOR_STAR=5;
 function dayAvg(h){return h?(h.s+PRIOR_STAR*PRIOR_N)/(h.n+PRIOR_N):PRIOR_STAR}
 const REPLY_BONUS=0.03, REPLY_BONUS_MAX=0.3, RUDE_FINE=100000;
 function replyBonus(){ // điểm cộng uy tín từ phản hồi tích cực, còn hiệu lực trong 7 ngày
@@ -1375,7 +1399,8 @@ function replyBonus(){ // điểm cộng uy tín từ phản hồi tích cực, 
   return Math.min(REPLY_BONUS_MAX,b);
 }
 function calcRating(){
-  if(!S||!S.hist)return 4;
+  if(!S||!S.hist)return 5;
+  if(!S.avgOn)return 5; // quán mới: giữ 5★ cho tới khi có khách chấm tệ
   const days=Object.keys(S.hist).map(Number).filter(d=>S.hist[d].n>0).sort((a,b)=>b-a).slice(0,7);
   const base=!days.length?(S.hist[S.day]?dayAvg(S.hist[S.day]):PRIOR_STAR):days.reduce((a,d)=>a+dayAvg(S.hist[d]),0)/days.length;
   return Math.min(5,base+replyBonus());
@@ -1384,6 +1409,7 @@ function rate(n,who){
   n=Math.max(1,Math.min(5,Math.round(n)));
   const h=S.hist[S.day]||(S.hist[S.day]={s:0,n:0,c:[0,0,0,0,0]});
   h.s+=n;h.n++;if(h.c)h.c[n-1]++;
+  if(n<=3&&!S.avgOn){S.avgOn=true;setTimeout(()=>ownerSay('Có đánh giá chưa tốt rồi, từ giờ sao quán tính theo trung bình khách chấm!'),600)}
   S.rating=calcRating();
   toast(`${who?who+' chấm ':''}${'★'.repeat(n)}`,n<=2?'bad':'star');
   return n;
@@ -1392,7 +1418,7 @@ function cleanCourts(){return Array.from({length:COURTS},()=>({dirty:false}))}
 const tr=n=>(n/1e6).toLocaleString('vi-VN',{maximumFractionDigits:1})+' tr';
 function dayState(money){return {time:OPEN,bookings:[],qB:[],qD:[],courts:cleanCourts(),jobs:[],staff:0,log:{},
   stats:{court:0,drink:0,cost:0,wage:0,served:0,lost:0,start:money,waste:0,sold:{}}}}
-function newGame(name,courts){courts=Math.max(1,Math.min(MAX_COURTS,courts||4));COURTS=courts;const m=START_CASH;return Object.assign({hist:{},name:name||'Sân Cầu Lông Nhà Mình',courtsOpen:courts,debt:courts*COURT_COST,loan0:courts*COURT_COST,wasBelow:false,fineDay:0,day:1,money:m,rating:4,phase:'prep',reviews:[],unread:0,lastSold:{},
+function newGame(name,courts){courts=Math.max(1,Math.min(MAX_COURTS,courts||4));COURTS=courts;const m=START_CASH;return Object.assign({hist:{},name:name||'Sân Cầu Lông Nhà Mình',courtsOpen:courts,debt:courts*COURT_COST,loan0:courts*COURT_COST,wasBelow:false,fineDay:0,day:1,money:m,rating:5,avgOn:false,phase:'prep',reviews:[],unread:0,lastSold:{},
   unlocked:[...START_ITEMS],menu:[...START_ITEMS],prices:{},courtRate:{day:RATE_DAY,peak:RATE_PEAK},upg:{},
   stock:{tra:20,suoi:12,dg:12,tl:6,cf:0,cau:12,banhmi:0,xoi:0,chuoi:0,mi:0}},dayState(m))}
 function norm(d){
@@ -1406,6 +1432,7 @@ function norm(d){
   d.log=d.log||{};d.reviews=d.reviews||[];d.unread=d.unread||0;d.lastSold=d.lastSold||{};
   d.phase=d.phase||'open';
   d.name=d.name||'Sân Cầu Lông Nhà Mình';
+  if(d.avgOn===undefined)d.avgOn=true;
   if(!d.hist){d.hist={};if(d.day>1)d.hist[d.day-1]={s:Math.round((d.rating||4)*5),n:5}}
   d.courtsOpen=Math.max(1,Math.min(MAX_COURTS,d.courtsOpen||MAX_COURTS)); COURTS=d.courtsOpen;
   d.debt=d.debt||0; d.loan0=d.loan0||d.debt; d.fineDay=d.fineDay||0; if(d.wasBelow===undefined)d.wasBelow=(d.rating||4)<3;
@@ -1451,7 +1478,7 @@ function spawnBooking(){
   let dur=pick([60,60,90,120,120]), start=null;
   if(walk){ if(now+dur>CLOSE){dur=Math.floor((CLOSE-now)/30)*30; if(dur<60)return;} }
   else { start=Math.ceil((now+30*(1+rand(8)))/30)*30; if(start+dur>CLOSE)return; }
-  const name=pick(NAMES), pat=Math.round((200+rand(70))*(has('bench')?1.25:1));
+  const name=pick(NAMES), pat=Math.round((240+rand(80))*(has('bench')?1.25:1));
   const c={id:++uid,type:'b',name,look:makeLook(name),walk,start,dur,count,assigned:[],paid:0,pat,patMax:pat,warned:0,chat:[]};
   const m=me(name), sc=count>1?'2 sân':'1 sân';
   talk(c,'c',walk
@@ -1471,7 +1498,7 @@ function spawnDrink(b){
   if(!pool.length)pool=S.menu.length?[pick(S.menu)]:['tra'];
   const order={}, n=1+rand(3);
   for(let i=0;i<n;i++){const id=pick(pool);order[id]=(order[id]||0)+1+(Math.random()<.2?1:0)}
-  const pat=Math.round((150+rand(60))*(has('fan')?1.25:1));
+  const pat=Math.round((120+rand(45))*(has('fan')?1.25:1));
   const c={id:++uid,type:'d',bid:b.id,name:b.name,look:makeLook(b.name),court:b.court,order,pat,patMax:pat,warned:0,chat:[]};
   const hasFood=Object.keys(order).some(id=>['banhmi','xoi','chuoi','mi'].includes(id));
   if(b.court){talk(c,'c',pick([`Em ơi, cho ${orderText(order)} nha!`,`Sân ${b.court} nè, lấy giùm ${orderText(order)}!`,hasFood?`Đói quá, cho ${orderText(order)} nha em!`:`Khát quá, ${orderText(order)} nha em!`]));
@@ -1496,7 +1523,7 @@ function step(dm){
   S.time=Math.min(CLOSE,S.time+dm);
   // dọn sân xong
   for(const j of S.jobs.filter(j=>S.time>=j.until)){
-    S.courts[j.court-1].dirty=false;S.jobs=S.jobs.filter(x=>x!==j);
+    S.courts[j.court-1].dirty=false;S.jobs=S.jobs.filter(x=>x!==j); if(j.by==='staff')L('staff');
     if(j.by==='owner')ownerSay(`Sân ${j.court} sạch bong rồi! ✨`);
     else courtSay[j.court]={t:'Sạch bong rồi nha! ✨',until:performance.now()+2000,staff:true};
     save();
@@ -1522,7 +1549,15 @@ function step(dm){
         S.courts[b.court-1].dirty=false;
       } else L('cleanStart');
     }
-    if(!b.over&&S.time>=b.end){b.over=true;S.courts[b.court-1].dirty=true}
+    if(!b.over&&S.time>=b.end){b.over=true;S.courts[b.court-1].dirty=true;
+      const f=b.fee!=null?b.fee:0;
+      if(f>0){
+        const dash=Math.random()<(has('cam')?0.01:0.06);
+        if(dash){S.stats.dash=(S.stats.dash||0)+1;S.stats.dashLoss=(S.stats.dashLoss||0)+f;L('dash');
+          courtSay[b.court]={t:pick(['Chuồn lẹ tụi bây! 🏃','Quên ví rồi, bye! 🏃‍♂️','Mai trả nha! 😜']),until:performance.now()+3000};
+          ownerSay(`Ơ! ${b.name} đánh xong sân ${b.court} rồi bùng mất ${fmt(f)} tiền sân! 😤`);toast(`−${fmt(f)} khách bùng`,'bad')}
+        else{S.money+=f;S.stats.court+=f;toast('+'+fmt(f)+` sân ${b.court}`)}
+      }}
   }
   const h=S.time/60;
   const pk=peakInfo(h);
@@ -1541,8 +1576,8 @@ function step(dm){
   for(const q of [S.qB,S.qD]){
     for(let i=q.length-1;i>=0;i--){
       const c=q[i]; c.pat-=dm; const p=c.pat/c.patMax;
-      if(p<.5&&c.warned<1){c.warned=1;talk(c,'c',pick(IMP1))}
-      if(p<.22&&c.warned<2){c.warned=2;talk(c,'c',pick(IMP2))}
+      if(p<Z_WARN&&c.warned<1){c.warned=1;talk(c,'c',pick(IMP1))}
+      if(p<Z_LATE&&c.warned<2){c.warned=2;talk(c,'c',pick(IMP2));if(cur!==c)ownerSay(`${c.name} sắp hết kiên nhẫn rồi, phục vụ gấp kẻo bị chấm xấu!`)}
       if(c.pat<=0){
         q.splice(i,1); rate(1,c.name); S.stats.lost++; L('wait');
         ownerSay(`Huhu, ${c.name} bỏ về rồi... Lần sau phải nhanh hơn!`);
@@ -1573,11 +1608,12 @@ function assign(ct){
   const [ws,we]=win(r);
   talk(r,'o',`Dạ, ${you(r.name)} vào sân ${ct} nha!`);
   if(!courtFree(ct,ws,we)){r.pat-=8;r.bad=(r.bad||0)+1;L('conflict');talk(r,'c',pick([`Ơ, sân ${ct} có người giờ đó mà em!`,`Sân ${ct} kín rồi, em coi lại đi!`]));return}
-  S.bookings.push({id:r.id+'-'+ct,rid:r.id,court:ct,start:ws,end:we,name:r.name});
-  const f=fee(ws,we); S.money+=f; S.stats.court+=f; r.paid+=f; r.assigned.push(ct);
-  toast('+'+fmt(f));
+  const f=fee(ws,we);
+  S.bookings.push({id:r.id+'-'+ct,rid:r.id,court:ct,start:ws,end:we,name:r.name,fee:f});
+  r.paid+=f; r.assigned.push(ct);
+  toast(`Sân ${ct}: thu ${fmt(f)} khi chơi xong`,'star');
   if(r.assigned.length>=r.count){
-    S.stats.served++; rate({happy:5,meh:4,angry:3}[moodOf(r)]-Math.min(2,r.bad||0)-(courtF()>1.25?1:0),r.name); if(moodOf(r)==='happy')L('fast'); if(courtF()>1.25)L('pricey'); else if(courtF()<.85)L('cheap');
+    S.stats.served++; rate(starByTime(r)-Math.min(2,r.bad||0)-(courtF()>1.25?1:0),r.name); if(moodOf(r)==='happy')L('fast'); else if(moodOf(r)==='angry')L('late'); if(peakInfo(S.time/60).hot)L('busy'); if(courtF()>1.25)L('pricey'); else if(courtF()<.85)L('cheap');
     const thx=pick(['Ok em, cảm ơn nha!','Tuyệt, đi đánh thôi!','Nhanh gọn ghê, thích!','Ngon lành, cảm ơn em!']);
     talk(r,'c',thx);
     ownerSay(r.walk&&isDirty(ct)?`Ối, sân ${ct} chưa dọn mà ${r.name} vô rồi!`:`${r.name} nhận sân ${r.assigned.join(' và ')}: "${thx}"`);
@@ -1639,8 +1675,8 @@ function give(){
   if(!ok){o.pat-=6;o.bad=(o.bad||0)+1;L('wrong');talk(o,'c',`Không phải, ${me(o.name)} gọi ${orderText(o.order)} mà!`);return}
   let sum=0;for(const id in tray){S.stock[id]-=tray[id];sum+=tray[id]*priceOf(id);S.stats.sold[id]=(S.stats.sold[id]||0)+tray[id]}
   const fs=Object.keys(tray).map(pf); if(Math.max(...fs)>1.3)L('pricey'); else if(Math.min(...fs)<.8)L('cheap');
-  S.money+=sum;S.stats.drink+=sum;S.stats.served++;rate({happy:5,meh:4,angry:3}[moodOf(o)]-Math.min(2,o.bad||0)-(Math.max(...fs)>1.3?1:0),o.name);
-  L('drinkOk'); if(Object.keys(tray).some(id=>['banhmi','xoi','chuoi','mi'].includes(id)))L('food');
+  S.money+=sum;S.stats.drink+=sum;S.stats.served++;rate(starByTime(o)-Math.min(2,o.bad||0)-(Math.max(...fs)>1.3?1:0),o.name);
+  L('drinkOk'); if(Object.keys(tray).some(id=>['banhmi','xoi','chuoi','mi'].includes(id)))L('food'); if(tray.cf)L('coffee'); if(tray.mi)L('noodle'); if(moodOf(o)==='angry')L('late');
   talk(o,'c',pick(['Mát quá!','Cảm ơn em nha!','Đã ghê!','Chuẩn luôn!','Ngon xỉu!']));
   toast('+'+fmt(sum));
   const low=ITEMS.filter(it=>S.stock[it.id]<4&&S.stats.sold[it.id]);
@@ -1709,7 +1745,7 @@ function renderQueue(el,q,emptyTxt){
   if(el.dataset.sig!==sig){el.dataset.sig=sig;el.innerHTML=q.length?q.map(chip).join(''):`<p class="empty">${emptyTxt}</p>`}
   for(const c of q){const bar=el.querySelector(`[data-id="${c.id}"] .pat i`);if(bar)setBar(bar,c)}
 }
-function setBar(bar,c){const p=Math.max(0,c.pat/c.patMax);bar.style.width=(p*100)+'%';bar.className=p<.3?'low':p<.6?'mid':''}
+function setBar(bar,c){const p=Math.max(0,c.pat/c.patMax);bar.style.width=(p*100)+'%';bar.className=p<Z_LATE?'low':p<Z_WARN?'mid':''}
 function render(){
   if(!S)return;
   checkStars();
@@ -1736,10 +1772,10 @@ function renderCounter(k,q,emptyTxt){
         <button class="chibi ${moodOf(f)} ${isNew?'new':''}" data-id="${f.id}" aria-label="Phục vụ ${f.name}">${avatar(f.look,moodOf(f))}</button>
         <span class="tapme">👆</span>
         <div class="line">${rest}${q.length>5?`<span class="more">+${q.length-5}</span>`:''}</div>
-        <div class="pat"><i></i></div>`;
+        <span class="eta"></span><div class="pat zpat"><i></i></div>`;
     }
   }
-  if(f){const bar=stage.querySelector('.pat i');if(bar)setBar(bar,f)}
+  if(f){const bar=stage.querySelector('.pat i');if(bar)setBar(bar,f);const e=stage.querySelector('.eta');if(e){const t=zoneTxt(f);if(e.textContent!==t)e.textContent=t;e.className='eta '+moodOf(f)}}
 }
 function openCounter(e,k){
   const b=e.target.closest('[data-id]');
@@ -1777,13 +1813,13 @@ function closeSheet(){cur=null;brewing=[];resetBench();$('#sheet').classList.rem
 function buildSheet(){
   if(!cur)return;
   const body=$('#sheetBody'), plain=cur.type==='kho'||cur.type==='rv';
-  $('#sheetPatWrap').style.visibility=plain?'hidden':'visible';
+  $('#sheetPatWrap').style.visibility=plain?'hidden':'visible'; $('#sheetEta').style.display=plain?'none':'';
   $('#sheetFace').innerHTML=plain?avatar(OWNER_LOOK,ownerMood()):avatar(cur.look,moodOf(cur));
   if(cur.type==='b'){
     const r=cur,[ws,we]=win(r);
     $('#sheetTitle').textContent=r.name;
     body.innerHTML=`
-      <div class="meta">Giờ khách muốn: <b id="winTxt">${hm(ws)} – ${hm(we)}</b>. Tiền sân: <b id="feeTxt">${fmt(fee(ws,we))}</b> mỗi sân${r.count>1?`. Đã xếp <b>${r.assigned.length}/${r.count}</b>`:''}</div>
+      <div class="meta">Giờ khách muốn: <b id="winTxt">${hm(ws)} – ${hm(we)}</b>. Tiền sân: <b id="feeTxt">${fmt(fee(ws,we))}</b> mỗi sân (thu khi chơi xong)${r.count>1?`. Đã xếp <b>${r.assigned.length}/${r.count}</b>`:''}</div>
       <p class="hint">Khung vàng là giờ khách muốn. Sân nào trong khung không có khối xanh là còn trống, chạm vào hàng đó để xếp. Sân có 🧹 là chưa dọn, khách vô sẽ chê.</p>
       <div class="tl-scroll" id="tlScroll"></div>
       <div class="actions">
@@ -1856,7 +1892,7 @@ let lastSheetMood='';
 function liveSheet(){
   if(!cur||cur.type==='kho'||cur.type==='rv')return;
   tickBrew();
-  setBar($('#sheetPat'),cur);
+  setBar($('#sheetPat'),cur);{const e=$('#sheetEta'),t=zoneTxt(cur);if(e.textContent!==t)e.textContent=t;e.className='eta '+moodOf(cur)}
   const m=moodOf(cur);if(m!==lastSheetMood){lastSheetMood=m;$('#sheetFace').innerHTML=avatar(cur.look,m)}
   if(cur.type==='b'&&!cur.done){
     const el=$('#tlScroll');
@@ -1943,7 +1979,7 @@ function prepTabHTML(total){
     const next=Math.round((S.debt-prepPay)*INTEREST);
     return `<div class="bank-card"><div class="bk-row"><span>🏦 Nợ hiện tại</span><b>${fmt(S.debt)}</b></div>
         <div class="bk-row"><span>Khoản vay ban đầu</span><b>${fmt(S.loan0)}</b></div>
-        <div class="bk-row"><span>Lãi suất</span><b>${Math.round(INTEREST*100)}% mỗi ngày, cộng dồn</b></div>
+        <div class="bk-row"><span>Lãi suất</span><b>${(INTEREST*100).toLocaleString('vi-VN')}% mỗi ngày, cộng dồn</b></div>
         <div class="bk-row"><span>Lãi dự kiến tối nay</span><b>+${fmt(next)}</b></div>
         <div class="bar-debt"><i style="width:${S.loan0?Math.min(100,S.debt/S.loan0*100):0}%"></i></div></div>
       ${S.debt>0?`<h3 class="sub">💸 Trả nợ sáng nay: <span style="color:var(--coral)">${fmt(prepPay)}</span></h3>
@@ -1985,7 +2021,7 @@ function showPrep(){
       if(v==='0')prepPay=0; else if(v==='max')prepPay=Math.max(0,Math.min(S.debt,room)); else{const nv=prepPay+ +v;if(nv>room)return toast('Không đủ tiền mặt','bad');prepPay=Math.min(S.debt,nv)}
       return keepScroll(showPrep)}
     if(g('[data-build]')){if(COURTS>=MAX_COURTS)return;
-      if(!confirm(`Vay thêm ${fmt(COURT_COST)} để xây sân số ${COURTS+1}? Khoản này cộng vào nợ, lãi ${Math.round(INTEREST*100)}%/ngày.`))return;
+      if(!confirm(`Vay thêm ${fmt(COURT_COST)} để xây sân số ${COURTS+1}? Khoản này cộng vào nợ, lãi ${(INTEREST*100).toLocaleString('vi-VN')}%/ngày.`))return;
       S.debt+=COURT_COST; S.loan0+=COURT_COST; COURTS++; S.courtsOpen=COURTS; S.courts.push({dirty:false}); save();
       ownerSay(`Xây xong sân số ${COURTS} rồi! Giờ quán có ${COURTS} sân.`); return keepScroll(showPrep)}
     if(g('[data-sinc]')){if(prepStaff>=MAX_STAFF)return toast('Tối đa 3 người thôi','bad');if(total+WAGE>S.money)return toast('Không đủ tiền','bad');prepStaff++;return keepScroll(showPrep)}
@@ -2057,6 +2093,7 @@ function showSummary(){
       ${st.wage?`<tr><td>👷 Lương thời vụ</td><td>−${fmt(st.wage)}</td></tr>`:''}
       <tr><td>🗑️ Đồ tươi bỏ đi${st.wasted?` (${st.wasted})`:''}<br><small style="color:var(--soft)">phí phạm, đã nằm trong tiền nhập</small></td><td>${fmt(st.waste)}</td></tr>
       <tr><td>📦 Tồn kho sang mai<br><small style="color:var(--soft)">${ITEMS.filter(i=>!i.perish&&S.stock[i.id]>0).map(i=>`${S.stock[i.id]} ${i.name.toLowerCase()}`).join(', ')||'hết sạch'}</small></td><td></td></tr>
+      ${st.dash?`<tr><td>🏃 Khách bùng tiền sân (${st.dash} lượt)</td><td>−${fmt(st.dashLoss)}</td></tr>`:''}
       <tr><td>😊 Lượt phục vụ</td><td>${st.served}</td></tr>
       <tr><td>😠 Khách không vui</td><td>${st.lost}</td></tr>
       <tr><td>🧹 Khách vô sân dơ</td><td>${lg.dirty||0}</td></tr>
@@ -2064,7 +2101,7 @@ function showSummary(){
       <tr><td>⭐ Sao quán (TB 7 ngày gần nhất)${replyBonus()>0?`<br><small style="color:var(--soft)">đã gồm +${replyBonus().toFixed(2)}★ uy tín từ phản hồi tốt</small>`:''}</td><td>${S.rating.toFixed(1)}</td></tr>
       ${st.fine?`<tr><td>😱 Mất do tụt dưới 3 sao</td><td>−${fmt(st.fine)}</td></tr>`:''}
       <tr class="total"><td>💰 Lãi hôm nay</td><td>${fmt(profit)}</td></tr>
-      <tr><td>🏦 Tiền lãi ngân hàng (${Math.round(INTEREST*100)}%/ngày, cộng vào nợ)</td><td>+${fmt(st.interest||0)}</td></tr>
+      <tr><td>🏦 Tiền lãi ngân hàng (${(INTEREST*100).toLocaleString('vi-VN')}%/ngày, cộng vào nợ)</td><td>+${fmt(st.interest||0)}</td></tr>
       ${st.repaid?`<tr><td>🏦 Đã trả nợ sáng nay</td><td>${fmt(st.repaid)}</td></tr>`:''}
       <tr><td>🏦 Nợ ngân hàng còn</td><td>${S.debt>0?fmt(S.debt):'Hết nợ 🎉'}</td></tr>
       <tr><td>💼 Tài sản ròng (tiền mặt − nợ)</td><td>${fmt(S.money-S.debt)}</td></tr>
@@ -2144,7 +2181,7 @@ function askLoan(name,done){
     const loan=n*COURT_COST;
     openModal(`<div class="mface">${avatar(OWNER_LOOK,'happy')}</div>
       <h2>🏦 Vay vốn mở sân</h2>
-      <p style="text-align:center">Quán tối đa <b>${MAX_COURTS} sân</b>. Mỗi sân tốn <b>${fmt(COURT_COST)}</b>, muốn mở mấy sân thì ngân hàng cho vay bấy nhiêu. Lãi <b>${Math.round(INTEREST*100)}% mỗi ngày</b>, cộng dồn vào nợ.</p>
+      <p style="text-align:center">Quán tối đa <b>${MAX_COURTS} sân</b>. Mỗi sân tốn <b>${fmt(COURT_COST)}</b>, muốn mở mấy sân thì ngân hàng cho vay bấy nhiêu. Lãi <b>${(INTEREST*100).toLocaleString('vi-VN')}% mỗi ngày</b>, cộng dồn vào nợ.</p>
       <div class="loan-pick"><button data-ln="-1" aria-label="Bớt sân">−</button><div><b>${n}</b><small>sân</small></div><button data-ln="1" aria-label="Thêm sân">+</button></div>
       <div class="courts-mini">${Array.from({length:MAX_COURTS},(_,i)=>`<i class="${i<n?'on':''}">${i+1}</i>`).join('')}</div>
       <div class="lvl lvl-${n<=3?'e':n<=6?'m':'h'}">${n<=3?'🙂 Dễ thở: hợp người mới chơi':n<=6?'😅 Vừa sức: đông khách hơn, lãi nặng hơn':'🔥 Khó: rất đông khách nhưng nợ khủng'}</div>
@@ -2185,7 +2222,7 @@ function snapshot(){
   const stock={};for(const it of ITEMS){const n=nextDay&&it.perish?0:S.stock[it.id];if(n)stock[it.id]=n}
   const db=Math.round(S.phase==='open'?S.debt*(1+INTEREST):S.debt);
   const hs={};Object.keys(S.hist||{}).map(Number).sort((a,b)=>b-a).slice(0,7).forEach(d=>hs[d]=[S.hist[d].s,S.hist[d].n,+(S.hist[d].b||0).toFixed(3)]);
-  return {v:1,hs,co:COURTS,db,l0:S.loan0,fd:S.fineDay,n:S.name,d:S.day+(nextDay?1:0),m:Math.round(S.money),r:+S.rating.toFixed(2),s:stock,u:S.unlocked,mn:S.menu,p:S.prices,c:S.courtRate,g:Object.keys(S.upg||{}).filter(k=>S.upg[k]),
+  return {v:1,ao:S.avgOn?1:0,hs,co:COURTS,db,l0:S.loan0,fd:S.fineDay,n:S.name,d:S.day+(nextDay?1:0),m:Math.round(S.money),r:+S.rating.toFixed(2),s:stock,u:S.unlocked,mn:S.menu,p:S.prices,c:S.courtRate,g:Object.keys(S.upg||{}).filter(k=>S.upg[k]),
     ls:nextDay?S.stats.sold:S.lastSold,
     rv:S.reviews.slice(0,6).map(r=>({h:r.h,s:r.stars,t:r.t,l:r.likes,d:r.day,...(r.reply?{re:r.reply,f:r.follow,o:r.tone}:{})}))};
 }
@@ -2206,6 +2243,7 @@ async function readKey(key){
   const o=JSON.parse(json); if(!o||o.v!==1||!o.d)throw new Error('Mã không đọc được.');
   const st=newGame(cleanName(o.n)||undefined,o.co||MAX_COURTS);
   st.debt=o.db||0; st.loan0=o.l0||st.debt; st.fineDay=o.fd||0;
+  st.avgOn=o.ao===undefined?true:!!o.ao;
   st.hist={};for(const d in (o.hs||{}))st.hist[d]={s:o.hs[d][0],n:o.hs[d][1],b:o.hs[d][2]||0};
   Object.assign(st,{day:o.d,money:o.m,rating:clamp(o.r||4),phase:'prep',
     stock:Object.assign(Object.fromEntries(ITEMS.map(i=>[i.id,0])),o.s||{}),
@@ -2340,7 +2378,7 @@ try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}ca
 $('#ownerFace').innerHTML=avatar(OWNER_LOOK,'happy');
 setInterval(()=>{
   const now=performance.now();let dt=(now-last)/1000;last=now;if(dt>.5)dt=.5;
-  if(S&&!paused&&S.phase==='open')step(dt*GAME_SPEED*speed);   // 1x: 1 giây thật = 3,5 phút trong game
+  if(S&&!paused&&S.phase==='open')step(dt*GAME_SPEED*speed);
   render();
 },100);
 startScreen();
