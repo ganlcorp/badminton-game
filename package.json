@@ -1,0 +1,9 @@
+{
+  "name": "badminton-game",
+  "private": true,
+  "description": "Sân Cầu Lông Nhà Mình - game quản lý sân cầu lông",
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "redis": "^4.7.0"
+  }
+}
