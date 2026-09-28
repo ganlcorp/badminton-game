@@ -714,6 +714,88 @@ header{flex-wrap:nowrap;min-width:0}
 .stage .eta{position:absolute;right:8px;bottom:22px;z-index:4}
 .stage .line{bottom:44px}
 @media (prefers-reduced-motion:reduce){.eta.angry{animation:none}}
+
+/* chibi hoạt hình */
+.cb{position:relative;width:66px;height:82px;cursor:pointer;flex:none}
+.cb .cb-svg{width:100%;height:100%;display:block;overflow:visible}
+.cb-svg *{transform-box:view-box}
+.cb .cb-all{animation:cbBob 1.5s ease-in-out infinite}
+@keyframes cbBob{50%{transform:translateY(-3px)}}
+.cb .cb-eyes{transform-origin:40px 35px;animation:cbBlink 3.8s infinite}
+@keyframes cbBlink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+.cb .m-talk{opacity:0}
+.cb.talk .m-talk{animation:cbMouthA .24s steps(1) infinite}
+.cb.talk .m-idle{animation:cbMouthB .24s steps(1) infinite}
+@keyframes cbMouthA{0%{opacity:1}50%{opacity:0}}
+@keyframes cbMouthB{0%{opacity:0}50%{opacity:1}}
+.cb .cb-armR{transform-origin:53px 62px;animation:cbIdleArm 2.6s ease-in-out infinite}
+@keyframes cbIdleArm{50%{transform:rotate(8deg)}}
+.cb.talk .cb-armR{animation:cbWave .32s ease-in-out infinite alternate}
+@keyframes cbWave{from{transform:rotate(-12deg)}to{transform:rotate(28deg)}}
+.cb .cb-head{transform-origin:40px 54px}
+.cb.talk .cb-head{animation:cbNodTalk .5s ease-in-out infinite alternate}
+@keyframes cbNodTalk{to{transform:rotate(-4deg) translateY(1px)}}
+.cb.guard .cb-head{animation:cbLook 3.2s ease-in-out infinite}
+@keyframes cbLook{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+.cb.alert .cb-all{animation:cbJump .28s ease-in-out 6 alternate}
+@keyframes cbJump{to{transform:translateY(-8px)}}
+.owner-bar .me-wrap{display:flex;flex-direction:column;align-items:center}
+.owner-bar .tagname{bottom:-4px}
+.tagname.g{background:#2d4a8a}
+.guard-wrap[hidden]{display:none!important}
+.gsay{position:absolute;left:50%;bottom:calc(100% - 4px);transform:translateX(-50%) scale(.6);opacity:0;white-space:nowrap;background:#fff;color:#1d2b36;border:2.5px solid var(--ink);border-radius:12px;padding:1px 8px;font-size:.72rem;font-weight:800;box-shadow:0 2px 0 var(--ink);z-index:6;transition:all .2s cubic-bezier(.3,1.6,.5,1);pointer-events:none}
+.gsay.on{opacity:1;transform:translateX(-50%) scale(1)}
+.gsay::after{content:"";position:absolute;left:50%;bottom:-8px;margin-left:-5px;border:5px solid transparent;border-top-color:var(--ink)}
+.owner-bar .ob{transition:transform .2s}
+.owner-bar .ob.on{animation:obPop2 .35s cubic-bezier(.3,1.6,.5,1)}
+@keyframes obPop2{from{transform:scale(.85) translateX(-10px);opacity:.3}}
+.owner-bar .ob.typing::after{content:"▍";margin-left:1px;animation:caret .5s steps(1) infinite}
+@keyframes caret{50%{opacity:0}}
+.mini-cb{width:54px;height:66px}
+.guardrow{background:linear-gradient(90deg,rgba(58,134,255,.18),transparent)!important;margin-top:8px}
+@media (max-width:420px){.cb{width:54px;height:68px}.owner-bar{gap:6px}}
+@media (orientation:landscape) and (max-height:520px){.owner-bar .cb{width:48px;height:60px}}
+@media (prefers-reduced-motion:reduce){.cb *,.cb .cb-all{animation:none!important}}
+/* responsive: không cho bất kỳ phần nào đẩy trang rộng hơn màn hình */
+html,body{max-width:100%;overflow-x:hidden}
+.app{width:100%;min-width:0;overflow-x:clip}
+.app>*{min-width:0}
+.courts{grid-template-columns:repeat(5,minmax(0,1fr))}
+.ctrs{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ctr,.hall,.owner-bar{min-width:0}
+header .pill{flex-shrink:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+header .clock{flex-shrink:0}
+.mcard{max-width:min(420px,100%)}
+.modal .mcard .pinfo{flex-wrap:wrap}
+.sheet{width:100%;max-width:min(780px,100%)}
+
+.ob-btns{display:flex;gap:8px;flex:none}
+@media (max-width:420px){.ob-btns{flex-direction:column;gap:5px}.ob-btns .phone{width:38px!important;height:38px!important;font-size:1.1rem!important;border-radius:12px}
+  .owner-bar .ob{font-size:.78rem;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;padding:4px 8px}}
+@media (orientation:landscape) and (min-height:521px) and (min-width:1000px){.courts{grid-template-columns:repeat(10,minmax(0,1fr))}}
+@media (min-width:1000px){.mini{max-width:84px}}
+
+/* nhân viên bán hàng & khách phàn nàn */
+.seller-h{display:inline-flex;align-items:center;gap:3px;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:0 4px 0 1px;height:20px;position:relative;overflow:hidden;min-width:44px}
+.seller-h[hidden]{display:none}
+.seller-h .sf{width:17px;height:17px;border-radius:50%;overflow:hidden;display:flex;background:#ffd6e7;flex:none}
+.seller-h i{display:block;height:5px;width:0;background:var(--pink);border-radius:3px;flex:1;min-width:18px;max-width:30px;transition:width .2s linear}
+.seller-h.busy{animation:qnPulse 1.4s ease-in-out infinite}
+.bub.cmp{background:#ffe1e6;border-color:#d6334f}
+.bub.cmp b{color:#d6334f}
+.chibi.fury .ava{animation:cFury .25s ease-in-out infinite!important}
+@keyframes cFury{25%{transform:translateX(-3px) rotate(-8deg)}75%{transform:translateX(3px) rotate(8deg)}}
+.chibi .fume{position:absolute;left:44px;top:-4px;font-size:1.2rem;animation:fume 0.9s ease-out infinite;pointer-events:none}
+.chibi .fume.f2{left:6px;top:4px;font-size:.95rem;animation-delay:-.45s}
+@keyframes fume{0%{transform:scale(.6);opacity:0}30%{opacity:1}100%{transform:translateY(-10px) scale(1.2);opacity:0}}
+.sell-tag{position:absolute;left:6px;bottom:48px;z-index:3;background:#ffd6e7;color:#1d2b36;border:2px solid var(--ink);border-radius:10px;font-size:.62rem;font-weight:800;padding:0 5px}
+.line .hd{position:relative}
+.line .hd.selling{box-shadow:0 0 0 3px var(--pink)}
+.sell-dot{position:absolute;right:-4px;top:-6px;font-size:.8rem;font-style:normal}
+.cmp-note{background:#ffe1e6;border:2.5px solid #d6334f;color:#7a1830;border-radius:12px;padding:5px 10px;font-weight:700;font-size:.84rem;margin-bottom:8px}
+.sellrow{background:linear-gradient(90deg,rgba(255,122,182,.22),transparent)!important;margin-top:8px}
+@media (prefers-reduced-motion:reduce){.chibi.fury .ava,.chibi .fume,.seller-h.busy{animation:none!important}}
+@media (max-width:420px){.ctr.drink .ctl{display:none}.seller-h i{max-width:18px;min-width:12px}}
 </style>
 </head>
 <body>
@@ -762,10 +844,11 @@ header{flex-wrap:nowrap;min-width:0}
   </section>
 
   <div class="owner owner-bar" id="owner">
-    <div class="me-wrap"><div class="me" id="ownerFace" title="Chủ quán"></div><span class="tagname">Chủ quán</span></div>
+    <div class="me-wrap"><div class="cb" id="ownerFace" title="Chủ quán"></div><span class="tagname">Chủ quán</span></div>
+    <div class="me-wrap guard-wrap" id="guardWrap" hidden><div class="cb guard" id="guardFace" title="Bảo vệ"></div><span class="tagname g">Bảo vệ</span><span class="gsay" id="guardSay"></span></div>
     <div class="ob on" id="ownerSay">Chạm vào khách ở quầy để phục vụ nha!</div>
-    <button class="phone press" id="keyBtn" aria-label="Lấy mã lưu game">💾</button>
-    <button class="phone press" id="rvBtn" aria-label="Xem review">📱<span class="badge" id="rvBadge" hidden>0</span></button>
+    <div class="ob-btns"><button class="phone press" id="keyBtn" aria-label="Lấy mã lưu game">💾</button>
+    <button class="phone press" id="rvBtn" aria-label="Xem review">📱<span class="badge" id="rvBadge" hidden>0</span></button></div>
   </div>
 
   <div class="ctrs">
@@ -774,7 +857,7 @@ header{flex-wrap:nowrap;min-width:0}
       <div class="stage" id="qBs"></div>
     </section>
     <section class="ctr drink" id="qD" aria-label="Quầy nước và đồ ăn">
-      <div class="ctr-h">🥤 Nước & đồ ăn <span class="qn" id="qDn">0</span><button class="kho-mini press" id="khoBtn">📦 Kho</button></div>
+      <div class="ctr-h">🥤 <span class="ctl">Nước & đồ ăn</span> <span class="qn" id="qDn">0</span><span class="seller-h" id="sellerH" hidden><span class="sf" id="sellerFace"></span><i id="sellerBar"></i></span><button class="kho-mini press" id="khoBtn">📦 Kho</button></div>
       <div class="stage" id="qDs"></div>
     </section>
   </div>
@@ -1138,6 +1221,9 @@ header{flex-wrap:nowrap;min-width:0}
 <script>
 const MAX_COURTS=10, COURT_COST=50000000, INTEREST=0.001, STAR_FINE=10000000, START_CASH=2000000;
 let COURTS=10;
+const SELLER_WAGE=170000, SELLER_ERR=0.15, SELL_MIN=10;
+const SELLER_LOOK={skin:'#fbd9bd',hair:'#4a2c1a',style:'bun',shirt:'#ff7ab6',cap:'#ff5a7a'};
+const GUARD_WAGE=150000, GUARD_CATCH=0.85, DASH_RATE=0.06;
 const OPEN=360, CLOSE=1320, PEAK=1020, W=28, CLEAN_MIN=12, STAFF_MIN=15, RUSH=1.3, WAGE=180000, MAX_STAFF=3;
 const STAFF_LOOKS=[{skin:'#f1c19b',hair:'#1b1b1b',style:'spiky',shirt:'#63e6be',band:'#ffd23f'},{skin:'#fbd9bd',hair:'#7a4a26',style:'bun',shirt:'#63e6be'},{skin:'#d9a07a',hair:'#2b1a12',style:'short',shirt:'#63e6be',glasses:true}];
 const RATE_DAY=70000, RATE_PEAK=100000;
@@ -1160,7 +1246,7 @@ const UNLOCK={tl:{cost:150000,t:'Nhập thêm nước tăng lực',d:'Thêm mộ
   mi:{cost:250000,t:'Ấm siêu tốc',d:'Bán mì ly, phải chế nước sôi chờ chín'},
   xoi:{cost:300000,t:'Nồi hấp xôi',d:'Bán xôi nóng buổi sáng'},
   cf:{cost:600000,t:'Máy pha cà phê',d:'Bán cà phê sữa, phải chờ máy pha'}};
-const UPG={cam:{e:'📹',cost:400000,t:'Camera an ninh',d:'Khách hết dám bùng tiền sân (6% → 1%)'},
+const UPG={cam:{e:'📹',cost:400000,t:'Camera an ninh',d:'Khách hết dám bùng tiền sân (6% → 1%). Thuê thêm bảo vệ ở tab Nhân viên để bắt quả tang.'},
   broom:{e:'🧹',cost:200000,t:'Chổi xịn',d:'Chủ quán quét sân nhanh hơn (12 → 8 phút)'},
   vac:{e:'🌀',cost:450000,t:'Máy hút bụi',d:'Nhân viên dọn nhanh hơn (15 → 10 phút)'},
   bench:{e:'🪑',cost:300000,t:'Ghế chờ có mái che',d:'Khách đặt sân chịu chờ lâu hơn 25%'},
@@ -1238,7 +1324,7 @@ function avatar(L,mood='happy'){
 const Z_WARN=0.4, Z_LATE=0.15;
 function moodOf(c){const p=c.pat/c.patMax;return p>=Z_WARN?'happy':p>=Z_LATE?'meh':'angry'}
 function starByTime(c){const p=c.pat/c.patMax;return p>=Z_WARN?5:p>=Z_LATE?4:2}
-function zoneTxt(c){const p=c.pat/c.patMax,m=Math.max(0,Math.ceil(c.pat));return p>=Z_WARN?`⏱ ${m}′ · ★5`:p>=Z_LATE?`⏳ ${m}′ · ★4`:`🔥 ${m}′ · ★2`}
+function zoneTxt(c){const p=c.pat/c.patMax,m=Math.max(0,Math.ceil(c.pat)),cap=c.complaint?3:5;return p>=Z_WARN?`⏱ ${m}′ · ★${Math.min(cap,5)}`:p>=Z_LATE?`⏳ ${m}′ · ★${Math.min(cap,4)}`:`🔥 ${m}′ · ★2`}
 function ownerMood(){return S&&S.rating<2.5?'angry':S&&S.rating<3.5?'meh':'happy'}
 
 /* ---------- Review Gen Z ---------- */
@@ -1288,6 +1374,10 @@ const RV={
     'Tủ còn đầy mà bảo hết, chủ quán đang troll tụi mình à 🤡']},
   pricey:{s:[2,2,3],t:['Giá chát xỉu, tưởng thuê sân ở trung tâm thương mại 😵','Chai nước mà giá như trà sữa size L, cay ghê 🥲','Sân đẹp nhưng ví tui khóc rồi 💸']},
   cheap:{s:[5,5,4],t:['Giá này là thuộc hàng hiếm, đánh 2 tiếng chưa bằng 1 ly trà sữa 🧋','Giá mềm như bún, sinh viên mãi iu 🫶','Rẻ mà chất, chủ quán đang làm từ thiện hả 🥹','Giá hạt dẻ, cuối tháng vẫn đi đánh được 🌰']},
+  sellerWrong:{s:[2,2,3],t:['Nhân viên đưa nhầm nước tăng lực trong khi tui gọi nước suối, hơi lú nha 😵‍💫','Bạn nhân viên dễ thương mà hay nhầm món ghê, chủ quán nhắc bạn xíu nha 🫠','Gọi một đằng nhân viên đưa một nẻo, lần sau tự lấy luôn cho chắc 🙃']},
+  fixed:{s:[3,4],t:['Nhân viên bán nhầm nhưng chủ quán ra đổi lại liền, xin lỗi dễ thương nên thông cảm 🫶','Bị đưa nhầm món mà chủ quán xử lý nhanh, thôi cho qua nha 👌']},
+  sellerOk:{s:[5,4],t:['Có nhân viên đứng quầy nên gọi nước nhanh hẳn, khỏi chờ lâu 👍','Bạn nhân viên bán hàng nhanh nhẹn, mát tay ghê 🧃']},
+  caught:{s:[5,4,5],t:['Bảo vệ quán tóm gọn nhóm định bùng tiền sân, an ninh 10 điểm 👮','Có anh bảo vệ canh nên đánh yên tâm, xe cộ cũng an toàn 🛡️','Thấy bảo vệ chặn đám bùng tiền, quán này làm ăn đàng hoàng ghê 👏']},
   dash:{s:[3,4,3],t:['Hôm nay thấy có nhóm đánh xong chạy mất tiêu không trả tiền, thương chủ quán ghê 🥲','Bàn bên cạnh bùng tiền sân, chủ quán mặt buồn thiu, tui trả dư 5k an ủi 🫂','Quán nên gắn camera đi, nãy có đám bùng tiền chạy lẹ như Usain Bolt 🏃‍♂️💨']},
   late:{s:[2,3,2],t:['Đợi muốn đóng rêu mới được phục vụ, đói muốn xỉu 😵','Gọi nước từ hiệp 1 tới hiệp 3 mới có, chắc nước đi đường vòng 🌀','Chờ lâu ghê, nhưng chủ quán cười xin lỗi nên thôi 🙂']},
   busy:{s:[4,5,4],t:['Tối nay quán đông như hội chợ, vui xỉu, không khí cháy phố 🔥','Giờ cao điểm mà vẫn có sân, chủ quán xếp khéo ghê 👏','Đông mà vẫn gọn gàng, chủ quán multitask đỉnh nóc 🐙']},
@@ -1416,7 +1506,7 @@ function rate(n,who){
 }
 function cleanCourts(){return Array.from({length:COURTS},()=>({dirty:false}))}
 const tr=n=>(n/1e6).toLocaleString('vi-VN',{maximumFractionDigits:1})+' tr';
-function dayState(money){return {time:OPEN,bookings:[],qB:[],qD:[],courts:cleanCourts(),jobs:[],staff:0,log:{},
+function dayState(money){return {time:OPEN,bookings:[],qB:[],qD:[],courts:cleanCourts(),jobs:[],staff:0,guard:0,seller:0,sellJob:null,log:{},
   stats:{court:0,drink:0,cost:0,wage:0,served:0,lost:0,start:money,waste:0,sold:{}}}}
 function newGame(name,courts){courts=Math.max(1,Math.min(MAX_COURTS,courts||4));COURTS=courts;const m=START_CASH;return Object.assign({hist:{},name:name||'Sân Cầu Lông Nhà Mình',courtsOpen:courts,debt:courts*COURT_COST,loan0:courts*COURT_COST,wasBelow:false,fineDay:0,day:1,money:m,rating:5,avgOn:false,phase:'prep',reviews:[],unread:0,lastSold:{},
   unlocked:[...START_ITEMS],menu:[...START_ITEMS],prices:{},courtRate:{day:RATE_DAY,peak:RATE_PEAK},upg:{},
@@ -1454,7 +1544,51 @@ function save(){if(!S)return;try{localStorage.setItem(SAVE_KEY,JSON.stringify({v
 function L(k,n=1){S.log[k]=(S.log[k]||0)+n}
 
 /* ---------- Chat helpers ---------- */
-function ownerSay(t){const el=$('#ownerSay');el.textContent=t;el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(sayTimer);sayTimer=setTimeout(()=>el.classList.remove('on'),4500)}
+// Chibi vẽ bằng SVG: đầu to, thân nhỏ, tay vẫy khi nói
+function chibi(L,mood,role){
+  const k='#1d2b36',s=`stroke="${k}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"`;
+  const guard=role==='guard', shirt=guard?'#2d4a8a':L.shirt, pants=guard?'#1d2b36':'#3a4a6b';
+  let g=`<ellipse cx="40" cy="97" rx="20" ry="4" fill="rgba(0,0,0,.18)"/><g class="cb-all">`;
+  g+=`<rect x="30" y="80" width="8" height="12" rx="3" fill="${pants}" ${s}/><rect x="42" y="80" width="8" height="12" rx="3" fill="${pants}" ${s}/>`;
+  g+=`<path d="M27 93 h12 M41 93 h12" stroke="${k}" stroke-width="5" stroke-linecap="round"/>`;
+  g+=`<rect x="25" y="55" width="30" height="29" rx="11" fill="${shirt}" ${s}/>`;
+  if(guard)g+=`<path d="M45 61 l5 2 v5 q-2.5 3.5 -5 3.5 q-2.5 0 -5 -3.5 v-5 Z" fill="#ffd23f" stroke="${k}" stroke-width="1.6"/><path d="M30 60 q4 8 10 7" fill="none" stroke="#e9eef5" stroke-width="1.8"/><rect x="25" y="74" width="30" height="4" fill="#1d2b36"/>`;
+  else g+=`<path d="M32 60 h16 v18 q-8 5 -16 0 Z" fill="#fff" stroke="${k}" stroke-width="2"/><rect x="36" y="66" width="8" height="5" rx="1.5" fill="none" stroke="${k}" stroke-width="1.6"/>`;
+  g+=`<path d="M27 62 q-9 6 -7 16" fill="none" stroke="${k}" stroke-width="7" stroke-linecap="round"/><path d="M27 62 q-9 6 -7 16" fill="none" stroke="${L.skin}" stroke-width="3.5" stroke-linecap="round"/>`;
+  g+=`<g class="cb-armR"><path d="M53 62 q9 -2 11 -12" fill="none" stroke="${k}" stroke-width="7" stroke-linecap="round"/><path d="M53 62 q9 -2 11 -12" fill="none" stroke="${L.skin}" stroke-width="3.5" stroke-linecap="round"/>`;
+  if(guard)g+=`<path d="M63 50 l6 -4" stroke="${k}" stroke-width="4" stroke-linecap="round"/><circle cx="70" cy="45" r="3" fill="#c9d2da" stroke="${k}" stroke-width="1.6"/>`;
+  else g+=`<path d="M64 50 l4 -12" stroke="${k}" stroke-width="3"/><ellipse cx="70" cy="31" rx="6" ry="8" transform="rotate(18 70 31)" fill="#fff" stroke="#ff5a7a" stroke-width="2.5"/><ellipse cx="70" cy="31" rx="7.5" ry="9.5" transform="rotate(18 70 31)" fill="none" stroke="${k}" stroke-width="1.5"/>`;
+  g+=`</g><g class="cb-head">`;
+  g+=`<circle cx="20" cy="34" r="4.5" fill="${L.skin}" ${s}/><circle cx="60" cy="34" r="4.5" fill="${L.skin}" ${s}/><circle cx="40" cy="33" r="21" fill="${L.skin}" ${s}/>`;
+  if(guard)g+=`<path d="M18 26 Q19 10 40 9 Q61 10 62 26 Z" fill="#2d4a8a" ${s}/><rect x="16" y="23" width="48" height="7" rx="3" fill="#1d2b36" ${s}/><path d="M36 13 l4 -3 l4 3 v4 l-4 2 l-4 -2 Z" fill="#ffd23f" stroke="${k}" stroke-width="1.5"/>`;
+  else g+=`<path d="M19 28 Q19 10 40 10 Q61 10 61 28 Z" fill="${L.cap||L.hair}" ${s}/><path d="M56 25 Q70 24 74 30 L58 31Z" fill="${L.cap||L.hair}" ${s}/><circle cx="40" cy="11" r="2.5" fill="${k}"/>`;
+  if(mood==='angry')g+=`<path d="M29 28 l7 3 M51 28 l-7 3" stroke="${k}" stroke-width="3" stroke-linecap="round"/>`;
+  g+=`<g class="cb-eyes"><ellipse cx="33" cy="35" rx="3" ry="3.8" fill="${k}"/><ellipse cx="47" cy="35" rx="3" ry="3.8" fill="${k}"/><circle cx="34" cy="33.8" r="1" fill="#fff"/><circle cx="48" cy="33.8" r="1" fill="#fff"/></g>`;
+  g+=`<ellipse cx="27" cy="42" rx="4" ry="2.5" fill="#ff7b7b" opacity=".55"/><ellipse cx="53" cy="42" rx="4" ry="2.5" fill="#ff7b7b" opacity=".55"/>`;
+  const idle=mood==='angry'?`<path d="M34 47 Q40 42 46 47" fill="none" stroke="${k}" stroke-width="2.6" stroke-linecap="round"/>`:mood==='meh'?`<path d="M35 46 H45" stroke="${k}" stroke-width="2.6" stroke-linecap="round"/><path d="M58 20 q4 6 0 9 q-4 -3 0 -9Z" fill="#7cc7ff" stroke="${k}" stroke-width="1.5"/>`:`<path d="M33 43 Q40 51 47 43 Z" fill="#fff" stroke="${k}" stroke-width="2.4" stroke-linejoin="round"/>`;
+  g+=`<g class="m-idle">${idle}</g><g class="m-talk"><ellipse cx="40" cy="46" rx="5" ry="4.5" fill="#b8323f" stroke="${k}" stroke-width="2.2"/><ellipse cx="40" cy="48" rx="3" ry="1.6" fill="#ff8fa3"/></g>`;
+  g+=`</g></g>`;
+  return `<svg class="cb-svg" viewBox="0 0 80 100" aria-hidden="true">${g}</svg>`;
+}
+const GUARD_LOOK={skin:'#e3aa7f',hair:'#1b1b1b'};
+let typeTimer=null;
+function ownerSay(t){
+  const el=$('#ownerSay'), cb=$('#ownerFace');
+  clearInterval(typeTimer); clearTimeout(sayTimer);
+  el.classList.remove('on'); void el.offsetWidth; el.classList.add('on','typing'); cb.classList.add('talk');
+  const ch=[...t]; let i=0;
+  const done=()=>{clearInterval(typeTimer);el.textContent=t;el.classList.remove('typing');setTimeout(()=>cb.classList.remove('talk'),250);sayTimer=setTimeout(()=>el.classList.remove('on'),4500)};
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){done();return}
+  el.textContent='';
+  typeTimer=setInterval(()=>{i+=2;el.textContent=ch.slice(0,i).join('');if(i>=ch.length)done()},30);
+}
+let gsayT=null;
+function guardSay(t){
+  const w=$('#guardWrap'); if(w.hidden)return;
+  const gs=$('#guardSay'), gf=$('#guardFace');
+  gs.textContent=t; gs.classList.remove('on'); void gs.offsetWidth; gs.classList.add('on'); gf.classList.add('alert','talk');
+  clearTimeout(gsayT); gsayT=setTimeout(()=>{gs.classList.remove('on');gf.classList.remove('alert','talk')},2600);
+}
 function talk(c,who,t){c.chat.push({who,t,mood:who==='c'?moodOf(c):ownerMood()});if(cur===c)renderChat()}
 function renderChat(){
   const el=$('#chat');if(!cur||!cur.chat){el.style.display='none';return}
@@ -1517,6 +1651,43 @@ function peakInfo(h){
   if(h<21)  return {b:.09, w:.018,hot:true, lbl:'🔥 Cao điểm tối'};
   return          {b:.021,w:.008,hot:false,lbl:''};
 }
+function sellerTick(){
+  if(!S.seller)return;
+  const J=S.sellJob;
+  if(J){
+    const c=S.qD.find(x=>x.id===J.id);
+    if(!c||c===cur||c.complaint){S.sellJob=null;return}
+    if(S.time>=J.until){S.sellJob=null;sellerServe(c)}
+    return;
+  }
+  // nhận đơn: ưu tiên khách thứ 2 trở đi (khách đầu hàng để chủ quán), đơn không có món phải pha máy
+  const cand=S.qD.filter(c=>c!==cur&&!c.complaint&&!c.sellerSkip&&!Object.keys(c.order).some(id=>FLOW[id]));
+  const pickC=cand.find((c,i)=>S.qD.indexOf(c)>0)||(S.qD.length===1?cand[0]:null);
+  if(pickC)S.sellJob={id:pickC.id,start:S.time,until:S.time+SELL_MIN};
+}
+function sellerServe(c){
+  const ids=Object.keys(c.order);
+  if(ids.some(id=>S.stock[id]<c.order[id])){c.sellerSkip=true;talk(c,'c','Nhân viên nói hết món rồi, chủ quán coi giúp với!');ownerSay(`Nhân viên: "Hết món cho ${c.name} rồi, chủ xử lý giúp em!"`);return}
+  if(Math.random()<SELLER_ERR){
+    // bán nhầm: đưa sai 1 món, khách quay lại phàn nàn
+    const right=pick(ids);
+    const wrongs=S.unlocked.filter(id=>!c.order[id]&&S.stock[id]>0&&!FLOW[id]);
+    const wrong=wrongs.length?pick(wrongs):null;
+    if(wrong)S.stock[wrong]--;
+    c.complaint={right,wrong}; c.pat=Math.max(c.pat,c.patMax*.55); c.warned=1;
+    talk(c,'c',wrong?`Ủa em ơi! Nhân viên đưa ${IT[wrong].name.toLowerCase()} mà ${me(c.name)} gọi ${IT[right].name.toLowerCase()}! 😤`:`Nhân viên đưa thiếu ${IT[right].name.toLowerCase()} rồi nè! 😤`);
+    S.qD=S.qD.filter(x=>x!==c); S.qD.unshift(c);
+    S.stats.sellWrong=(S.stats.sellWrong||0)+1; L('sellerWrong');
+    ownerSay(`Chết, nhân viên bán nhầm cho ${c.name}! Mau ra quầy xin lỗi đổi món đi!`);
+    toast('💢 Nhân viên bán nhầm món!','bad');
+    return;
+  }
+  let sum=0;for(const id of ids){S.stock[id]-=c.order[id];sum+=c.order[id]*priceOf(id);S.stats.sold[id]=(S.stats.sold[id]||0)+c.order[id]}
+  S.money+=sum;S.stats.drink+=sum;S.stats.served++;S.stats.sellOk=(S.stats.sellOk||0)+1;L('sellerOk');
+  S.qD=S.qD.filter(x=>x!==c);
+  rate(Math.min(5,starByTime(c)),c.name);
+  toast(`+${fmt(sum)} nhân viên bán`);
+}
 const IMP1=['Em ơi, sao rồi?','Lâu vậy em...','Còn đó không em?','Nhanh giùm nha em!'];
 const IMP2=['Chờ lâu quá à!','Thôi, sắp đi về luôn nè!','Hết kiên nhẫn rồi nha!'];
 function step(dm){
@@ -1552,8 +1723,13 @@ function step(dm){
     if(!b.over&&S.time>=b.end){b.over=true;S.courts[b.court-1].dirty=true;
       const f=b.fee!=null?b.fee:0;
       if(f>0){
-        const dash=Math.random()<(has('cam')?0.01:0.06);
-        if(dash){S.stats.dash=(S.stats.dash||0)+1;S.stats.dashLoss=(S.stats.dashLoss||0)+f;L('dash');
+        const tryDash=Math.random()<(has('cam')?0.01:DASH_RATE);
+        const caught=tryDash&&S.guard&&Math.random()<GUARD_CATCH;
+        if(caught){S.stats.caught=(S.stats.caught||0)+1;S.stats.caughtAmt=(S.stats.caughtAmt||0)+f;L('caught');S.money+=f;S.stats.court+=f;
+          courtSay[b.court]={t:'Ơ... bị bắt rồi 😅',until:performance.now()+3000};
+          guardSay(`Đứng lại! Trả tiền sân ${b.court} đã! 🫷`);
+          ownerSay(`Bảo vệ tóm gọn ${b.name} định bùng tiền sân ${b.court}, thu đủ ${fmt(f)}! 👮`);toast(`+${fmt(f)} bảo vệ thu lại`)}
+        else if(tryDash){S.stats.dash=(S.stats.dash||0)+1;S.stats.dashLoss=(S.stats.dashLoss||0)+f;L('dash');
           courtSay[b.court]={t:pick(['Chuồn lẹ tụi bây! 🏃','Quên ví rồi, bye! 🏃‍♂️','Mai trả nha! 😜']),until:performance.now()+3000};
           ownerSay(`Ơ! ${b.name} đánh xong sân ${b.court} rồi bùng mất ${fmt(f)} tiền sân! 😤`);toast(`−${fmt(f)} khách bùng`,'bad')}
         else{S.money+=f;S.stats.court+=f;toast('+'+fmt(f)+` sân ${b.court}`)}
@@ -1585,6 +1761,7 @@ function step(dm){
       }
     }
   }
+  sellerTick();
   if(S.time>=CLOSE)endDay();
 }
 
@@ -1675,9 +1852,10 @@ function give(){
   if(!ok){o.pat-=6;o.bad=(o.bad||0)+1;L('wrong');talk(o,'c',`Không phải, ${me(o.name)} gọi ${orderText(o.order)} mà!`);return}
   let sum=0;for(const id in tray){S.stock[id]-=tray[id];sum+=tray[id]*priceOf(id);S.stats.sold[id]=(S.stats.sold[id]||0)+tray[id]}
   const fs=Object.keys(tray).map(pf); if(Math.max(...fs)>1.3)L('pricey'); else if(Math.min(...fs)<.8)L('cheap');
-  S.money+=sum;S.stats.drink+=sum;S.stats.served++;rate(starByTime(o)-Math.min(2,o.bad||0)-(Math.max(...fs)>1.3?1:0),o.name);
+  S.money+=sum;S.stats.drink+=sum;S.stats.served++;rate(Math.min(o.complaint?3:5,starByTime(o))-Math.min(2,o.bad||0)-(Math.max(...fs)>1.3?1:0),o.name);
+  if(o.complaint){L('fixed');S.stats.fixed=(S.stats.fixed||0)+1}
   L('drinkOk'); if(Object.keys(tray).some(id=>['banhmi','xoi','chuoi','mi'].includes(id)))L('food'); if(tray.cf)L('coffee'); if(tray.mi)L('noodle'); if(moodOf(o)==='angry')L('late');
-  talk(o,'c',pick(['Mát quá!','Cảm ơn em nha!','Đã ghê!','Chuẩn luôn!','Ngon xỉu!']));
+  talk(o,'c',o.complaint?pick(['Ừ, lần sau nhắc nhân viên cẩn thận nha.','Thôi được, đổi đúng là ok rồi.','Hên là chủ quán đổi liền đó!']):pick(['Mát quá!','Cảm ơn em nha!','Đã ghê!','Chuẩn luôn!','Ngon xỉu!']));
   toast('+'+fmt(sum));
   const low=ITEMS.filter(it=>S.stock[it.id]<4&&S.stats.sold[it.id]);
   ownerSay(low.length?`Tủ sắp hết ${low[0].name} rồi!`:`${o.court?'Sân '+o.court:o.name}: "${lastLine(o)}"`);
@@ -1709,7 +1887,8 @@ function renderHUD(){
   const r=Math.round(S.rating);
   $('#stars').textContent=starStr(r)+' '+S.rating.toFixed(1);
   $('#pauseBtn').textContent=paused?'▶':'❚❚';
-  const m=ownerMood(); if(m!==lastMood){lastMood=m;$('#ownerFace').innerHTML=avatar(OWNER_LOOK,m)}
+  const m=ownerMood(); if(m!==lastMood){lastMood=m;$('#ownerFace').innerHTML=chibi(OWNER_LOOK,m,'owner')}
+  const gw=$('#guardWrap'); if(gw.hidden===!!S.guard){gw.hidden=!S.guard; if(S.guard&&!$('#guardFace').innerHTML)$('#guardFace').innerHTML=chibi(GUARD_LOOK,'happy','guard')}
   const u=unreplied(), bd=$('#rvBadge'); bd.hidden=!u; bd.textContent=u>9?'9+':u;
 }
 function renderCourts(){
@@ -1752,6 +1931,7 @@ function render(){
   renderHUD();renderCourts();
   renderCounter('B',S.qB,'Chưa có khách hỏi sân');
   renderCounter('D',S.qD,'Chưa ai gọi đồ');
+  renderSeller();
   liveSheet();
 }
 
@@ -1760,22 +1940,31 @@ function renderCounter(k,q,emptyTxt){
   const stage=$('#q'+k+'s'), n=$('#q'+k+'n');
   n.textContent=q.length; n.classList.toggle('hot',q.length>0);
   const f=q[0];
-  const sig=q.map(c=>c.id+':'+moodOf(c)+':'+c.chat.length+':'+(c.assigned?c.assigned.length:0)).join(',');
+  const sj=S.sellJob&&k==='D'?S.sellJob.id:0;
+  const sig=sj+'|'+q.map(c=>c.id+':'+moodOf(c)+':'+c.chat.length+':'+(c.assigned?c.assigned.length:0)+(c.complaint?'!':'')).join(',');
   if(stage.dataset.sig!==sig){
     stage.dataset.sig=sig;
     if(!f){stage.innerHTML=`<div class="empty-ctr"><span>😴</span>${emptyTxt}</div>`;lastFirst[k]=null}
     else{
       const isNew=lastFirst[k]!==f.id; lastFirst[k]=f.id;
-      const tag=f.type==='d'?`<b>${f.court?'Sân '+f.court:'🛍️ Mang đi'}:</b> `:(f.count>1?`<b>2 sân:</b> `:'');
-      const rest=q.slice(1,5).map(c=>`<button class="hd ${moodOf(c)}" data-id="${c.id}" aria-label="${c.name}">${avatar(c.look,moodOf(c))}</button>`).join('');
-      stage.innerHTML=`<div class="bub ${isNew?'new':''}">${tag}${esc(lastLine(f))}</div>
-        <button class="chibi ${moodOf(f)} ${isNew?'new':''}" data-id="${f.id}" aria-label="Phục vụ ${f.name}">${avatar(f.look,moodOf(f))}</button>
+      const tag=f.complaint?`<b>⚠️ Nhân viên bán nhầm!</b> `:f.type==='d'?`<b>${f.court?'Sân '+f.court:'🛍️ Mang đi'}:</b> `:(f.count>1?`<b>2 sân:</b> `:'');
+      const rest=q.slice(1,5).map(c=>`<button class="hd ${c.complaint?'angry':moodOf(c)} ${c.id===sj?'selling':''}" data-id="${c.id}" aria-label="${c.name}">${avatar(c.look,c.complaint?'angry':moodOf(c))}${c.id===sj?'<i class="sell-dot">🧑‍💼</i>':''}</button>`).join('');
+      stage.innerHTML=`<div class="bub ${isNew?'new':''} ${f.complaint?'cmp':''}">${tag}${esc(lastLine(f))}</div>
+        <button class="chibi ${f.complaint?'angry fury':moodOf(f)} ${isNew?'new':''}" data-id="${f.id}" aria-label="Phục vụ ${f.name}">${avatar(f.look,f.complaint?'angry':moodOf(f))}${f.complaint?'<span class="fume">💢</span><span class="fume f2">💢</span>':''}</button>
+        ${f.id===sj?'<span class="sell-tag">🧑‍💼 nhân viên đang bán...</span>':''}
         <span class="tapme">👆</span>
         <div class="line">${rest}${q.length>5?`<span class="more">+${q.length-5}</span>`:''}</div>
         <span class="eta"></span><div class="pat zpat"><i></i></div>`;
     }
   }
   if(f){const bar=stage.querySelector('.pat i');if(bar)setBar(bar,f);const e=stage.querySelector('.eta');if(e){const t=zoneTxt(f);if(e.textContent!==t)e.textContent=t;e.className='eta '+moodOf(f)}}
+}
+function renderSeller(){
+  const h=$('#sellerH'); if(!h)return;
+  h.hidden=!S.seller; if(!S.seller)return;
+  if(!$('#sellerFace').innerHTML)$('#sellerFace').innerHTML=avatar(SELLER_LOOK,'happy');
+  const J=S.sellJob; $('#sellerBar').style.width=J?Math.min(100,(S.time-J.start)/(J.until-J.start)*100)+'%':'0%';
+  h.classList.toggle('busy',!!J); h.title=J?'Nhân viên đang bán':'Nhân viên đang rảnh';
 }
 function openCounter(e,k){
   const b=e.target.closest('[data-id]');
@@ -1834,9 +2023,10 @@ function buildSheet(){
     const checks=Object.entries(o.order).map(([id,n])=>{const h=tray[id]||0;return `<span class="ck ${h===n?'ok':h>n?'ck-over':''}">${IT[id].e} ${h}/${n}${h===n?' ✓':''}</span>`}).join('');
     const extra=Object.keys(tray).filter(id=>!o.order[id]).map(id=>`<span class="ck ck-over">${IT[id].e} dư</span>`).join('');
     const wk=Object.keys(bench).find(k=>bench[k].step>0);
+    const cmpNote=o.complaint?`<div class="cmp-note">💢 Nhân viên đã bán nhầm${o.complaint.wrong?' '+IT[o.complaint.wrong].name.toLowerCase():''} cho khách. Làm lại đúng đơn để xin lỗi, khách chấm tối đa 3★.</div>`:'';
     const bw=brewing.length?`${PREP_T[brewing[0].id].v}...`:wk?(bench[wk].busy?`${FLOW[wk].busy}...`:`${IT[wk].name}: bước ${bench[wk].step+1}/${FLOW[wk].steps.length}, ${FLOW[wk].steps[bench[wk].step][2].toLowerCase()}`):'';
     body.innerHTML=`
-      <div class="step">${bw?`⏳ ${bw}`:trayCount()?'Đủ món thì bấm Giao cho khách':'Chạm hoặc kéo món ở quầy vào khay'}</div>
+      ${cmpNote}<div class="step">${bw?`⏳ ${bw}`:trayCount()?'Đủ món thì bấm Giao cho khách':'Chạm hoặc kéo món ở quầy vào khay'}</div>
       <div class="checks">${checks}${extra}</div>
       <div class="khay" id="khay">${tis||'<div class="ph">🍽️ Khay trống</div>'}</div>
       <div class="khay-sum"><span>${trayCount()?'Chạm món trên khay để bỏ bớt':''}</span><b>${trayCount()?fmt(sum):''}</b></div>
@@ -1932,7 +2122,7 @@ function stationHTML(){
 }
 
 /* ---------- Day flow ---------- */
-let prepStaff=0, prepTab='hang', prepPay=0;
+let prepStaff=0, prepTab='hang', prepPay=0, prepGuard=0, prepSeller=0;
 function chalkboard(){
   const rows=S.menu.map(id=>{const empty=S.stock[id]+(prepCart[id]||0)*IT[id].pack<=0;return `<div class="cb-row ${empty?'cb-empty':''}"><span>${IT[id].e} ${IT[id].name}</span><i></i><b>${empty?'hết':Math.round(priceOf(id)/1000)+'k'}</b></div>`}).join('');
   return `<div class="chalk"><div class="cb-title">📋 Menu hôm nay</div>
@@ -1972,7 +2162,15 @@ function prepTabHTML(total){
     return `<div class="prep-row staff"><span class="e">👷</span><div><b>Nhân viên dọn sân thời vụ</b>
         <small>Tự đi quét sân dơ, ưu tiên sân sắp có khách. ${fmt(WAGE)} một người một ngày, tối đa ${MAX_STAFF}. Trả lương khi mở cửa.</small></div>
         <div class="stepper"><button data-sdec aria-label="Bớt nhân viên">−</button><span>${prepStaff}</span><button data-sinc aria-label="Thêm nhân viên">+</button></div></div>
-      <div class="staff-line">${STAFF_LOOKS.slice(0,prepStaff).map(l=>`<span class="face">${avatar(l,'happy')}</span>`).join('')||'<p class="hint">Chưa thuê ai. Một mình chủ quán quét sân nha!</p>'}</div>`;
+      <div class="staff-line">${STAFF_LOOKS.slice(0,prepStaff).map(l=>`<span class="face">${avatar(l,'happy')}</span>`).join('')||'<p class="hint">Chưa thuê ai. Một mình chủ quán quét sân nha!</p>'}</div>
+      <div class="prep-row staff guardrow"><span class="e">🛡️</span><div><b>Bảo vệ giám sát sân</b>
+        <small>Canh các nhóm định đánh xong rồi bùng tiền sân: bắt được khoảng ${Math.round(GUARD_CATCH*100)}% vụ. ${fmt(GUARD_WAGE)} một ngày. ${has('cam')?'Có camera nữa thì gần như không ai dám bùng.':'Kết hợp camera an ninh (tab Nâng cấp) càng chắc.'}</small></div>
+        <div class="stepper"><button data-gdec aria-label="Không thuê bảo vệ">−</button><span>${prepGuard}</span><button data-ginc aria-label="Thuê bảo vệ">+</button></div></div>
+      ${prepGuard?`<div class="staff-line"><span class="cb mini-cb guard">${chibi(GUARD_LOOK,'happy','guard')}</span><p class="hint" style="align-self:center">Bảo vệ đã sẵn sàng canh sân!</p></div>`:''}
+      <div class="prep-row staff sellrow"><span class="e">🧑‍💼</span><div><b>Nhân viên bán hàng</b>
+        <small>Đứng quầy nước, tự bán cho khách đang xếp hàng (trừ món phải pha máy như mì, cà phê). Nhưng thỉnh thoảng bán nhầm (khoảng ${Math.round(SELLER_ERR*100)}%), khách quay lại phàn nàn và chủ quán phải ra đổi món. ${fmt(SELLER_WAGE)} một ngày.</small></div>
+        <div class="stepper"><button data-xdec aria-label="Không thuê nhân viên bán hàng">−</button><span>${prepSeller}</span><button data-xinc aria-label="Thuê nhân viên bán hàng">+</button></div></div>
+      ${prepSeller?`<div class="staff-line"><span class="face" style="background:#ffd6e7">${avatar(SELLER_LOOK,'happy')}</span><p class="hint" style="align-self:center">Nhân viên bán hàng đã vào quầy!</p></div>`:''}`;
   }
   if(prepTab==='bank'){
     const maxPay=Math.max(0,Math.min(S.debt,S.money-(total-prepPay)));
@@ -1997,7 +2195,7 @@ function showPrep(){
   paused=true; closeSheet();
   $('#prepBg').style.display='flex'; $('#over').classList.add('prep');
   prepPay=Math.max(0,Math.min(prepPay,S.debt));
-  const total=Object.entries(prepCart).reduce((a,[id,n])=>a+n*IT[id].packCost,0)+prepStaff*WAGE+prepPay;
+  const total=Object.entries(prepCart).reduce((a,[id,n])=>a+n*IT[id].packCost,0)+prepStaff*WAGE+prepGuard*GUARD_WAGE+prepSeller*SELLER_WAGE+prepPay;
   const tabs=[['hang','📦','Nhập hàng'],['bank','🏦','Ngân hàng'],['nang','🛠️','Nâng cấp'],['gia','🏷️','Giá & menu'],['nv','👷','Nhân viên'],['rv','⭐','Đánh giá']];
   const u=unreplied();
   $('#over').innerHTML=`<div class="card box prep-card">
@@ -2007,7 +2205,7 @@ function showPrep(){
     <div class="ptab-body" id="prepList">${prepTabHTML(total)}</div>
     <div class="prep-sum">
       ${(()=>{const em=S.menu.filter(id=>S.stock[id]+(prepCart[id]||0)*IT[id].pack<=0);return em.length?`<div class="warn-empty">⚠️ Trong menu nhưng chưa có hàng: <b>${em.map(id=>IT[id].e+' '+IT[id].name).join(', ')}</b>. Khách gọi là phải báo hết món. <button id="fillEmpty">Nhập mỗi món 1 lần</button></div>`:''})()}
-      <div class="ps-line"><span>Nhập hàng${prepStaff?` + ${prepStaff} NV`:''}${prepPay?' + trả nợ':''}</span><b>−${fmt(total)}</b><span>Còn lại</span><b>${fmt(S.money-total)}</b></div>
+      <div class="ps-line"><span>Nhập hàng${prepStaff?` + ${prepStaff} NV`:''}${prepGuard?' + bảo vệ':''}${prepSeller?' + NV bán':''}${prepPay?' + trả nợ':''}</span><b>−${fmt(total)}</b><span>Còn lại</span><b>${fmt(S.money-total)}</b></div>
       <button class="btn press" id="openShop">Nhập hàng & mở cửa · ${fmt(total)}</button>
     </div></div>`;
   $('#over').style.display='flex';
@@ -2026,6 +2224,10 @@ function showPrep(){
       ownerSay(`Xây xong sân số ${COURTS} rồi! Giờ quán có ${COURTS} sân.`); return keepScroll(showPrep)}
     if(g('[data-sinc]')){if(prepStaff>=MAX_STAFF)return toast('Tối đa 3 người thôi','bad');if(total+WAGE>S.money)return toast('Không đủ tiền','bad');prepStaff++;return keepScroll(showPrep)}
     if(g('[data-sdec]')){if(prepStaff){prepStaff--;keepScroll(showPrep)}return}
+    if(g('[data-ginc]')){if(prepGuard>=1)return toast('Một bảo vệ là đủ canh cả quán rồi');if(total+GUARD_WAGE>S.money)return toast('Không đủ tiền','bad');prepGuard=1;return keepScroll(showPrep)}
+    if(g('[data-gdec]')){if(prepGuard){prepGuard=0;keepScroll(showPrep)}return}
+    if(g('[data-xinc]')){if(prepSeller>=1)return toast('Quầy nhỏ, 1 nhân viên bán là đủ');if(total+SELLER_WAGE>S.money)return toast('Không đủ tiền','bad');prepSeller=1;return keepScroll(showPrep)}
+    if(g('[data-xdec]')){if(prepSeller){prepSeller=0;keepScroll(showPrep)}return}
     const inc=g('[data-inc]'),dec=g('[data-dec]');
     if(inc){const id=inc.dataset.inc;if(total+IT[id].packCost>S.money)return toast('Không đủ tiền','bad');prepCart[id]=(prepCart[id]||0)+1;return keepScroll(showPrep)}
     if(dec){const id=dec.dataset.dec;if(prepCart[id]){prepCart[id]--;keepScroll(showPrep)}return}
@@ -2060,7 +2262,7 @@ function showPrep(){
   if($('#clearCart'))$('#clearCart').onclick=()=>{prepCart={};keepScroll(showPrep)};
   $('#openShop').onclick=()=>{
     for(const [id,n] of Object.entries(prepCart)){S.stock[id]+=n*IT[id].pack}
-    S.money-=total; S.debt-=prepPay; S.stats.repaid=prepPay; S.stats.wage=prepStaff*WAGE; const goods=total-S.stats.wage-prepPay; S.stats.cost+=goods; S.stats.start=S.money+total-prepPay+(S.stats.cost-goods); S.staff=prepStaff; prepCart={}; prepStaff=0;
+    S.money-=total; S.debt-=prepPay; S.stats.repaid=prepPay; S.stats.wage=prepStaff*WAGE+prepGuard*GUARD_WAGE+prepSeller*SELLER_WAGE; const goods=total-S.stats.wage-prepPay; S.stats.cost+=goods; S.stats.start=S.money+total-prepPay+(S.stats.cost-goods); S.staff=prepStaff; S.guard=prepGuard; S.seller=prepSeller; S.sellJob=null; prepCart={}; prepStaff=0; prepGuard=0; prepSeller=0;
     if(prepPay)toast('Đã trả nợ '+fmt(prepPay)); if(S.debt<=0&&prepPay){S.debt=0;ownerSay('Trả hết nợ ngân hàng rồi! Nhẹ cả người 🎉')} prepPay=0;
     S.phase='open'; save();
     $('#over').style.display='none'; $('#over').classList.remove('prep'); $('#prepBg').style.display='none'; paused=false; last=performance.now();
@@ -2090,9 +2292,11 @@ function showSummary(){
       <tr><td>🏸 Tiền sân</td><td>${fmt(st.court)}</td></tr>
       <tr><td>🥤 Tiền nước & đồ ăn</td><td>${fmt(st.drink)}</td></tr>
       <tr><td>📦 Chi nhập hàng</td><td>−${fmt(st.cost)}</td></tr>
-      ${st.wage?`<tr><td>👷 Lương thời vụ</td><td>−${fmt(st.wage)}</td></tr>`:''}
+      ${st.wage?`<tr><td>👷 Lương nhân viên & bảo vệ</td><td>−${fmt(st.wage)}</td></tr>`:''}
       <tr><td>🗑️ Đồ tươi bỏ đi${st.wasted?` (${st.wasted})`:''}<br><small style="color:var(--soft)">phí phạm, đã nằm trong tiền nhập</small></td><td>${fmt(st.waste)}</td></tr>
       <tr><td>📦 Tồn kho sang mai<br><small style="color:var(--soft)">${ITEMS.filter(i=>!i.perish&&S.stock[i.id]>0).map(i=>`${S.stock[i.id]} ${i.name.toLowerCase()}`).join(', ')||'hết sạch'}</small></td><td></td></tr>
+      ${st.sellOk||st.sellWrong?`<tr><td>🧑‍💼 Nhân viên bán hàng<br><small style="color:var(--soft)">bán đúng ${st.sellOk||0} đơn, bán nhầm ${st.sellWrong||0} lần${st.fixed?`, chủ quán đổi lại ${st.fixed} đơn`:''}</small></td><td></td></tr>`:''}
+      ${st.caught?`<tr><td>🛡️ Bảo vệ bắt được vụ bùng tiền (${st.caught} lượt)</td><td>+${fmt(st.caughtAmt)}</td></tr>`:''}
       ${st.dash?`<tr><td>🏃 Khách bùng tiền sân (${st.dash} lượt)</td><td>−${fmt(st.dashLoss)}</td></tr>`:''}
       <tr><td>😊 Lượt phục vụ</td><td>${st.served}</td></tr>
       <tr><td>😠 Khách không vui</td><td>${st.lost}</td></tr>
@@ -2375,7 +2579,8 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
 addEventListener('pagehide',save);
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 
-$('#ownerFace').innerHTML=avatar(OWNER_LOOK,'happy');
+$('#ownerFace').innerHTML=chibi(OWNER_LOOK,'happy','owner');
+$('#guardFace').onclick=()=>guardSay(pick(['Có tui canh, yên tâm!','An ninh ổn định nha chủ!','Ai định bùng là biết tay!']));
 setInterval(()=>{
   const now=performance.now();let dt=(now-last)/1000;last=now;if(dt>.5)dt=.5;
   if(S&&!paused&&S.phase==='open')step(dt*GAME_SPEED*speed);
