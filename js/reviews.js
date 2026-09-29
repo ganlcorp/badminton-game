@@ -63,6 +63,27 @@ const RV={
     'Sân ổn áp, giá mềm, chill phết 👌',
     'Không có gì để chê, cũng chưa có gì để flex, sẽ quay lại 😌']},
 };
+// Review "vô lí": khách chê những thứ... quá tốt
+const ABSURD=['Sân sáng đẹp quá, đèn rọi rõ từng đường cầu nên đánh không hay, 2 sao 🙄',
+  'Sân nhiều bạn nữ xinh quá làm mất tập trung, thua 3 trận liền, tại quán hết 😤',
+  'Quán bán cầu xịn quá đánh không quen, cầu bay thẳng quá hết cớ đổ thừa 😒',
+  'Nhân viên thân thiện quá, ngại không dám về, 1 sao cho chừa 🥲',
+  'Sàn sạch bóng quá, hết cớ nói tại sàn trơn nên đánh hụt 🤷',
+  'Trà đá lạnh quá buốt răng, đề nghị bỏ bớt đá mà vẫn phải lạnh như cũ 🧊',
+  'Wifi mạnh quá lướt TikTok quên đánh, phí mất 2 tiếng sân 📱',
+  'Lưới căng chuẩn quá, cầu của tui toàn mắc lưới, chắc lưới cao hơn bình thường 🤨',
+  'Chủ quán đẹp trai quá, bạn gái tui cứ nhìn hoài, 1 sao 😤',
+  'Sân rộng đúng chuẩn quá chạy mệt, đề nghị thu nhỏ sân lại 🏃‍♂️',
+  'Mở nhạc hay quá, lo nhún theo nhạc quên giao cầu 🎶',
+  'Quán gần nhà quá, hết lý do đi trễ, 3 sao 😐',
+  'Toàn người đánh giỏi làm tui tự ti, về luyện thêm rồi quay lại chê tiếp 😭',
+  'Mèo trọng tài dễ thương quá, nhìn mèo quên nhìn cầu 🐱',
+  'Trà đá ngon quá uống 5 ly đầy bụng chạy không nổi 🥤',
+  'Bãi xe rộng quá, đi lạc 15 phút không tìm ra xe 🛵',
+  'Giá rẻ quá, rủ crush tới sợ bị nghĩ là keo 💸',
+  'Bạn nhân viên dọn sân nhanh quá, chưa kịp xả rác đã sạch rồi 🧹',
+  'Ghế chờ êm quá ngồi ngủ quên, lỡ luôn giờ sân 😴',
+  'Đặt sân nhanh quá không có thời gian khởi động tâm lý 😵‍💫'];
 function genReviews(){
   const L=S.log, pool=[];
   for(const k in RV)if(L[k])for(let i=0;i<Math.min(L[k],4);i++)pool.push(k);
@@ -95,6 +116,8 @@ function genReviews(){
     for(let i=0;i<k;i++){const t=VB.splice(rand(VB.length),1)[0];
       out.unshift({id:'r'+S.day+'_'+(++uid),h:pick(HANDLES),stars:1,t,likes:1500+rand(12000),day:S.day,look:makeLook(pick(NAMES)),viral:true,platform:pick(['TikTok','Threads'])})}
   }
+  // thỉnh thoảng có review vô lí
+  if(Math.random()<.45){const n=Math.random()<.25?2:1, bag=[...ABSURD].sort(()=>Math.random()-.5);for(let i=0;i<n;i++)out.push({id:'r'+S.day+'_'+(++uid),h:pick(HANDLES),stars:1+rand(3),t:bag[i],likes:rand(600)+5,day:S.day,look:makeLook(pick(NAMES)),absurd:true})}
   return out;
 }
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -126,7 +149,7 @@ function reviewHTML(r){
     ?`<div class="reply"><b>Chủ quán:</b> ${esc(r.reply)}</div>${r.follow?`<div class="follow ${r.tone||''}"><b>${r.h}:</b> ${r.follow}</div>`:''}${r.pile?`<div class="pile">${r.pile}</div>`:''}${r.fined?`<div class="rv-eff bad">−${fmt(r.fined)} bồi thường vì chửi khách</div>`:''}${r.bonus?`<div class="rv-eff good">+${r.bonus.toFixed(2)}★ uy tín cho sao quán</div>`:''}`
     :`<div class="rbox"><textarea data-draft="${r.id}" maxlength="200" placeholder="Viết phản hồi cho ${r.h}...">${esc(drafts[r.id]||'')}</textarea>
       <div class="row">${SUG[tier].map(t=>`<button class="sug" data-fill="${r.id}" data-text="${esc(t)}">${esc(t.length>26?t.slice(0,24)+'…':t)}</button>`).join('')}<button class="send" data-send="${r.id}">Gửi</button></div></div>`;
-  return `<div class="rv ${r.viral?'viral':''}">${r.viral?`<span class="viral-tag">🔥 Viral${r.platform?' trên '+r.platform:''}</span>`:''}<div class="face">${avatar(r.look,r.stars>=4?'happy':r.stars>=3?'meh':'angry')}</div><div><b>${r.h}</b><span class="st">${starStr(r.stars)}</span><p>${r.t}</p><small>❤️ ${r.likes} lượt thích, ngày ${r.day}</small>${tail}</div></div>`;
+  return `<div class="rv ${r.viral?'viral':''} ${r.absurd?'absurd':''}">${r.viral?`<span class="viral-tag">🔥 Viral${r.platform?' trên '+r.platform:''}</span>`:''}${r.absurd?'<span class="viral-tag absurd-tag">🤡 Khó hiểu</span>':''}<div class="face">${avatar(r.look,r.stars>=4?'happy':r.stars>=3?'meh':'angry')}</div><div><b>${r.h}</b><span class="st">${starStr(r.stars)}</span><p>${r.t}</p><small>❤️ ${r.likes} lượt thích, ngày ${r.day}</small>${tail}</div></div>`;
 }
 function replyReview(id,text){
   const r=S.reviews.find(x=>x.id===id); if(!r||r.reply)return false;
