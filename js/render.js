@@ -1,6 +1,7 @@
 // render.js — Vẽ thanh trên cùng, sân, quầy, nhân viên
 /* ---------- Render ---------- */
 function renderHUD(){
+  {const mb=$('#mapBadge'),n=(S.branches||[]).length;if(mb){mb.hidden=!n;mb.textContent=n}}
   const sn='🏸 '+S.name; if($('#signName').textContent!==sn){$('#signName').textContent=sn;document.title=S.name+' · Game quản lý sân cầu lông'}
   $('#clock').textContent=hm(S.time);
   $('#day').textContent=`Ngày ${S.day}`+(paused&&S.phase==='open'?' · dừng':'');

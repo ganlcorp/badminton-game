@@ -24,6 +24,7 @@
     <div class="pill clock"><span id="clock">06:00</span><small id="day">Ngày 1</small></div>
     <button class="ib press" id="pauseBtn" aria-label="Tạm dừng">❚❚</button>
     <button class="ib press" id="speedBtn" aria-label="Tốc độ">1x</button>
+    <button class="ib press hbtn" id="mapBtnH" aria-label="Bản đồ chi nhánh">🗺️</button>
     <button class="ib press hbtn" id="keyBtnH" aria-label="Lấy mã lưu game">💾</button>
     <button class="ib press hbtn" id="rvBtnH" aria-label="Xem review">📱<span class="badge" id="rvBadgeH" hidden>0</span></button>
     <div class="pill money">🪙 <span id="money">0đ</span></div>
@@ -42,7 +43,7 @@
     <div class="me-wrap"><div class="cb" id="ownerFace" title="Chủ quán"></div><span class="tagname">Chủ quán</span></div>
     <div class="me-wrap guard-wrap" id="guardWrap" hidden><div class="cb guard" id="guardFace" title="Bảo vệ"></div><span class="tagname g">Bảo vệ</span><span class="gsay" id="guardSay"></span></div>
     <div class="ob on" id="ownerSay">Chạm vào khách ở quầy để phục vụ nha!</div>
-    <div class="ob-btns"><button class="phone press" id="keyBtn" aria-label="Lấy mã lưu game">💾</button>
+    <div class="ob-btns"><button class="phone press map-fab" id="mapBtn" aria-label="Bản đồ chi nhánh">🗺️<span class="badge" id="mapBadge" hidden>0</span></button><button class="phone press" id="keyBtn" aria-label="Lấy mã lưu game">💾</button>
     <button class="phone press" id="rvBtn" aria-label="Xem review">📱<span class="badge" id="rvBadge" hidden>0</span></button></div>
   </div>
 
@@ -79,6 +80,8 @@
   <div class="chat" id="chat"></div>
   <div id="sheetBody"></div>
 </div>
+<div class="rain" id="rain" aria-hidden="true"></div>
+<div class="mapov" id="mapOv" hidden role="dialog" aria-modal="true" aria-label="Bản đồ chi nhánh"><div class="map-card" id="mapCard"></div></div>
 <div class="toasts" id="toasts"></div>
 <div class="modal" id="modal" role="dialog" aria-modal="true"><div class="mcard" id="mcard"></div></div>
 <div class="prep-bg" id="prepBg"><div class="mk-in"><i data-art="assets/art/market.svg"></i></div></div>
@@ -94,7 +97,7 @@
   <button class="sbtn" id="sPlay">Chơi tiếp</button>
   <div class="sc-links"><button class="slink" id="sGuide">Hướng dẫn</button><button class="slink" id="sImport">Nhập mã lưu game</button><button class="slink small" id="sFresh" hidden>Chơi lại từ đầu</button></div>
 </div>
-<div class="sver">v0.9</div>
+<div class="sver">v0.11</div>
 <div class="guide" id="guide"><div class="gcard">
   <h2>Cách chơi</h2>
   <p>🏦 Vay ngân hàng để mở sân, mỗi sân 50 triệu. Lãi 0,1% mỗi ngày cộng dồn, sáng nào cũng có thể trả bớt nợ. Tụt dưới 3★ là mất 10 triệu.</p>
@@ -118,6 +121,8 @@
 <script src="js/chat.js"></script>
 <script src="js/logic.js"></script>
 <script src="js/owner-events.js"></script>
+<script src="js/world-events.js"></script>
+<script src="js/branches.js"></script>
 <script src="js/render.js"></script>
 <script src="js/sheet.js"></script>
 <script src="js/day-flow.js"></script>

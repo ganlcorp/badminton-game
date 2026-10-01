@@ -11,12 +11,15 @@ function packV2(){
   const cr=S.courtRate.day!==RATE_DAY||S.courtRate.peak!==RATE_PEAK;
   w(2); w(nm.length); nm.forEach(b=>o.push(b));
   w(S.day+(nextDay?1:0)); w(S.money/1000); w(S.rating*100); w(COURTS); w(debt/1000); w(S.loan0/1000);
-  w((S.avgOn?1:0)|(pr.length?2:0)|(cr?4:0));
+  const bs=S.branches||[];
+  w((S.avgOn?1:0)|(pr.length?2:0)|(cr?4:0)|(bs.length?8:0)|(S.collateral?16:0));
   const mask=list=>ITEMS.reduce((m,it,i)=>list.includes(it.id)?m|(1<<i):m,0);
   w(mask(S.unlocked)); w(mask(S.menu)); w(UPG_ORDER.reduce((m,k,i)=>S.upg&&S.upg[k]?m|(1<<i):m,0));
   ITEMS.forEach(it=>w(nextDay&&it.perish?0:S.stock[it.id]));
   if(pr.length){w(pr.length);pr.forEach(([i,v])=>{w(i);w(v/1000)})}
   if(cr){w(S.courtRate.day/1000);w(S.courtRate.peak/1000)}
+  if(bs.length){w(bs.length);bs.forEach(b=>{w(BRANCH_LOCS.findIndex(l=>l.id===b.loc));BR_ROLES.forEach(r=>w(b.staff[r.k]||0));w(b.rating*100);w(b.openedDay);w(Math.max(0,b.total||0)/1000)})}
+  if(S.collateral)w(S.collateral/1000);
   const u8=new Uint8Array(o), c=crc16(u8);
   return 'SC2'+b64u.enc(new Uint8Array([...u8,c>>8,c&255]));
 }
@@ -33,11 +36,13 @@ function unpackV2(body){
   const stock={}; ITEMS.forEach(it=>stock[it.id]=r());
   const prices={}; if(fl&2){const k=r();for(let j=0;j<k;j++){const i=r(),v=r()*1000;if(ITEMS[i])prices[ITEMS[i].id]=v}}
   const courtRate=fl&4?{day:r()*1000,peak:r()*1000}:{day:RATE_DAY,peak:RATE_PEAK};
+  const branches=[]; if(fl&8){const nb=r();for(let j=0;j<nb;j++){const li=r(),staff={};BR_ROLES.forEach(x=>staff[x.k]=r());const rating=r()/100,openedDay=r(),total=r()*1000;if(BRANCH_LOCS[li])branches.push({loc:BRANCH_LOCS[li].id,staff,rating,openedDay,total,hist:[]})}}
+  const collateral=fl&16?r()*1000:0;
   const bits=m=>ITEMS.filter((_,i)=>m&(1<<i)).map(it=>it.id);
   const st=newGame(cleanName(name)||undefined,co||MAX_COURTS);
   Object.assign(st,{day,money,rating:clamp(rating||5),phase:'prep',stock:Object.assign(Object.fromEntries(ITEMS.map(i=>[i.id,0])),stock),
     unlocked:bits(um).length?bits(um):[...START_ITEMS],menu:bits(mm).length?bits(mm):bits(um),prices,courtRate,
-    upg:Object.fromEntries(UPG_ORDER.filter((k,i)=>gm&(1<<i)).map(k=>[k,1])),lastSold:{},reviews:[],debt,loan0:loan0||debt,fineDay:0,avgOn:!!(fl&1)});
+    upg:Object.fromEntries(UPG_ORDER.filter((k,i)=>gm&(1<<i)).map(k=>[k,1])),lastSold:{},reviews:[],debt,loan0:loan0||debt,fineDay:0,avgOn:!!(fl&1),branches,collateral});
   Object.assign(st,dayState(st.money));
   st.hist={}; if(st.avgOn)st.hist[day-1]={s:Math.max(40,Math.round(st.rating*(40+PRIOR_N)-PRIOR_STAR*PRIOR_N)),n:40}; // giữ đúng số sao lúc lưu
   const nd=norm(st); { const keep=S; S=nd; nd.rating=calcRating(); S=keep; } nd.wasBelow=nd.rating<3; return nd;

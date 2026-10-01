@@ -72,6 +72,7 @@ function prepTabHTML(total){
       <h3 class="sub">🏗️ Mở thêm sân (${COURTS}/${MAX_COURTS})</h3>
       <div class="courts-mini">${Array.from({length:MAX_COURTS},(_,i)=>`<i class="${i<COURTS?'on':''}">${i+1}</i>`).join('')}</div>
       ${COURTS<MAX_COURTS?`<div class="up-row"><span class="e">🏸</span><div><b>Xây sân số ${COURTS+1}</b><small>Vay thêm ${fmt(COURT_COST)}, cộng vào nợ. Thêm sân thì thêm khách.</small></div><button class="btn press" data-build>Vay ${tr(COURT_COST)}</button></div>`:'<p class="hint">Đã đủ 10 sân.</p>'}
+      ${branchesBankHTML()}
       <p class="hint">⚠️ Nếu đánh giá tụt dưới 3★, quán mất ${fmt(STAR_FINE)} (tối đa 1 lần mỗi ngày).</p>`;
   }
   // đánh giá
@@ -85,8 +86,9 @@ function showPrep(){
   const tabs=[['hang','📦','Nhập hàng'],['bank','🏦','Ngân hàng'],['nang','🛠️','Nâng cấp'],['gia','🏷️','Giá & menu'],['nv','👷','Nhân viên'],['rv','⭐','Đánh giá']];
   const u=unreplied();
   $('#over').innerHTML=`<div class="card box prep-card">
+    ${prepNotices()}
     ${S.event&&S.event.day===S.day&&S.event.state==='pending'?`<div class="ev-card"><b>📣 Tin nóng hôm nay!</b><br>Từ <b>${hm(S.event.arrive)}</b> đến <b>${hm(S.event.arrive+S.event.dur)}</b>, ${S.event.vip.f} <b>${esc(S.event.vip.n)}</b> (${S.event.vip.r}) sẽ <b>bao hết sân</b> giao lưu. Khung này không nhận đặt sân, chỉ bán nước & đồ ăn cho fan.${(()=>{const f=evForecast(S.event);return `<div class="ev-fc">📊 Dự kiến khoảng <b>${f.orders} đơn</b> gọi đồ trong 2 tiếng (~${f.items} món). Nên thuê <b>${f.sellers} nhân viên bán hàng</b> trở lên, dọn sạch hết sân trước giờ idol tới.</div>`})()}Phục vụ tốt thưởng <b>${fmt(VIP_REWARD)}</b>, để fan và idol chờ lâu là dính phốt!</div>`:''}
-    <div class="prep-head"><div class="face">${avatar(OWNER_LOOK,'happy')}</div><div><h1>Chuẩn bị ngày ${S.day}</h1><small>🪙 ${fmt(S.money)} · ⭐ ${S.rating.toFixed(1)} · 🏦 nợ ${tr(S.debt)}</small><div class="prep-keys"><button id="pRename">🏪 ${esc(S.name)} ✏️</button><button id="pKey">💾 Mã lưu game</button></div></div></div>
+    <div class="prep-head"><div class="face">${avatar(OWNER_LOOK,'happy')}</div><div><h1>Chuẩn bị ngày ${S.day}</h1><small>🪙 ${fmt(S.money)} · ⭐ ${S.rating.toFixed(1)} · 🏦 nợ ${tr(S.debt)}</small><div class="prep-keys"><button id="pRename">🏪 ${esc(S.name)} ✏️</button><button id="pKey">💾 Mã lưu game</button><button id="pMap">🗺️ Chi nhánh${(S.branches||[]).length?` (${S.branches.length})`:''}</button></div></div></div>
     ${chalkboard()}
     <div class="ptabs" role="tablist">${tabs.map(([k,e,t])=>`<button role="tab" aria-selected="${prepTab===k}" data-tab="${k}"><span>${e}</span>${t}${k==='rv'&&u?`<b>${u}</b>`:''}</button>`).join('')}</div>
     <div class="ptab-body" id="prepList">${prepTabHTML(total)}</div>
@@ -96,8 +98,9 @@ function showPrep(){
       <button class="btn press" id="openShop">Nhập hàng & mở cửa · ${fmt(total)}</button>
     </div></div>`;
   $('#over').style.display='flex';
+  bindPrepNotices();
   $('#pRename').onclick=()=>askName(S.name,n=>{S.name=n;save();keepScroll(showPrep);ownerSay(`Quán mình giờ tên là "${n}" nha!`)});
-  $('#pKey').onclick=showKey;
+  $('#pKey').onclick=showKey; $('#pMap').onclick=()=>openMap(); const bm=$('#bkMap'); if(bm)bm.onclick=()=>openMap();
   $('#over').querySelector('.ptabs').onclick=e=>{const t=e.target.closest('[data-tab]');if(t){prepTab=t.dataset.tab;keepScroll(showPrep)}};
   $('#prepList').onclick=e=>{
     const g=e.target.closest.bind(e.target);
@@ -163,6 +166,7 @@ function showPrep(){
   };
   if($('#clearCart'))$('#clearCart').onclick=()=>{prepCart={};keepScroll(showPrep)};
   $('#openShop').onclick=()=>{
+    if(taxBlocksOpen())return;
     for(const [id,u] of Object.entries(prepCart)){S.stock[id]+=u}
     S.money-=total; S.debt-=prepPay; S.stats.repaid=prepPay; S.stats.wage=prepStaff*WAGE+prepGuard*GUARD_WAGE+prepSeller*SELLER_WAGE+prepBooker*BOOKER_WAGE; const goods=total-S.stats.wage-prepPay; S.stats.cost+=goods; S.stats.start=S.money+total-prepPay+(S.stats.cost-goods); S.staff=prepStaff; S.guard=prepGuard; S.seller=prepSeller; S.sellJobs=[]; S.booker=prepBooker; S.bookJob=null; S.bookErr=BOOKER_ERR_MIN+Math.random()*(BOOKER_ERR_MAX-BOOKER_ERR_MIN); S.sellErr=SELLER_ERR_MIN+Math.random()*(SELLER_ERR_MAX-SELLER_ERR_MIN); S.morale=!!S.nextMorale&&(prepSeller||prepStaff||prepGuard||prepBooker)>0; S.nextMorale=false;
     if(S.morale)setTimeout(()=>ownerSay('Hôm qua nhân viên được khách tip đậm, hôm nay ai cũng hăng hái hẳn! 💪'),800);
@@ -203,6 +207,8 @@ function endDay(){
   if(S.event&&S.event.day===S.day&&(S.event.state==='waiting'||S.event.state==='playing')){if(S.event.state==='waiting'){S.event.state='left';S.event.notes.push('tới giờ đóng cửa vẫn chưa có sân')}vipFinish()}
   S.qB=[];S.qD=[];closeSheet();
   dayTips();
+  simulateBranches();
+  S.weekRev=(S.weekRev||0)+(S.stats.court||0)+(S.stats.drink||0);
   let waste=0;const wasted=[];
   for(const it of ITEMS)if(it.perish&&S.stock[it.id]>0){waste+=S.stock[it.id]*unitCost(it.id);wasted.push(`${S.stock[it.id]} ${it.name.toLowerCase()}`);S.stock[it.id]=0}
   S.stats.waste=waste; S.stats.wasted=wasted.join(', ');
@@ -242,6 +248,8 @@ function showSummary(){
       <tr><td>🏦 Nợ ngân hàng còn</td><td>${S.debt>0?fmt(S.debt):'Hết nợ 🎉'}</td></tr>
       <tr><td>💼 Tài sản ròng (tiền mặt − nợ)</td><td>${fmt(S.money-S.debt)}</td></tr>
     </table>
+    ${branchesSummaryHTML()}
+    ${casesSummaryHTML()}
     ${(st.oev&&st.oev.length)?`<h3>🎲 Chuyện của chủ quán hôm nay</h3><table class="sum">${st.oev.map(o=>`<tr><td>${o.icon} ${esc(o.text)}</td><td>${o.amt>0?'+'+fmt(o.amt):o.amt<0?'−'+fmt(-o.amt):'–'}</td></tr>`).join('')}</table>`:''}
     ${(st.tips&&st.tips.length)?`<h3>💝 Tip cho nhân viên</h3>
     <p>Quán bo mỗi bạn ${(TIP_RATE*100).toLocaleString('vi-VN')}% tiền công. Hôm nào khách vui thì có khi được khách bo thêm 100k đến 500k.</p>
@@ -263,9 +271,15 @@ function showSummary(){
     <button class="btn press" id="nextDay">Sang ngày ${S.day+1}</button></div>`;
   $('#sumKey').onclick=showKey;
   $('#over').style.display='flex';
+  $('#over').querySelectorAll('[data-case]').forEach(b=>b.onclick=()=>openCase(b.dataset.case));
+  if(casesToday().length&&!S.casesShown){S.casesShown=true;setTimeout(()=>openCase(casesToday()[0].id),500)}
   $('#nextDay').onclick=()=>{
     const keepBroken=S.courts.map(x=>x&&x.broken&&!x.broken.repair?x.broken:null);
-    S.lastSold=S.stats.sold; S.day++; Object.assign(S,dayState(S.money)); S.todayIds=[]; planEvent();
+    const openCases=casesToday(); if(openCases.length&&!confirm(`Còn ${openCases.length} hồ sơ công an chưa xử lý. Sang ngày mới thì hồ sơ bị đóng, không thu hồi được tiền. Vẫn sang ngày?`))return;
+    openCases.forEach(c=>c.state='expired'); S.cases=[];
+    S.casesShown=false;
+    releaseCollateral();
+    S.lastSold=S.stats.sold; S.day++; Object.assign(S,dayState(S.money)); S.todayIds=[]; planEvent(); planWeather(); planIncident(); taxOnNewDay();
     keepBroken.forEach((b,i)=>{if(b&&S.courts[i])S.courts[i].broken=b});
     courtSay={}; S.phase='prep'; save(); cloudAutoSync(); showPrep(); $('#over').scrollTop=0;
   };

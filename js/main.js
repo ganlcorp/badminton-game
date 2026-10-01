@@ -12,6 +12,8 @@ $('#sBar').addEventListener('click',e=>{e.stopPropagation();const sj=e.target.cl
 $('#sBar').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();checkSeller()}});
 $('#rvBtn').onclick=openReviews;
 $('#rvBtnH').onclick=openReviews;
+$('#mapBtn').onclick=$('#mapBtnH').onclick=()=>openMap();
+$('#mapOv').addEventListener('click',e=>{if(e.target.id==='mapOv')closeMap()});
 $('#keyBtn').onclick=$('#keyBtnH').onclick=()=>{if(!S)return;const was=paused;paused=true;showKey(()=>{paused=was;last=performance.now()})};
 $('#sheetClose').onclick=closeSheet;
 $('#backdrop').onclick=closeSheet;

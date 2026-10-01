@@ -1,8 +1,8 @@
 // config.js — Hằng số, danh sách món, tên khách, tiện ích chung
 const MAX_COURTS=10, COURT_COST=50000000, INTEREST=0.001, STAR_FINE=10000000, START_CASH=2000000;
 let COURTS=10;
-const SELLER_WAGE=170000, SELLER_ERR_MIN=0.04, SELLER_ERR_MAX=0.07, SELL_MIN=10;
-const BOOKER_WAGE=160000, BOOKER_ERR_MIN=0.03, BOOKER_ERR_MAX=0.07, BOOK_MIN=5;
+const SELLER_WAGE=170000, SELLER_ERR_MIN=0.03, SELLER_ERR_MAX=0.05, SELL_MIN=10;
+const BOOKER_WAGE=160000, BOOKER_ERR_MIN=0.03, BOOKER_ERR_MAX=0.05, BOOK_MIN=5;
 const BOOKER_LOOK={skin:'#fbd9bd',hair:'#2b1a12',style:'long',shirt:'#3a86ff',glasses:true}, BOOKER_NAME='Chị Hoa';
 const SELLER_LOOK={skin:'#fbd9bd',hair:'#4a2c1a',style:'bun',shirt:'#ff7ab6',cap:'#ff5a7a'}, MAX_SELLER=3;
 const SELLER_LOOKS=[SELLER_LOOK,{skin:'#f1c19b',hair:'#1b1b1b',style:'short',shirt:'#ff7ab6'},{skin:'#d9a07a',hair:'#7a4a26',style:'long',shirt:'#ff7ab6',glasses:true}];
